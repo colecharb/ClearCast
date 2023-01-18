@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName, Pressable, StyleSheet } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -55,20 +55,28 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const styles = makeStyles();
 
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
+        // headerTitleStyle: styles.navigationHeaderTitle,
+        headerStyle: styles.navigationHeader,
+        // headerBackTitleStyle: styles.navigationBackTitleStyle,
+        headerTintColor: Colors[colorScheme].tint,
+        headerShadowVisible: false,
+
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarStyle: styles.navigationTabBar,
       }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="ForecastTab"
         component={ForecastScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           // headerShown: false,
-          title: 'Forecast',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Forecasts',
+          tabBarIcon: ({ color }) => <TabBarIcon name='list-ul' color={color} />,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
@@ -105,4 +113,21 @@ function TabBarIcon(props: {
   color: string;
 }) {
   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+}
+
+
+const makeStyles = () => {
+  const colorScheme = useColorScheme()
+
+  return (
+    StyleSheet.create({
+      navigationHeader: {
+        backgroundColor: Colors[colorScheme].background,
+      },
+      navigationTabBar: {
+        backgroundColor: Colors[colorScheme].background,
+        borderTopWidth: 0,
+      }
+    })
+  )
 }
