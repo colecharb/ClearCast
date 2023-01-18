@@ -26,8 +26,8 @@ export default function SearchBar(
       platform='ios'
 
       containerStyle={styles.searchBarContainer}
-      inputContainerStyle={{ backgroundColor: 'transparent' }}
-      // inputStyle={{ textAlign: "center" }}
+      inputContainerStyle={styles.inputContainer}
+      inputStyle={styles.inputStyle}
       placeholderTextColor={Colors[colorScheme].text}
       // showCancel={true}
       // cancelButtonTitle='asdf'
@@ -48,6 +48,12 @@ const makeStyles = () => {
     StyleSheet.create({
       searchBarContainer: {
         backgroundColor: Colors[colorScheme].background,
+      },
+      inputContainer: {
+        backgroundColor: 'transparent'
+      },
+      inputStyle: {
+        color: Colors[colorScheme].text,
       },
       cancelButton: {
         margin: Layout.margin
