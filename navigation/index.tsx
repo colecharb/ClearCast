@@ -64,8 +64,10 @@ function BottomTabNavigator() {
         // headerTitleStyle: styles.navigationHeaderTitle,
         headerStyle: styles.navigationHeader,
         // headerBackTitleStyle: styles.navigationBackTitleStyle,
-        headerTintColor: Colors[colorScheme].tint,
+        // headerTintColor: Colors[colorScheme].tint,
         headerShadowVisible: false,
+        // headerShown: false,
+        headerTransparent: true,
 
         tabBarActiveTintColor: Colors[colorScheme].tint,
         tabBarStyle: styles.navigationTabBar,
@@ -75,7 +77,7 @@ function BottomTabNavigator() {
         component={ForecastScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           // headerShown: false,
-          title: 'Forecasts',
+          title: 'Current Location',
           tabBarIcon: ({ color }) => <TabBarIcon name='list-ul' color={color} />,
           headerRight: () => (
             <Pressable
