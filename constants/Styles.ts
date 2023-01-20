@@ -1,16 +1,22 @@
-import { StyleSheet, useColorScheme } from "react-native";
+import { StyleSheet } from "react-native";
+import useColorScheme from "../hooks/useColorScheme";
+import Colors from "./Colors";
 import Layout from "./Layout";
 
-const makeStyles = () => {
-  const colorScheme = useColorScheme()
+export default function makeStyles() {
+  const theme = useColorScheme()
 
   return (
     StyleSheet.create({
       container: {
         padding: Layout.margin,
       },
+      card: {
+        borderWidth: 1,
+        borderRadius: Layout.margin,
+        borderColor: Colors[theme].text
+      }
     })
   )
 }
 
-export default makeStyles();
