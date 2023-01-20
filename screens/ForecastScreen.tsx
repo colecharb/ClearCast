@@ -15,7 +15,7 @@ import makeStyles from '../constants/Styles';
 export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
 
   const theme = useColorScheme()
-
+  const headerHeight = useHeaderHeight()
   const styles = makeStyles()
 
   // Constants
@@ -49,6 +49,12 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
     ]).then(() => setRefreshing(false));
   }, []);
 
+  useEffect(() => {
+    if (weatherData?.name) {
+      navigation.setOptions({ title: weatherData.name })
+    }
+  }, [weatherData])
+
   // renderCount.current += 1;
 
   if (weatherContext.errorMessage) return (<Text>{weatherContext.errorMessage}</Text>)
@@ -63,7 +69,7 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
         style={{ flex: 1 }}
       >
         <ScrollView
-          contentContainerStyle={styles.container}
+          contentContainerStyle={[styles.container, { paddingTop: headerHeight }]}
           refreshControl={<RefreshControl
             refreshing={refreshing}
             onRefresh={reload}
@@ -71,7 +77,7 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
         >
 
           <View style={[styles.card, styles.container]}>
-            <Text>{weatherData?.name}</Text>
+            {/* <Text>{weatherData?.name}</Text> */}
             <Text>{weatherData?.weather[0].main}</Text>
             <Text>{weatherData?.main.temp}˚F  (feels like {weatherData?.main.feels_like})</Text>
           </View>
