@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { Button, KeyboardAvoidingView, Platform, RefreshControl, ScrollView } from 'react-native';
+import { Button, FlatList, KeyboardAvoidingView, Platform, RefreshControl, ScrollView } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
@@ -11,16 +11,18 @@ import wait, { refreshDelay, waitTime } from '../utils/wait';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
+import ForecastIntervalCard from '../components/ForecastIntervalCard';
+import Layout from '../constants/Layout';
 
-export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
 
-  const theme = useColorScheme()
+  // const theme = useColorScheme()
   const headerHeight = useHeaderHeight()
   const styles = makeStyles()
 
   // Contexts
-  const weatherContext = useContext(WeatherContext);
-  const weatherData = weatherContext.currentWeather;
+  const weather = useContext(WeatherContext);
+  const forecast = weather.forecast;
 
   // States
   const [refreshing, setRefreshing] = useState(false)
@@ -32,27 +34,29 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
 
 
   useEffect(() => {
-    weatherContext.getCurrentWeatherAsync()
+    weather.getForecastAsync()
   }, [])
 
   const reload = useCallback(() => {
     setRefreshing(true);
     Promise.all([
       refreshDelay(),
-      weatherContext.getCurrentWeatherAsync()
+      weather.getForecastAsync()
       // refetch things
     ]).then(() => setRefreshing(false));
   }, []);
 
   useEffect(() => {
-    if (weatherData?.name) {
-      navigation.setOptions({ title: weatherData.name })
+    const city = forecast?.city
+    // const country = forecast?.city.country
+    if (city) {
+      navigation.setOptions({ title: `Forecast: ${city.name}` })
     }
-  }, [weatherData])
+  }, [forecast?.city])
 
   // renderCount.current += 1;
 
-  if (weatherContext.errorMessage) return (<Text>{weatherContext.errorMessage}</Text>)
+  if (weather.errorMessage) return (<Text>{weather.errorMessage}</Text>)
 
   return (
 
@@ -63,52 +67,16 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
         // keyboardVerticalOffset={useHeaderHeight()}
         style={{ flex: 1 }}
       >
-        <ScrollView
+        <FlatList
           contentContainerStyle={[styles.container, { paddingTop: headerHeight }]}
-          refreshControl={<RefreshControl
-            refreshing={refreshing}
-            onRefresh={reload}
-          />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
+          data={forecast?.list}
+          renderItem={({ item, index, separators }) => <ForecastIntervalCard forecastInterval={item} index={index} />}
+          ItemSeparatorComponent={<View style={{ height: Layout.margin }} />}
         >
 
-          <View style={[styles.card, styles.container]}>
-            {/* <Text>{weatherData?.name}</Text> */}
-            <Text>
-              {weatherData?.weather[0].main}
-            </Text>
-            <Text>
-              {weatherData?.main.temp}˚F  (feels like {weatherData?.main.feels_like})
-            </Text>
-          </View>
 
-          {/* <View style={{ flex: 1, alignItems: 'center' }}> */}
-
-          {/* <Text>
-            {renderCount.current} renders
-            {'\n'}
-            {apiCallCount.current} calls to API
-            {'\n'}
-          </Text> */}
-
-          {/* <Text style={{ textAlign: 'center' }}>
-            Daily forecasts (past, present, and future) will be displayed here.
-          </Text> */}
-
-          {/* <Text style={{ fontFamily: 'space-mono' }}>
-            LOCATION: {JSON.stringify(location.current, null, '  ') + '\n'}
-          </Text>
-
-          <Text style={{ fontFamily: 'space-mono' }}>
-            CURRENT WEATHER: {JSON.stringify(weatherContext.currentWeather.current, null, '  ')}
-          </Text> */}
-
-
-
-
-
-          {/* </View> */}
-
-        </ScrollView>
+        </FlatList>
 
         {/* <Button
           title='REFRESH (getCurrentWeatherAsync)'
