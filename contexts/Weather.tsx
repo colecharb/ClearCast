@@ -6,6 +6,8 @@ export type WeatherContextData = {
   location: React.MutableRefObject<Location.LocationObject | undefined>,
   currentWeather: Weather | undefined,
   getCurrentWeatherAsync: () => Promise<void>,
+  forecast: Forecast | undefined,
+  getForecastAsync: () => Promise<void>,
   errorMessage: string | undefined,
 };
 
@@ -21,7 +23,8 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // location hooks
   // const [locationWatcher, setLocationWatcher] = useState<Location.LocationSubscription>();
   const location = useRef<Location.LocationObject>()
-  const [currentWeather, setCurrentWeather] = useState<WeatherData>()
+  const [currentWeather, setCurrentWeather] = useState<Weather>()
+  const [forecast, setForecast] = useState<Forecast>()
 
   const API_KEY = 'f82f1ad0af0d696e1c657915946d75c2'
   const CURRENT_WEATHER_URL = `https://api.openweathermap.org/data/2.5/weather`
@@ -48,7 +51,30 @@ export const WeatherProvider = ({ children }: { children: any }) => {
         .then((response) => {
           setCurrentWeather(response)
           // console.log('here');
-          console.log('here');
+        })
+        .catch((error) => console.error(error))
+    }).catch((error: string) => {
+      console.log(error);
+    })
+  }
+
+  async function getForecastAsync() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setErrorMessage('Permission to access location was denied');
+      return;
+    }
+    Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Balanced,
+    }).then((loc: Location.LocationObject) => {
+      location.current = loc;
+      // console.log(loc);
+      const { latitude, longitude } = loc.coords;
+      fetch(FORECAST_URL + makeUrlParams(latitude, longitude, 'imperial'))
+        .then((response) => response.json())
+        .then((response) => {
+          setForecast(response)
+          // console.log('here');
         })
         .catch((error) => console.error(error))
     }).catch((error: string) => {
@@ -60,6 +86,8 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     location: location,
     currentWeather: currentWeather,
     getCurrentWeatherAsync: getCurrentWeatherAsync,
+    forecast: forecast,
+    getForecastAsync: getForecastAsync,
     errorMessage: errorMessage
   }
 
@@ -69,3 +97,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     </WeatherContext.Provider>
   );
 };
+
+export const fetchIcon = async (icon: string) => {
+  const iconURL = `http://openweathermap.org/img/wn/${icon}@2x.png`
+  const response = await fetch(iconURL)
+  return URL.createObjectURL(await response.blob());
+}
