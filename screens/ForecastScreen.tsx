@@ -22,7 +22,7 @@ export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
 
   // Contexts
   const weather = useContext(WeatherContext);
-  const forecast = weather.forecast;
+  const forecast = weather.hourlyForecast;
 
   // States
   const [refreshing, setRefreshing] = useState(false)
@@ -34,14 +34,14 @@ export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
 
 
   useEffect(() => {
-    weather.getForecastAsync()
+    weather.getHourlyForecastAsync()
   }, [])
 
   const reload = useCallback(() => {
     setRefreshing(true);
     Promise.all([
       refreshDelay(),
-      weather.getForecastAsync()
+      weather.getHourlyForecastAsync()
       // refetch things
     ]).then(() => setRefreshing(false));
   }, []);
@@ -72,7 +72,7 @@ export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
           data={forecast?.list}
           renderItem={({ item, index, separators }) => <ForecastIntervalCard forecastInterval={item} index={index} />}
-          ItemSeparatorComponent={<View style={{ height: Layout.margin }} />}
+          ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
         >
 
 
