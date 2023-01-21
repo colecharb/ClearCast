@@ -18,13 +18,8 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
   const headerHeight = useHeaderHeight()
   const styles = makeStyles()
 
-  // Constants
-  const API_KEY = 'f82f1ad0af0d696e1c657915946d75c2'
-  const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${57}&lon=${-2.15}&appid=${API_KEY}&units=imperial`
-
   // Contexts
   const weatherContext = useContext(WeatherContext);
-  // const location = weatherContext.location;
   const weatherData = weatherContext.currentWeather;
 
   // States
@@ -65,7 +60,7 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={useHeaderHeight()}
+        // keyboardVerticalOffset={useHeaderHeight()}
         style={{ flex: 1 }}
       >
         <ScrollView
@@ -78,8 +73,12 @@ export default function ({ navigation }: RootTabScreenProps<'TabOne'>) {
 
           <View style={[styles.card, styles.container]}>
             {/* <Text>{weatherData?.name}</Text> */}
-            <Text>{weatherData?.weather[0].main}</Text>
-            <Text>{weatherData?.main.temp}˚F  (feels like {weatherData?.main.feels_like})</Text>
+            <Text>
+              {weatherData?.weather[0].main}
+            </Text>
+            <Text>
+              {weatherData?.main.temp}˚F  (feels like {weatherData?.main.feels_like})
+            </Text>
           </View>
 
           {/* <View style={{ flex: 1, alignItems: 'center' }}> */}
