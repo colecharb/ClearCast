@@ -20,6 +20,7 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const theme = useColorScheme()
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -59,9 +60,9 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="ForecastTab"
       screenOptions={{
-        // headerTitleStyle: styles.navigationHeaderTitle,
+        headerTitleStyle: styles.navigationHeaderTitle,
         headerStyle: styles.navigationHeader,
         // headerBackTitleStyle: styles.navigationBackTitleStyle,
         // headerTintColor: Colors[colorScheme].tint,
@@ -75,9 +76,9 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="ForecastTab"
         component={ForecastScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+        options={({ navigation }: RootTabScreenProps<'ForecastTab'>) => ({
           // headerShown: false,
-          title: 'Current Location',
+          title: 'Forecast',
           tabBarIcon: ({ color }) => <TabBarIcon name='list-ul' color={color} />,
           headerRight: () => (
             <Pressable
@@ -126,9 +127,15 @@ const makeStyles = () => {
       navigationHeader: {
         backgroundColor: Colors[theme].background,
       },
+      navigationHeaderTitle: {
+        color: Colors[theme].text,
+      },
       navigationTabBar: {
-        backgroundColor: Colors[theme].background,
+        backgroundColor: 'transparent',
         borderTopWidth: 0,
+        elevation: 0,
+        height: 0,
+        position: 'absolute'
       }
     })
   )
