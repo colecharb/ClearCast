@@ -6,8 +6,8 @@ export type WeatherContextData = {
   location: React.MutableRefObject<Location.LocationObject | undefined>,
   currentWeather: Weather | undefined,
   getCurrentWeatherAsync: () => Promise<void>,
-  forecast: Forecast | undefined,
-  getForecastAsync: () => Promise<void>,
+  hourlyForecast: Forecast | undefined,
+  getHourlyForecastAsync: () => Promise<void>,
   errorMessage: string | undefined,
 };
 
@@ -24,11 +24,11 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // const [locationWatcher, setLocationWatcher] = useState<Location.LocationSubscription>();
   const location = useRef<Location.LocationObject>()
   const [currentWeather, setCurrentWeather] = useState<Weather>()
-  const [forecast, setForecast] = useState<Forecast>()
+  const [hourlyForecast, setHourlyForecast] = useState<Forecast>()
 
   const API_KEY = 'f82f1ad0af0d696e1c657915946d75c2'
-  const CURRENT_WEATHER_URL = `https://api.openweathermap.org/data/2.5/weather`
-  const FORECAST_URL = `https://api.openweathermap.org/data/2.5/forecast`
+  const CURRENT_WEATHER_URL = `https://pro.openweathermap.org/data/2.5/weather`
+  const HOURLY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/hourly`
   // easy way to generate params to append either API URL
   const makeUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric') => (
     `?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`
@@ -58,7 +58,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     })
   }
 
-  async function getForecastAsync() {
+  async function getHourlyForecastAsync() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       setErrorMessage('Permission to access location was denied');
@@ -70,10 +70,10 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       location.current = loc;
       // console.log(loc);
       const { latitude, longitude } = loc.coords;
-      fetch(FORECAST_URL + makeUrlParams(latitude, longitude, 'imperial'))
+      fetch(HOURLY_FORECAST_URL + makeUrlParams(latitude, longitude, 'imperial'))
         .then((response) => response.json())
         .then((response) => {
-          setForecast(response)
+          setHourlyForecast(response)
           // console.log('here');
         })
         .catch((error) => console.error(error))
@@ -86,8 +86,8 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     location: location,
     currentWeather: currentWeather,
     getCurrentWeatherAsync: getCurrentWeatherAsync,
-    forecast: forecast,
-    getForecastAsync: getForecastAsync,
+    hourlyForecast: hourlyForecast,
+    getHourlyForecastAsync: getHourlyForecastAsync,
     errorMessage: errorMessage
   }
 
