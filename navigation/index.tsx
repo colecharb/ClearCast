@@ -119,15 +119,15 @@ function TabBarIcon(props: {
 
 
 const makeStyles = () => {
-  const colorScheme = useColorScheme()
+  const theme = useColorScheme()
 
   return (
     StyleSheet.create({
       navigationHeader: {
-        backgroundColor: Colors[colorScheme].background,
+        backgroundColor: Colors[theme].background,
       },
       navigationTabBar: {
-        backgroundColor: Colors[colorScheme].background,
+        backgroundColor: Colors[theme].background,
         borderTopWidth: 0,
       }
     })
