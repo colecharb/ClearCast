@@ -84,7 +84,7 @@ export type Weather = {
   "cod": number
 }
 
-export type ForecastInterval_3hr = {
+export type ForecastInterval = {
   "dt": number,
   "main": {
     "temp": number,
@@ -121,7 +121,7 @@ export type Forecast = {
   "cod": string,
   "message": number,
   "cnt": number,
-  "list": ForecastInterval_3hr[],
+  "list": ForecastInterval[],
   "city": {
     "id": number,
     "name": string,
