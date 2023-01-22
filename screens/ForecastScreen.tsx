@@ -73,16 +73,7 @@ export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
           data={forecast?.list}
           renderItem={({ item, index, separators }) => <ForecastIntervalCard forecastInterval={item} index={index} />}
           ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
-        >
-
-
-        </FlatList>
-
-        {/* <Button
-          title='REFRESH (getCurrentWeatherAsync)'
-          onPress={reload}
-        /> */}
-
+        />
 
 
         {/* <SearchBar
