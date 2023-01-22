@@ -11,10 +11,11 @@ import wait, { refreshDelay, waitTime } from '../utils/wait';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
-import ForecastIntervalCard from '../components/ForecastIntervalCard';
 import Layout from '../constants/Layout';
+import HourForecastCard from '../components/HourForecastCard';
+import DayForecastCard from '../components/DayForecastCard';
 
-export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
+export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
 
   // const theme = useColorScheme()
   const headerHeight = useHeaderHeight()
@@ -22,26 +23,22 @@ export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
 
   // Contexts
   const weather = useContext(WeatherContext);
-  const forecast = weather.hourlyForecast;
+  const forecast = weather.dailyForecast;
 
   // States
   const [refreshing, setRefreshing] = useState(false)
   // const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Refs
-  // const renderCount = useRef<number>(0);
-  // const apiCallCount = useRef<number>(0);
-
 
   useEffect(() => {
-    weather.getHourlyForecastAsync()
+    weather.getDailyForecastAsync()
   }, [])
 
   const reload = useCallback(() => {
     setRefreshing(true);
     Promise.all([
       refreshDelay(),
-      weather.getHourlyForecastAsync()
+      weather.getDailyForecastAsync()
       // refetch things
     ]).then(() => setRefreshing(false));
   }, []);
@@ -50,7 +47,7 @@ export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
     const city = forecast?.city
     // const country = forecast?.city.country
     if (city) {
-      navigation.setOptions({ title: `Forecast: ${city.name}` })
+      navigation.setOptions({ title: `Daily: ${city.name}` })
     }
   }, [forecast?.city])
 
@@ -71,7 +68,7 @@ export default function ({ navigation }: RootTabScreenProps<'ForecastTab'>) {
           contentContainerStyle={[styles.container, { paddingTop: headerHeight }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
           data={forecast?.list}
-          renderItem={({ item, index, separators }) => <ForecastIntervalCard forecastInterval={item} index={index} />}
+          renderItem={({ item, index, separators }) => <DayForecastCard forecast={forecast} index={index} />}
           ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
         />
 
