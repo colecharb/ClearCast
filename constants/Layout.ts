@@ -2,12 +2,12 @@ import { Dimensions } from 'react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const margin = 16
+const margin = 12
 
 export default {
   margin,
   borderWidth: 2,
-  borderRadius: margin,
+  borderRadius: 30,
   window: {
     width,
     height,
