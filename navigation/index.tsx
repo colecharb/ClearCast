@@ -14,10 +14,10 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import ForecastScreen from '../screens/ForecastScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import HourlyForecastScreen from '../screens/HourlyForecastScreen';
+import DailyForecastScreen from '../screens/DailyForecastScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const theme = useColorScheme()
@@ -60,7 +60,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="ForecastTab"
+      initialRouteName="DailyTab"
       screenOptions={{
         headerTitleStyle: styles.navigationHeaderTitle,
         headerStyle: styles.navigationHeader,
@@ -72,36 +72,37 @@ function BottomTabNavigator() {
 
         tabBarActiveTintColor: Colors[colorScheme].tint,
         tabBarStyle: styles.navigationTabBar,
+        tabBarShowLabel: false
       }}>
       <BottomTab.Screen
-        name="ForecastTab"
-        component={ForecastScreen}
-        options={({ navigation }: RootTabScreenProps<'ForecastTab'>) => ({
+        name="HourlyTab"
+        component={HourlyForecastScreen}
+        options={({ navigation }: RootTabScreenProps<'HourlyTab'>) => ({
           // headerShown: false,
-          title: 'Forecast',
-          tabBarIcon: ({ color }) => <TabBarIcon name='list-ul' color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
+          title: 'Hourly',
+          tabBarIcon: ({ color }) => <TabBarIcon name='clock-o' color={color} />,
+          // headerRight: () => (
+          //   <Pressable
+          //     onPress={() => navigation.navigate('Modal')}
+          //     style={({ pressed }) => ({
+          //       opacity: pressed ? 0.5 : 1,
+          //     })}>
+          //     <FontAwesome
+          //       name="info-circle"
+          //       size={25}
+          //       color={Colors[colorScheme].text}
+          //       style={{ marginRight: 15 }}
+          //     />
+          //   </Pressable>
+          // ),
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="DailyTab"
+        component={DailyForecastScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Daily',
+          tabBarIcon: ({ color }) => <TabBarIcon name="list-ul" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -133,8 +134,7 @@ const makeStyles = () => {
       navigationTabBar: {
         backgroundColor: 'transparent',
         borderTopWidth: 0,
-        elevation: 0,
-        height: 0,
+        // height: 0,
         position: 'absolute'
       }
     })
