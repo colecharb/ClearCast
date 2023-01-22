@@ -13,8 +13,8 @@ export default function makeStyles() {
       },
       card: {
         borderWidth: 1,
-        borderRadius: Layout.margin,
-        borderColor: Colors[theme].text
+        borderRadius: Layout.borderRadius,
+        borderColor: Colors[theme].subtle 
       }
     })
   )
