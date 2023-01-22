@@ -25,8 +25,8 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >;
 
 export type RootTabParamList = {
-  ForecastTab: undefined;
-  TabTwo: undefined;
+  HourlyTab: undefined;
+  DailyTab: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
@@ -84,7 +84,7 @@ export type Weather = {
   "cod": number
 }
 
-export type ForecastInterval = {
+export type HourInterval = {
   "dt": number,
   "main": {
     "temp": number,
@@ -117,11 +117,15 @@ export type ForecastInterval = {
   "dt_txt": string
 }
 
-export type Forecast = {
+export type HourlyForecast = {
   "cod": string,
   "message": number,
   "cnt": number,
-  "list": ForecastInterval[],
+  "list": HourInterval[],
+  "minTemp": number,
+  "maxTemp": number,
+  "minLow": number,
+  "maxHigh": number,
   "city": {
     "id": number,
     "name": string,
@@ -135,4 +139,60 @@ export type Forecast = {
     "sunrise": number,
     "sunset": number
   }
+}
+
+export type DayInterval = {
+  "dt": number,
+  "sunrise": number,
+  "sunset": number,
+  "temp": {
+    "day": number,
+    "min": number,
+    "max": number,
+    "night": number,
+    "eve": number,
+    "morn": number
+  },
+  "feels_like": {
+    "day": number,
+    "night": number,
+    "eve": number,
+    "morn": number
+  },
+  "pressure": number,
+  "humidity": number,
+  "weather": [
+    {
+      "id": number,
+      "main": string,
+      "description": string,
+      "icon": string
+    }
+  ],
+  "speed": number,
+  "deg": number,
+  "gust": number,
+  "clouds": number,
+  "pop": number,
+  "rain": number
+}
+
+export type DailyForecast = {
+  "city": {
+    "id": number,
+    "name": string,
+    "coord": {
+      "lon": number,
+      "lat": number
+    },
+    "country": string,
+    "population": number,
+    "timezone": number
+  },
+  "cod": string,
+  "message": number,
+  "cnt": number,
+  "list": DayInterval[]
+  "minLow": number,
+  "maxHigh": number
 }
