@@ -50,7 +50,7 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
     const city = forecast?.city
     // const country = forecast?.city.country
     if (city) {
-      navigation.setOptions({ title: `Daily: ${city.name}` })
+      navigation.setOptions({ title: `ClearCast: ${city.name}` })
     }
   }, [forecast?.city])
 
@@ -71,18 +71,24 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
 
 
         <FlatList
-          contentContainerStyle={[styles.container, { flex: 1, paddingTop: headerHeight }]}
+          contentContainerStyle={[styles.container, { flex: 1 }]}
+          contentInset={{ top: headerHeight, left: 0, right: 0, bottom: 3.5 * tabBarHeight }}
+          scrollIndicatorInsets={{}}
+          showsVerticalScrollIndicator={false}
+          automaticallyAdjustContentInsets={false}
+          automaticallyAdjustsScrollIndicatorInsets={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
           data={forecast?.list}
           renderItem={({ item, index, separators }) => <DayForecastCard forecast={forecast} index={index} />}
-          ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
+          // ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
         />
 
 
         {/* <View style={{ zIndex: Layout.gradientOverlayZIndex + 1, position: 'relative', bottom: 0, backgroundColor: 'transparent' }}> */}
         <LinearGradient
-          colors={[Colors[theme].background + '00', Colors[theme].background + '99', Colors[theme].background]}
-          style={{ zIndex: 11, marginTop: -3 * tabBarHeight, paddingVertical: tabBarHeight }}
+          colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
+          locations={[0, 0.3, 1]}
+          style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
         >
           <SearchBar
             value={searchQuery}

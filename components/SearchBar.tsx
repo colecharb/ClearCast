@@ -26,6 +26,7 @@ export default function SearchBar(
       selectionColor={Colors[colorScheme].tint}
       platform='ios'
 
+      searchIcon={styles.searchIcon}
       containerStyle={[styles.searchBarContainer, containerStyle]}
       inputContainerStyle={styles.inputContainer}
       inputStyle={styles.inputStyle}
@@ -56,9 +57,13 @@ function makeStyles() {
     inputStyle: {
       backgroundColor: 'transparent',
       color: Colors[theme].text,
+      fontWeight: 'bold'
     },
     cancelButton: {
       margin: Layout.margin
+    },
+    searchIcon: {
+      color: Colors[theme].text
     }
   })
 }

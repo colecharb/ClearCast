@@ -61,14 +61,14 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
     <View style={styles.intervalContainer}>
       <View style={{ flex: low - minLow }} />
 
-      <View style={[styles.intervalTempContainer, { borderColor: '#aaf7' }]}>
+      <View style={[styles.intervalTempContainer, { borderColor: '#cff7' }]}>
         <Text style={styles.intervalTemp}>{low.toFixed(0)}˚</Text>
       </View>
 
 
       <View style={{ flex: high - low }} />
 
-      <View style={[styles.intervalTempContainer, { borderColor: '#faa7' }]}>
+      <View style={[styles.intervalTempContainer, { borderColor: '#fc58' }]}>
         <Text style={styles.intervalTemp}>{high.toFixed(0)}˚</Text>
       </View>
 

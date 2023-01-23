@@ -80,7 +80,7 @@ function BottomTabNavigator() {
         name="DailyTab"
         component={DailyForecastScreen}
         options={{
-          title: 'Daily',
+          title: 'ClearCast',
           tabBarIcon: ({ color }) => <TabBarIcon name="list-ul" color={color} />,
         }}
       />

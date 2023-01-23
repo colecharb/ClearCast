@@ -32,10 +32,10 @@ export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
 
 export function Text(props: TextProps) {
-  const colorScheme = useColorScheme()
+  const theme = useColorScheme()
   const { style, lightColor, darkColor, ...otherProps } = props;
 
-  return <DefaultText style={[{ color: Colors[colorScheme].text }, style]} {...otherProps} />;
+  return <DefaultText style={[{ color: Colors[theme].text }, style]} {...otherProps} />;
 }
 
 export function View(props: ViewProps) {

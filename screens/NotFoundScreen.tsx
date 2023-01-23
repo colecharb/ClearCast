@@ -1,37 +1,23 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable } from 'react-native';
+import ScreenContainer from '../components/ScreenContainer';
 
-import { Text, View } from '../components/Themed';
-import { RootStackScreenProps, RootTabParamList, RootTabScreenProps } from '../types';
+import { Text } from '../components/Themed';
+import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
+import { RootStackScreenProps, RootTabScreenProps } from '../types';
 
 export default function NotFoundScreen({ navigation }: RootTabScreenProps<'SettingsTab'> | RootStackScreenProps<'NotFound'>) {
+
+  const theme = useColorScheme()
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>This screen doesn't exist.</Text>
-      <TouchableOpacity onPress={() => navigation.replace('Root')} style={styles.link}>
-        <Text style={styles.linkText}>Go to home screen!</Text>
-      </TouchableOpacity>
-    </View>
+    <ScreenContainer style={{ justifyContent: 'center', alignItems: 'center' }}>
+
+      <Text style={{ color: '#fff' }}>This screen doesn't exist.</Text>
+      <Pressable onPress={() => navigation.replace('Root')}>
+        <Text style={{ color: Colors[theme].tint }}>Go to home screen!</Text>
+      </Pressable>
+    </ScreenContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-});

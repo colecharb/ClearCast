@@ -55,7 +55,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     `?lat=${lat}&lon=${lon}&appid=${API_KEY}&cnt=${cnt}&units=${units}`
   )
   const DAILY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/daily`
-  const makeDailyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 7) => (
+  const makeDailyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 16) => (
     `?lat=${lat}&lon=${lon}&appid=${API_KEY}&cnt=${cnt}&units=${units}`
   )
 
