@@ -27,15 +27,13 @@ export default function ({ forecast, index }: { forecast: DailyForecast | undefi
     <Card>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text>{index === 0 ? 'Today' : day}</Text>
+        <Text style={{ flex: 1, textAlign: 'center' }}>{index === 0 ? 'Today' : day}</Text>
 
-          <View style={{ aspectRatio: 1, height: 45, marginVertical: -16 }}>
-            <Image
-              style={styles.weatherIcon}
-              source={{ uri: `https://openweathermap.org/img/wn/${dayForecast.weather[0].icon}@4x.png` }}
-            />
-          </View>
+        <View style={{ flex: 1.5, height: 45, marginVertical: -16, alignItems: 'center' }}>
+          <Image
+            style={styles.weatherIcon}
+            source={{ uri: `https://openweathermap.org/img/wn/${dayForecast.weather[0].icon}@4x.png` }}
+          />
         </View>
 
 
@@ -64,14 +62,14 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
     <View style={styles.intervalContainer}>
       <View style={{ flex: low - minLow }} />
 
-      <View style={styles.intervalTempContainer}>
+      <View style={[styles.intervalTempContainer, { borderColor: '#aaf7' }]}>
         <Text style={styles.intervalTemp}>{low.toFixed(0)}˚</Text>
       </View>
 
 
       <View style={{ flex: high - low }} />
 
-      <View style={styles.intervalTempContainer}>
+      <View style={[styles.intervalTempContainer, { borderColor: '#faa7' }]}>
         <Text style={styles.intervalTemp}>{high.toFixed(0)}˚</Text>
       </View>
 
@@ -85,21 +83,21 @@ const makeStyles = () => {
   return StyleSheet.create({
     weatherIcon: {
       aspectRatio: 1,
-      width: undefined,
-      height: undefined
+      height: 45
     },
     intervalContainer: {
-      width: 150,
+      flex: 5,
       height: '100%',
       flexDirection: 'row',
-      backgroundColor: '#444',
-      borderRadius: Layout.borderRadius / 2,
+      backgroundColor: Colors[theme].subtle,
+      borderRadius: Layout.borderRadius - Layout.margin,
     },
     intervalTempContainer: {
       justifyContent: 'center',
       padding: Layout.margin / 2,
+      borderColor: Colors[theme].light,
       borderRadius: Layout.borderRadius - Layout.margin,
-      backgroundColor: Colors[theme].tint
+      borderWidth: Layout.borderWidth
     },
     intervalTemp: {
       fontWeight: 'bold'
