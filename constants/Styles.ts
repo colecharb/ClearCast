@@ -12,10 +12,11 @@ export default function makeStyles() {
         padding: Layout.margin,
       },
       card: {
-        borderWidth: 1,
+        // borderWidth: 1,
         borderRadius: Layout.borderRadius,
         borderColor: Colors[theme].subtle 
-      }
+      },
+
     })
   )
 }
