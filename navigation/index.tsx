@@ -39,7 +39,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
@@ -85,9 +85,9 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="HourlyTab"
-        component={HourlyForecastScreen}
-        options={({ navigation }: RootTabScreenProps<'HourlyTab'>) => ({
+        name="SettingsTab"
+        component={NotFoundScreen}
+        options={({ navigation }: RootTabScreenProps<'SettingsTab'>) => ({
           // headerShown: false,
           title: 'Hourly',
           tabBarIcon: ({ color }) => <TabBarIcon name='clock-o' color={color} />,
