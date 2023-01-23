@@ -5,7 +5,6 @@ import Colors from "../constants/Colors"
 import { useThemeColor } from "./Themed"
 import { StyleProp, StyleSheet, ViewStyle } from "react-native"
 import Layout from "../constants/Layout"
-import makeStyles from "../constants/Styles"
 
 export default function SearchBar(
   {
@@ -42,4 +41,25 @@ export default function SearchBar(
     />
   )
 
+}
+
+
+function makeStyles() {
+  const theme = useColorScheme()
+  return StyleSheet.create({
+    searchBarContainer: {
+      backgroundColor: 'transparent',
+      height: 75
+    },
+    inputContainer: {
+      backgroundColor: 'transparent'
+    },
+    inputStyle: {
+      backgroundColor: 'transparent',
+      color: Colors[theme].text,
+    },
+    cancelButton: {
+      margin: Layout.margin
+    }
+  })
 }
