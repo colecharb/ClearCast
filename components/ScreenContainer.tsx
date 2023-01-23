@@ -1,7 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import Colors from "../constants/Colors";
-import Layout from "../constants/Layout";
 import useColorScheme from "../hooks/useColorScheme";
 import { View, ViewProps } from "./Themed";
 import { useHeaderHeight } from '@react-navigation/elements'

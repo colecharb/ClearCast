@@ -1,13 +1,13 @@
-import React, { useCallback, useContext, useEffect, useRef } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { useState } from 'react';
-import { Button, FlatList, KeyboardAvoidingView, Platform, RefreshControl, SafeAreaView, ScrollView } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, RefreshControl } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import { WeatherContext } from '../contexts/Weather';
-import wait, { refreshDelay, waitTime } from '../utils/wait';
+import { refreshDelay } from '../utils/wait';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';

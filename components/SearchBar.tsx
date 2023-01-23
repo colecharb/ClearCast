@@ -2,7 +2,6 @@ import { SearchBar as _SearchBar_ } from "@rneui/themed"
 import React from "react"
 import useColorScheme from "../hooks/useColorScheme"
 import Colors from "../constants/Colors"
-import { useThemeColor } from "./Themed"
 import { StyleProp, StyleSheet, ViewStyle } from "react-native"
 import Layout from "../constants/Layout"
 

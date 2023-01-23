@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Image, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
-import { WeatherContext } from "../contexts/Weather";
 import useColorScheme from "../hooks/useColorScheme";
 import { DailyForecast } from "../types";
 import Card from "./Card";

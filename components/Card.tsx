@@ -1,6 +1,5 @@
 import React from "react";
 import makeStyles from "../constants/Styles";
-import useColorScheme from "../hooks/useColorScheme";
 import { View, ViewProps } from "./Themed";
 
 
