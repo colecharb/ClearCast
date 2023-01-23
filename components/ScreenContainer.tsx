@@ -3,7 +3,6 @@ import React from "react";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import useColorScheme from "../hooks/useColorScheme";
-import GradientOverlay from "./GradientOverlay";
 import { View, ViewProps } from "./Themed";
 import { useHeaderHeight } from '@react-navigation/elements'
 

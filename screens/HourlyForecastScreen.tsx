@@ -13,7 +13,6 @@ import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
 import Layout from '../constants/Layout';
 import HourForecastCard from '../components/HourForecastCard';
-import GradientOverlay from '../components/GradientOverlay';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LinearGradient } from 'expo-linear-gradient';
 

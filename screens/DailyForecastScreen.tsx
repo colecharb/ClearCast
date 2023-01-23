@@ -15,7 +15,6 @@ import Layout from '../constants/Layout';
 
 import DayForecastCard from '../components/DayForecastCard';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import GradientOverlay from '../components/GradientOverlay';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
