@@ -28,7 +28,7 @@ export default function ({ forecast, index }: { forecast: DailyForecast | undefi
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text>{day}</Text>
+          <Text>{index === 0 ? 'Today' : day}</Text>
 
           <View style={{ aspectRatio: 1, height: 45, marginVertical: -16 }}>
             <Image
