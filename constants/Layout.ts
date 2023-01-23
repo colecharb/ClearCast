@@ -13,4 +13,5 @@ export default {
     height,
   },
   isSmallDevice: width < 375,
+  gradientOverlayZIndex: 10,
 };
