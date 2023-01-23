@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { Button, FlatList, KeyboardAvoidingView, Platform, RefreshControl, ScrollView } from 'react-native';
+import { Button, FlatList, KeyboardAvoidingView, Platform, RefreshControl, SafeAreaView, ScrollView } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
@@ -13,24 +13,29 @@ import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
 import Layout from '../constants/Layout';
 import HourForecastCard from '../components/HourForecastCard';
+import GradientOverlay from '../components/GradientOverlay';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ({ navigation }: RootTabScreenProps<'HourlyTab'>) {
 
-  // const theme = useColorScheme()
-  const headerHeight = useHeaderHeight()
-  const styles = makeStyles()
+  const theme = useColorScheme();
+  const headerHeight = useHeaderHeight();
+  const tabBarHeight = useBottomTabBarHeight();
+  const styles = makeStyles();
 
   // Contexts
   const weather = useContext(WeatherContext);
   const forecast = weather.hourlyForecast;
 
   // States
-  const [refreshing, setRefreshing] = useState(false)
-  // const [searchQuery, setSearchQuery] = useState<string>('');
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchBarBottom, setSearchBarBottom] = useState<number>(tabBarHeight)
 
 
   useEffect(() => {
-    weather.getHourlyForecastAsync()
+    weather.getHourlyForecastAsync();
   }, [])
 
   const reload = useCallback(() => {
@@ -60,23 +65,32 @@ export default function ({ navigation }: RootTabScreenProps<'HourlyTab'>) {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        // keyboardVerticalOffset={useHeaderHeight()}
+        keyboardVerticalOffset={-tabBarHeight}
         style={{ flex: 1 }}
       >
+        {/* <GradientOverlay /> */}
+
         <FlatList
-          contentContainerStyle={[styles.container, { paddingTop: headerHeight }]}
+          contentContainerStyle={[styles.container, {}]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
           data={forecast?.list}
           renderItem={({ item, index, separators }) => <HourForecastCard forecast={forecast} index={index} />}
           ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
         />
 
+        <LinearGradient
+          colors={[Colors[theme].background + '00', Colors[theme].background + '99', Colors[theme].background]}
+          style={{ zIndex: 11, marginTop: -3 * tabBarHeight, paddingVertical: tabBarHeight }}
+        >
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Current Location"
+          />
+        </LinearGradient>
 
-        {/* <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder="Current Location"
-        /> */}
+
+
 
       </KeyboardAvoidingView >
 

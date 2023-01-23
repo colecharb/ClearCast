@@ -7,18 +7,22 @@ import SearchBar from '../components/SearchBar';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import { WeatherContext } from '../contexts/Weather';
-import wait, { refreshDelay, waitTime } from '../utils/wait';
+import { refreshDelay } from '../utils/wait';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
 import Layout from '../constants/Layout';
-import HourForecastCard from '../components/HourForecastCard';
+
 import DayForecastCard from '../components/DayForecastCard';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import GradientOverlay from '../components/GradientOverlay';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
 
-  // const theme = useColorScheme()
+  const theme = useColorScheme()
   const headerHeight = useHeaderHeight()
+  const tabBarHeight = useBottomTabBarHeight()
   const styles = makeStyles()
 
   // Contexts
@@ -27,7 +31,7 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
 
   // States
   const [refreshing, setRefreshing] = useState(false)
-  // const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
 
   useEffect(() => {
@@ -51,7 +55,7 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
     }
   }, [forecast?.city])
 
-  // renderCount.current += 1;
+
 
   if (weather.errorMessage) return (<Text>{weather.errorMessage}</Text>)
 
@@ -61,11 +65,14 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        // keyboardVerticalOffset={useHeaderHeight()}
+        keyboardVerticalOffset={-tabBarHeight}
         style={{ flex: 1 }}
       >
+
+
+
         <FlatList
-          contentContainerStyle={[styles.container, { paddingTop: headerHeight }]}
+          contentContainerStyle={[styles.container, { flex: 1, paddingTop: headerHeight }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
           data={forecast?.list}
           renderItem={({ item, index, separators }) => <DayForecastCard forecast={forecast} index={index} />}
@@ -73,13 +80,23 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
         />
 
 
-        {/* <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder="Current Location"
-        /> */}
+        {/* <View style={{ zIndex: Layout.gradientOverlayZIndex + 1, position: 'relative', bottom: 0, backgroundColor: 'transparent' }}> */}
+        <LinearGradient
+          colors={[Colors[theme].background + '00', Colors[theme].background + '99', Colors[theme].background]}
+          style={{ zIndex: 11, marginTop: -3 * tabBarHeight, paddingVertical: tabBarHeight }}
+        >
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Current Location"
+          />
+        </LinearGradient>
 
-      </KeyboardAvoidingView >
+
+        {/* </View> */}
+
+
+      </KeyboardAvoidingView>
 
     </ScreenContainer >
 
