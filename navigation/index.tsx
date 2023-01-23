@@ -4,7 +4,7 @@
  *
  */
 import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
@@ -55,7 +55,7 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+  const theme = useColorScheme();
   const styles = makeStyles();
 
   return (
@@ -70,10 +70,20 @@ function BottomTabNavigator() {
         // headerShown: false,
         headerTransparent: true,
 
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: Colors[theme].tint,
+        tabBarInactiveTintColor: Colors[theme].light,
         tabBarStyle: styles.navigationTabBar,
         tabBarShowLabel: false
       }}>
+
+      <BottomTab.Screen
+        name="DailyTab"
+        component={DailyForecastScreen}
+        options={{
+          title: 'Daily',
+          tabBarIcon: ({ color }) => <TabBarIcon name="list-ul" color={color} />,
+        }}
+      />
       <BottomTab.Screen
         name="HourlyTab"
         component={HourlyForecastScreen}
@@ -96,14 +106,6 @@ function BottomTabNavigator() {
           //   </Pressable>
           // ),
         })}
-      />
-      <BottomTab.Screen
-        name="DailyTab"
-        component={DailyForecastScreen}
-        options={{
-          title: 'Daily',
-          tabBarIcon: ({ color }) => <TabBarIcon name="list-ul" color={color} />,
-        }}
       />
     </BottomTab.Navigator>
   );
@@ -132,9 +134,10 @@ const makeStyles = () => {
         color: Colors[theme].text,
       },
       navigationTabBar: {
-        backgroundColor: 'transparent',
+        backgroundColor: Colors[theme].background + '00',
         borderTopWidth: 0,
-        // height: 0,
+        // marginTop: -100,
+        // height: 100,
         position: 'absolute'
       }
     })
