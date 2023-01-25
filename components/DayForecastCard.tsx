@@ -4,6 +4,7 @@ import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import useColorScheme from "../hooks/useColorScheme";
 import { DailyForecast } from "../types";
+import emojiFromIcon from "../utils/emojiFromIcon";
 import Card from "./Card";
 import { Text, View } from "./Themed";
 
@@ -26,14 +27,17 @@ export default function ({ forecast, index }: { forecast: DailyForecast | undefi
     <Card>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text style={{ flex: 1, textAlign: 'center' }}>{index === 0 ? 'Today' : day}</Text>
+        <View style={{ flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
+          <Text style={[styles.dayText, { flex: 1, textAlign: 'center' }]}>{index === 0 ? 'Today' : day}</Text>
+          <Text style={[styles.emoji, { textAlign: 'right' }]}>{emojiFromIcon(dayForecast.weather[0].icon)}</Text>
+        </View>
 
-        <View style={{ flex: 1.5, height: 45, marginVertical: -16, alignItems: 'center' }}>
+        {/* <View style={{ flex: 1.5, height: 45, marginVertical: -16, alignItems: 'center' }}>
           <Image
             style={styles.weatherIcon}
             source={{ uri: `https://openweathermap.org/img/wn/${dayForecast.weather[0].icon}@4x.png` }}
           />
-        </View>
+        </View> */}
 
 
         {/* <Text>L {dayForecast.temp.min.toFixed(0)}˚</Text>
@@ -80,12 +84,19 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
 const makeStyles = () => {
   const theme = useColorScheme()
   return StyleSheet.create({
+    dayText: {
+      fontSize: 20,
+      flexWrap: 'nowrap',
+    },
+    emoji: {
+      fontSize: 30,
+    },
     weatherIcon: {
       aspectRatio: 1,
       height: 45
     },
     intervalContainer: {
-      flex: 5,
+      flex: 6,
       height: '100%',
       flexDirection: 'row',
       backgroundColor: Colors[theme].subtle,
@@ -99,6 +110,7 @@ const makeStyles = () => {
       borderWidth: Layout.borderWidth
     },
     intervalTemp: {
+      fontSize: 14,
       fontWeight: 'bold'
     }
   })
