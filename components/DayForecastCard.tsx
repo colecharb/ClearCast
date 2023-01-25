@@ -65,14 +65,14 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
     <View style={styles.intervalContainer}>
       <View style={{ flex: low - minLow }} />
 
-      <View style={[styles.intervalTempContainer, { borderColor: '#cff7' }]}>
+      <View style={[styles.intervalTempContainer, { backgroundColor: '#adf5' }]}>
         <Text style={styles.intervalTemp}>{low.toFixed(0)}˚</Text>
       </View>
 
 
       <View style={{ flex: high - low }} />
 
-      <View style={[styles.intervalTempContainer, { borderColor: '#fc58' }]}>
+      <View style={[styles.intervalTempContainer, { backgroundColor: '#ec95' }]}>
         <Text style={styles.intervalTemp}>{high.toFixed(0)}˚</Text>
       </View>
 
@@ -85,16 +85,16 @@ const makeStyles = () => {
   const theme = useColorScheme()
   return StyleSheet.create({
     dayText: {
-      fontSize: 20,
+      fontSize: 18,
       flexWrap: 'nowrap',
     },
     emoji: {
       fontSize: 30,
     },
-    weatherIcon: {
-      aspectRatio: 1,
-      height: 45
-    },
+    // weatherIcon: {
+    //   aspectRatio: 1,
+    //   height: 45
+    // },
     intervalContainer: {
       flex: 6,
       height: '100%',
@@ -104,13 +104,15 @@ const makeStyles = () => {
     },
     intervalTempContainer: {
       justifyContent: 'center',
+      alignItems: 'center',
       padding: Layout.margin / 2,
-      borderColor: Colors[theme].light,
+      // borderColor: Colors[theme].light,
       borderRadius: Layout.borderRadius - Layout.margin,
-      borderWidth: Layout.borderWidth
+      // borderWidth: Layout.borderWidth,
+      aspectRatio: 1.3
     },
     intervalTemp: {
-      fontSize: 14,
+      fontSize: 16,
       fontWeight: 'bold'
     }
   })
