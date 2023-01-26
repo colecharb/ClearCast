@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "clearcast",
     "name": "ClearCast",
     "slug": "ClearCast",
     "version": "1.0.0",
