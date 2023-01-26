@@ -11,11 +11,11 @@ import { refreshDelay } from '../utils/wait';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
-import Layout from '../constants/Layout';
 
 import DayForecastCard from '../components/DayForecastCard';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LinearGradient } from 'expo-linear-gradient';
+import Layout from '../constants/Layout';
 
 export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
 
@@ -71,9 +71,18 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
 
 
         <FlatList
-          contentContainerStyle={[styles.container, { flex: 1 }]}
-          contentInset={{ top: headerHeight, left: 0, right: 0, bottom: 3.5 * tabBarHeight }}
-          scrollIndicatorInsets={{}}
+          contentContainerStyle={[
+            styles.container,
+            { paddingTop: headerHeight, paddingBottom: tabBarHeight * 2.5 }
+          ]}
+          style={{ flex: 1 }}
+          // contentInset={{ top: headerHeight, left: 0, right: 0, bottom: 0 }}
+          // initialScrollIndex={1}
+          // getItemLayout={(data, index) => ({
+          //   length: styles,
+          //   offset: Layout.margin,
+          //   index:
+          // })}
           showsVerticalScrollIndicator={false}
           automaticallyAdjustContentInsets={false}
           automaticallyAdjustsScrollIndicatorInsets={false}
@@ -88,9 +97,11 @@ export default function ({ navigation }: RootTabScreenProps<'DailyTab'>) {
         <LinearGradient
           colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
           locations={[0, 0.3, 1]}
+          // style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
           style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
         >
           <SearchBar
+            containerStyle={{ height: tabBarHeight }}
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Current Location"
