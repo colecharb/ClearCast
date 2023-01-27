@@ -48,6 +48,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   return (
     <Card>
       <Pressable
+        hitSlop={Layout.margin}
         onPress={() => {
           setShowHours(!showHours)
           console.log(showHours);
@@ -152,6 +153,8 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
 
 const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number, low: number, temp: number, high: number, maxHigh: number }) => {
   const styles = makeStyles()
+  // todo: figure out what this stretch factor should be, and where it should go. 
+  const STRETCH_FACTOR = 2.2
 
   return (
     <View style={styles.intervalContainer}>
@@ -159,7 +162,7 @@ const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number
 
       {/* <View style={styles.intervalExtremeContainer} />
       <View style={[{ marginRight: -50, borderWidth: 2, borderColor: 'red' }]} /> */}
-      <View style={[styles.intervalContainerHighlight, { flex: high - low }]}>
+      <View style={[styles.intervalContainerHighlight, { flex: (high - low) * STRETCH_FACTOR }]}>
 
         <View style={{ flex: temp - low }} />
 

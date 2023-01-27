@@ -72,7 +72,7 @@ function BottomTabNavigator() {
         headerTransparent: true,
 
         tabBarActiveTintColor: Colors[theme].tint,
-        tabBarInactiveTintColor: Colors[theme].light,
+        tabBarInactiveTintColor: Colors[theme].medium,
         tabBarStyle: styles.navigationTabBar,
         tabBarShowLabel: false
       }}>
