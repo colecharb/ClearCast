@@ -32,7 +32,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   const hoursThisDay = weather.hourlyForecast?.list.filter(
     hourInterval => {
       const hourDate = new Date(hourInterval.dt * 1000)
-      console.log(hourDate.getDate(), date.getDate());
+      // console.log(hourDate.getDate(), date.getDate());
       return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0))
     }
   )
@@ -55,8 +55,8 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         hitSlop={Layout.margin}
         onPress={() => {
           setShowHours(!showHours)
-          console.log(showHours);
-          console.log(hoursThisDay)
+          // console.log(showHours);
+          // console.log(hoursThisDay)
         }}
       >
 
