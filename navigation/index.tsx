@@ -17,7 +17,8 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import HourlyForecastScreen from '../screens/HourlyForecastScreen';
-import DailyForecastScreen from '../screens/DailyForecastScreen';
+import DailyForecastScreen from '../screens/ClearCastScreen';
+import ClearCastScreen from '../screens/ClearCastScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const theme = useColorScheme()
@@ -60,7 +61,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="DailyTab"
+      initialRouteName="ClearCast"
       screenOptions={{
         headerTitleStyle: styles.navigationHeaderTitle,
         headerStyle: styles.navigationHeader,
@@ -77,8 +78,8 @@ function BottomTabNavigator() {
       }}>
 
       <BottomTab.Screen
-        name="DailyTab"
-        component={DailyForecastScreen}
+        name="ClearCast"
+        component={ClearCastScreen}
         options={{
           title: 'ClearCast',
           tabBarIcon: ({ color }) => <TabBarIcon name="list-ul" color={color} />,

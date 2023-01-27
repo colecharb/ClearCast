@@ -51,12 +51,13 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     `?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`
   )
   const HOURLY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/hourly`
-  const makeHourlyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 24) => (
+  const makeHourlyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 96) => (
     `?lat=${lat}&lon=${lon}&appid=${API_KEY}&cnt=${cnt}&units=${units}`
   )
   const DAILY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/daily`
-  const makeDailyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 14) => (
+  const makeDailyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 5) => (
     `?lat=${lat}&lon=${lon}&appid=${API_KEY}&cnt=${cnt}&units=${units}`
+
   )
 
   async function getCurrentWeatherAsync() {

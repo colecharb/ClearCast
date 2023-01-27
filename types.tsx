@@ -25,7 +25,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >;
 
 export type RootTabParamList = {
-  DailyTab: undefined;
+  ClearCast: undefined;
   SettingsTab: undefined;
 };
 
@@ -85,6 +85,7 @@ export type Weather = {
 }
 
 export type HourInterval = {
+  "__typename": "HourInterval",
   "dt": number,
   "main": {
     "temp": number,
@@ -118,6 +119,7 @@ export type HourInterval = {
 }
 
 export type HourlyForecast = {
+  "__typename": "HourlyForecast",
   "cod": string,
   "message": number,
   "cnt": number,
@@ -142,6 +144,7 @@ export type HourlyForecast = {
 }
 
 export type DayInterval = {
+  "__typename": "DayInterval",
   "dt": number,
   "sunrise": number,
   "sunset": number,
@@ -178,6 +181,7 @@ export type DayInterval = {
 }
 
 export type DailyForecast = {
+  "__typename": "DailyForecast",
   "city": {
     "id": number,
     "name": string,
