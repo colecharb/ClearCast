@@ -27,13 +27,17 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   const date = new Date(dayInterval.dt * 1000)
   const day = date.toLocaleDateString(navigator.language, { weekday: 'short' })
 
+  // filter hours:
+  // only want this day and only want evey two hours
   const hoursThisDay = weather.hourlyForecast?.list.filter(
     hourInterval => {
       const hourDate = new Date(hourInterval.dt * 1000)
       console.log(hourDate.getDate(), date.getDate());
-      return (hourDate.getDate() === date.getDate())
+      return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0))
     }
   )
+
+
 
   const renderHourForecast = ({ item }: { item: HourInterval }) => (
     <HourForecastCard
@@ -60,7 +64,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
           <View style={{ flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
-            <Text style={[styles.dayText, { flex: 1, textAlign: 'center' }]}>{index === 0 ? 'Today' : day}</Text>
+            <Text style={[styles.dayText, { flex: 1, textAlign: 'left' }]}>{index === 0 ? 'Today' : day}</Text>
             <Text style={[styles.emoji, { textAlign: 'right' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
 
           </View>
@@ -80,7 +84,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
       {showHours ? (
         <FlatList
-          style={{ marginTop: Layout.margin / 2, marginBottom: -1.5 * Layout.margin }}
+          style={{ marginTop: Layout.margin / 3, marginBottom: 0 }}
           scrollEnabled={false}
           data={hoursThisDay}
           renderItem={renderHourForecast}
@@ -125,14 +129,14 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
   const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' })
 
   return (
-    <Card style={{ paddingHorizontal: 0, paddingVertical: Layout.margin / 2 }}>
+    <View style={{ marginVertical: Layout.margin / 4, height: 35 }}>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
         <View style={{ flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
-          <Text style={[styles.dayText, { flex: 1, textAlign: 'right', paddingHorizontal: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
-          <Text style={[styles.emoji, { textAlign: 'right' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
+          <Text style={[styles.hourText, { flex: 1, textAlign: 'right', paddingHorizontal: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
+          <Text style={styles.emoji}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
 
         </View>
 
@@ -147,7 +151,7 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
         {/* <Text>{forecastInterval.main.temp.toFixed(0)}˚</Text> */}
 
       </View>
-    </Card>
+    </View>
   )
 }
 
@@ -167,7 +171,7 @@ const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number
         <View style={{ flex: temp - low }} />
 
         <View style={[styles.intervalTempContainer]}>
-          <Text style={styles.intervalTemp}>{temp.toFixed(0)}˚</Text>
+          <Text style={[styles.intervalTemp, styles.smallText]}>{temp.toFixed(0)}˚</Text>
         </View>
 
         <View style={{ flex: high - temp }} />
@@ -188,10 +192,17 @@ const makeStyles = () => {
   return StyleSheet.create({
     dayText: {
       fontSize: 18,
-      flexWrap: 'nowrap',
+    },
+    hourText: {
+      fontSize: 16,
+    },
+    smallText: {
+      fontSize: 12,
     },
     emoji: {
+      zIndex: 10,
       fontSize: 30,
+      lineHeight: 35,
     },
     // weatherIcon: {
     //   aspectRatio: 1,
