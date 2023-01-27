@@ -44,6 +44,8 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast>()
   const [dailyForecast, setDailyForecast] = useState<DailyForecast>()
 
+
+  // TODO! hide this key from the frontend; use Expo secrets?
   const API_KEY = 'f82f1ad0af0d696e1c657915946d75c2'
 
   const CURRENT_WEATHER_URL = `https://pro.openweathermap.org/data/2.5/weather`
