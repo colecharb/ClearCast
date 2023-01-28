@@ -14,7 +14,7 @@ export default (icon: string) => {
         emoji = '☀️';
         break;
       } else {
-        emoji = '🌕';
+        emoji = '🌙';
         break;
       }
     case '02':
@@ -22,7 +22,7 @@ export default (icon: string) => {
         emoji = '🌤️';
         break;
       } else {
-        emoji = '🌕';
+        emoji = '🌙';
         break;
       }
     case '03':

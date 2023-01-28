@@ -177,7 +177,8 @@ export type DayInterval = {
   "gust": number,
   "clouds": number,
   "pop": number,
-  "rain": number
+  "rain": number,
+  "snow": number,
 }
 
 export type DailyForecast = {

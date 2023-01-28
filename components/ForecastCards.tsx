@@ -12,6 +12,9 @@ import { Text, View } from "./Themed";
 
 export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
 
+
+  const theme = useColorScheme();
+
   // for showing or hiding the hours view
   const [showHours, setShowHours] = useState<boolean>(false)
 
@@ -37,6 +40,8 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
     }
   )
 
+  if (hoursThisDay?.length === 0) return null
+
 
 
   const renderHourForecast = ({ item }: { item: HourInterval }) => (
@@ -60,21 +65,33 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         }}
       >
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
-          <View style={{ flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
+          <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
-            <Text style={[styles.dayText, { flex: 1, textAlign: 'left' }]}>{index === 0 ? 'Today' : day}</Text>
-            <Text style={[styles.emoji, { textAlign: 'right' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
+            <Text style={[styles.dayText, { flex: 4, textAlign: 'right', paddingHorizontal: Layout.margin }]}>{index === 0 ? 'Today' : day}</Text>
+            <Text style={[styles.emojiLg, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
+            <Text style={[styles.statsText, { flex: 3 }]}>{(dayInterval.pop * 100).toFixed(0)}%💧</Text>
 
           </View>
 
-          <LowHighTempInterval
-            minLow={dailyForecast.minLow}
-            low={dayInterval.temp.min}
-            high={dayInterval.temp.max}
-            maxHigh={dailyForecast.maxHigh}
-          />
+          <View style={styles.rightSideContainer}>
+            <View style={{ flexDirection: 'row', marginBottom: Layout.margin / 2 }}>
+
+
+              <Text style={[styles.statsText, { flex: 1, textAlign: 'center', color: Colors[theme].medium }]}>{dayInterval.weather[0].description}</Text>
+
+            </View>
+
+
+            <LowHighTempInterval
+              minLow={dailyForecast.minLow}
+              low={dayInterval.temp.min}
+              high={dayInterval.temp.max}
+              maxHigh={dailyForecast.maxHigh}
+            />
+          </View>
+
 
           {/* <Text>{forecastInterval.main.temp.toFixed(0)}˚</Text> */}
 
@@ -84,7 +101,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
       {showHours ? (
         <FlatList
-          style={{ marginTop: Layout.margin / 3, marginBottom: 0 }}
+          style={{ marginTop: Layout.margin / 4, marginBottom: -Layout.margin / 4 }}
           scrollEnabled={false}
           data={hoursThisDay}
           renderItem={renderHourForecast}
@@ -129,17 +146,17 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
   const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' })
 
   return (
-    <View style={{ marginVertical: Layout.margin / 4, height: 35 }}>
-
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+    <View style={{ marginVertical: Layout.margin / 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
         <View style={{ flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
-          <Text style={[styles.hourText, { flex: 1, textAlign: 'right', paddingHorizontal: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
-          <Text style={styles.emoji}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
+        <Text style={[styles.hourText, { flex: 4, textAlign: 'right', paddingHorizontal: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
+        <Text style={[styles.emojiSm, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
+        <Text style={[styles.statsText, { flex: 3 }]}>{(hourInterval.pop * 100).toFixed(0)}%</Text>
 
         </View>
 
+      <View style={styles.rightSideContainer}>
         <HourTempInterval
           minLow={minLow}
           low={low}
@@ -147,10 +164,11 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
           high={high}
           maxHigh={maxHigh}
         />
+      </View>
+
 
         {/* <Text>{forecastInterval.main.temp.toFixed(0)}˚</Text> */}
 
-      </View>
     </View>
   )
 }
@@ -171,7 +189,7 @@ const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number
         <View style={{ flex: temp - low }} />
 
         <View style={[styles.intervalTempContainer]}>
-          <Text style={[styles.intervalTemp, styles.smallText]}>{temp.toFixed(0)}˚</Text>
+          <Text style={[styles.intervalTemp, styles.hourText]}>{temp.toFixed(0)}˚</Text>
         </View>
 
         <View style={{ flex: high - temp }} />
@@ -197,12 +215,21 @@ const makeStyles = () => {
       fontSize: 16,
     },
     smallText: {
-      fontSize: 12,
+      fontSize: 14,
     },
-    emoji: {
-      zIndex: 10,
-      fontSize: 30,
-      lineHeight: 35,
+    emojiLg: {
+      fontSize: 40,
+      lineHeight: 45,
+    },
+    emojiSm: {
+      fontSize: 20,
+      lineHeight: 25,
+    },
+    statsText: {
+      fontSize: 14,
+      // flex: 1,
+      // marginHorizontal: Layout.margin / 2,
+      textAlign: 'center',
     },
     // weatherIcon: {
     //   aspectRatio: 1,
@@ -210,8 +237,13 @@ const makeStyles = () => {
     // },
     intervalContainer: {
       flex: 6,
-      height: '100%',
+      // height: '100%',
       flexDirection: 'row',
+      alignItems: 'center',
+    },
+    rightSideContainer: {
+      flex: 3,
+      // height: '100%',
     },
     intervalContainerHighlight: {
       backgroundColor: Colors[theme].subtle,
@@ -238,7 +270,7 @@ const makeStyles = () => {
     },
     intervalTemp: {
       fontSize: 16,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     }
   })
 }
