@@ -85,7 +85,7 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
 
         {/* <View style={{ zIndex: Layout.gradientOverlayZIndex + 1, position: 'relative', bottom: 0, backgroundColor: 'transparent' }}> */}
         <LinearGradient
-          pointerEvents='none'
+          pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
           locations={[0, 0.3, 1]}
           // style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
