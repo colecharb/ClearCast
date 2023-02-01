@@ -9,12 +9,13 @@ export type Coordinates = {
 
 export type WeatherContextData = {
   coordinates: Coordinates | undefined,
+  getCoordinatesAsync: () => Promise<void>,
   currentWeather: Weather | undefined,
-  getCurrentWeatherAsync: () => Promise<void>,
+  // getCurrentWeatherAsync: () => Promise<void>,
   hourlyForecast: HourlyForecast | undefined,
-  getHourlyForecastAsync: () => Promise<void>,
+  // getHourlyForecastAsync: () => Promise<void>,
   dailyForecast: DailyForecast | undefined,
-  getDailyForecastAsync: () => Promise<void>,
+  // getDailyForecastAsync: () => Promise<void>,
   errorMessage: string | undefined,
 };
 
@@ -42,8 +43,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // console.log('AuthProvider has been called.');
   const [errorMessage, setErrorMessage] = useState<string>()
 
-  // location hooks
-  // const [locationWatcher, setLocationWatcher] = useState<Location.LocationSubscription>();
+  // hooks
   const [coordinates, setCoordinates] = useState<Coordinates>()
   const [currentWeather, setCurrentWeather] = useState<Weather>()
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast>()
@@ -67,7 +67,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   )
 
-  async function getCurrentWeatherAsync() {
+  async function getCoordinatesAsync() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       setErrorMessage('Permission to access location was denied');
@@ -78,73 +78,61 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     }).then((loc: Location.LocationObject) => {
       const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
       setCoordinates(theCoords)
-      fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(theCoords.latitude, theCoords.longitude, 'imperial'))
-        .then((response) => response.json())
-        .then((response) => {
-          setCurrentWeather(response)
-          // console.log('here');
-        })
-        .catch((error) => console.error(error))
-    }).catch((error: string) => {
-      console.log(error);
-    })
+    });
+  }
+
+  async function getCurrentWeatherAsync() {
+    if (!coordinates) return;
+    fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(coordinates.latitude, coordinates.longitude, 'imperial'))
+      .then((response) => response.json())
+      .then((response) => {
+        setCurrentWeather(response)
+        // console.log('here');
+      })
+      .catch((error) => console.error(error))
   }
 
   async function getHourlyForecastAsync() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMessage('Permission to access location was denied');
-      return;
-    }
-    Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced,
-    }).then((loc: Location.LocationObject) => {
-      const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
-      setCoordinates(theCoords)
-      // console.log(loc);
-      fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(theCoords.latitude, theCoords.longitude, 'imperial'))
-        .then((response) => response.json())
-        .then((hourlyForecast) => {
-          setHourlyForecast(addExtremesToHourlyForecast(hourlyForecast))
-          // console.log('here');
-        })
-        .catch((error) => console.error(error))
-    }).catch((error: string) => {
-      console.log(error);
-    })
+    if (!coordinates) return;
+    fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(coordinates.latitude, coordinates.longitude, 'imperial'))
+      .then((response) => response.json())
+      .then((hourlyForecast) => {
+        setHourlyForecast(addExtremesToHourlyForecast(hourlyForecast))
+        // console.log('here');
+      })
+      .catch((error) => console.error(error))
   }
 
   async function getDailyForecastAsync() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMessage('Permission to access location was denied');
-      return;
-    }
-    Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced,
-    }).then((loc: Location.LocationObject) => {
-      const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
-      setCoordinates(theCoords)
-      fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(theCoords.latitude, theCoords.longitude, 'imperial'))
-        .then((response) => response.json())
-        .then((dailyForecast) => {
-          setDailyForecast(addExtremesToDailyForecast(dailyForecast))
-          // console.log('here');
-        })
-        .catch((error) => console.error(error))
-    }).catch((error: string) => {
-      console.log(error);
-    })
+    if (!coordinates) return;
+    fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(coordinates.latitude, coordinates.longitude, 'imperial'))
+      .then((response) => response.json())
+      .then((dailyForecast) => {
+        setDailyForecast(addExtremesToDailyForecast(dailyForecast))
+        // console.log('here');
+      })
+      .catch((error) => console.error(error))
   }
+
+  useEffect(() => {
+    getCoordinatesAsync()
+  }, [])
+
+  useEffect(() => {
+    getCurrentWeatherAsync()
+    getDailyForecastAsync()
+    getHourlyForecastAsync()
+  }, [coordinates])
 
   const weatherContextData = {
     coordinates: coordinates,
+    getCoordinatesAsync: getCoordinatesAsync,
     currentWeather: currentWeather,
-    getCurrentWeatherAsync: getCurrentWeatherAsync,
+    // getCurrentWeatherAsync: getCurrentWeatherAsync,
     hourlyForecast: hourlyForecast,
-    getHourlyForecastAsync: getHourlyForecastAsync,
+    // getHourlyForecastAsync: getHourlyForecastAsync,
     dailyForecast: dailyForecast,
-    getDailyForecastAsync: getDailyForecastAsync,
+    // getDailyForecastAsync: getDailyForecastAsync,
     errorMessage: errorMessage
   }
 
