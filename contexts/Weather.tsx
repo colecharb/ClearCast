@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useRef } from 'react';
 import * as Location from 'expo-location';
 import { DailyForecast, HourlyForecast, Weather } from '../types';
+import { refreshDelay } from '../utils/wait';
 
 export type Coordinates = {
   latitude: number,
@@ -16,6 +17,7 @@ export type WeatherContextData = {
   // getHourlyForecastAsync: () => Promise<void>,
   dailyForecast: DailyForecast | undefined,
   // getDailyForecastAsync: () => Promise<void>,
+  loading: boolean,
   errorMessage: string | undefined,
 };
 
@@ -48,6 +50,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [currentWeather, setCurrentWeather] = useState<Weather>()
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast>()
   const [dailyForecast, setDailyForecast] = useState<DailyForecast>()
+  const [loading, setLoading] = useState<boolean>(false)
 
 
   // TODO! hide this key from the frontend; use Expo secrets?
@@ -129,9 +132,18 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   }, [])
 
   useEffect(() => {
-    getCurrentWeatherAsync()
-    getDailyForecastAsync()
-    getHourlyForecastAsync()
+    async function getWeather() {
+      setLoading(true)
+      await Promise.all([
+        getCurrentWeatherAsync(),
+        getDailyForecastAsync(),
+        getHourlyForecastAsync(),
+        // refreshDelay()
+      ])
+      setLoading(false)
+      console.log('got weather');
+    }
+    getWeather()
   }, [coordinates])
 
   const weatherContextData = {
@@ -143,6 +155,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     // getHourlyForecastAsync: getHourlyForecastAsync,
     dailyForecast: dailyForecast,
     // getDailyForecastAsync: getDailyForecastAsync,
+    loading: loading,
     errorMessage: errorMessage
   }
 
