@@ -11,11 +11,13 @@ export default function SearchBar(
     value,
     onChangeText,
     placeholder = 'Search',
+    onSubmitEditing
   }: {
       containerStyle?: StyleProp<ViewStyle>,
     value: string,
     onChangeText: (s: string) => void,
     placeholder?: string,
+      onSubmitEditing: (() => void) | undefined
   }) {
 
   const colorScheme = useColorScheme()
@@ -37,6 +39,7 @@ export default function SearchBar(
 
       value={value}
       onChangeText={onChangeText}
+      onSubmitEditing={onSubmitEditing}
       placeholder={placeholder}
     />
   )
