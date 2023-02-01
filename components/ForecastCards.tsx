@@ -152,7 +152,7 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
 
         <Text style={[styles.hourText, { flex: 4, textAlign: 'right', paddingHorizontal: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
         <Text style={[styles.emojiSm, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
-        <Text style={[styles.statsText, { flex: 3 }]}>{(hourInterval.pop * 100).toFixed(0)}%</Text>
+        <Text style={[styles.statsText, { flex: 3 }]}>{hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}%` : null}</Text>
 
         </View>
 
@@ -243,7 +243,7 @@ const makeStyles = () => {
     },
     rightSideContainer: {
       flex: 3,
-      // height: '100%',
+      // height: 100,
     },
     intervalContainerHighlight: {
       backgroundColor: Colors[theme].subtle,
@@ -251,6 +251,7 @@ const makeStyles = () => {
       flexDirection: 'row',
     },
     intervalExtremeContainer: {
+      // height: 'auto',
       justifyContent: 'center',
       alignItems: 'center',
       padding: Layout.margin / 2,
@@ -260,6 +261,7 @@ const makeStyles = () => {
       aspectRatio: 1.4
     },
     intervalTempContainer: {
+      // height: 'auto',
       justifyContent: 'center',
       alignItems: 'center',
       padding: Layout.margin / 2,
