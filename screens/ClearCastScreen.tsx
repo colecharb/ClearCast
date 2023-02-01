@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, ScrollView, SectionList } from 'react-native';
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, RefreshControl, ScrollView, SectionList } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
@@ -14,6 +14,7 @@ import makeStyles from '../constants/Styles';
 import { DayForecastCard } from '../components/ForecastCards';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LinearGradient } from 'expo-linear-gradient';
+import Layout from '../constants/Layout';
 
 
 export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
@@ -51,8 +52,13 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
         keyboardVerticalOffset={-tabBarHeight}
         style={{ flex: 1 }}
       >
-
-        <FlatList
+        {weather.loading ? (
+          <ActivityIndicator
+            size='large'
+            style={{ marginTop: headerHeight + Layout.margin }}
+          />
+        ) : (
+          <FlatList
           contentContainerStyle={[
             styles.container,
             { paddingTop: headerHeight, paddingBottom: tabBarHeight * 2.5 }
@@ -73,6 +79,8 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
           renderItem={renderDayForecastCard}
         // ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
         />
+        )}
+
 
 
         {/* <View style={{ zIndex: Layout.gradientOverlayZIndex + 1, position: 'relative', bottom: 0, backgroundColor: 'transparent' }}> */}
