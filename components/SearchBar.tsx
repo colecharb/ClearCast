@@ -36,6 +36,7 @@ export default function SearchBar(
       // showCancel={true}
       // cancelButtonTitle='asdf'
       cancelButtonProps={{ color: Colors[colorScheme].tint, buttonStyle: styles.cancelButton }}
+      returnKeyType='go'
 
       value={value}
       onChangeText={onChangeText}
