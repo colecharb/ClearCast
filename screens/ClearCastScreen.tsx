@@ -34,14 +34,6 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
 
   useCityNameInHeaderTitle(navigation, weather)
 
-  // const refreshWeather = useCallback(() => {
-  //   setRefreshing(true);
-  //   Promise.all([
-  //     refreshDelay(),
-  //     getWeatherAsync(weather)
-  //   ]).then(() => setRefreshing(false));
-  // }, []);
-
   const renderDayForecastCard = ({ index }: { index: number }) => (
     <DayForecastCard
       weather={weather}
@@ -96,6 +88,7 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Current Location"
+            onSubmitEditing={() => weather.getCoordinatesAsync(searchQuery)}
           />
         </LinearGradient>
 
