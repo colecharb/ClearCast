@@ -2,8 +2,13 @@ import React, { createContext, useState, useEffect, useRef } from 'react';
 import * as Location from 'expo-location';
 import { DailyForecast, HourlyForecast, Weather } from '../types';
 
+export type Coordinates = {
+  latitude: number,
+  longitude: number
+}
+
 export type WeatherContextData = {
-  location: React.MutableRefObject<Location.LocationObject | undefined>,
+  coordinates: Coordinates | undefined,
   currentWeather: Weather | undefined,
   getCurrentWeatherAsync: () => Promise<void>,
   hourlyForecast: HourlyForecast | undefined,
@@ -39,7 +44,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   // location hooks
   // const [locationWatcher, setLocationWatcher] = useState<Location.LocationSubscription>();
-  const location = useRef<Location.LocationObject>()
+  const [coordinates, setCoordinates] = useState<Coordinates>()
   const [currentWeather, setCurrentWeather] = useState<Weather>()
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast>()
   const [dailyForecast, setDailyForecast] = useState<DailyForecast>()
@@ -71,10 +76,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.Balanced,
     }).then((loc: Location.LocationObject) => {
-      location.current = loc;
-      // console.log(loc);
-      const { latitude, longitude } = loc.coords;
-      fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(latitude, longitude, 'imperial'))
+      const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
+      setCoordinates(theCoords)
+      fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(theCoords.latitude, theCoords.longitude, 'imperial'))
         .then((response) => response.json())
         .then((response) => {
           setCurrentWeather(response)
@@ -95,10 +99,10 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.Balanced,
     }).then((loc: Location.LocationObject) => {
-      location.current = loc;
+      const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
+      setCoordinates(theCoords)
       // console.log(loc);
-      const { latitude, longitude } = loc.coords;
-      fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(latitude, longitude, 'imperial'))
+      fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(theCoords.latitude, theCoords.longitude, 'imperial'))
         .then((response) => response.json())
         .then((hourlyForecast) => {
           setHourlyForecast(addExtremesToHourlyForecast(hourlyForecast))
@@ -119,10 +123,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.Balanced,
     }).then((loc: Location.LocationObject) => {
-      location.current = loc;
-      // console.log(loc);
-      const { latitude, longitude } = loc.coords;
-      fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(latitude, longitude, 'imperial'))
+      const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
+      setCoordinates(theCoords)
+      fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(theCoords.latitude, theCoords.longitude, 'imperial'))
         .then((response) => response.json())
         .then((dailyForecast) => {
           setDailyForecast(addExtremesToDailyForecast(dailyForecast))
@@ -135,7 +138,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   }
 
   const weatherContextData = {
-    location: location,
+    coordinates: coordinates,
     currentWeather: currentWeather,
     getCurrentWeatherAsync: getCurrentWeatherAsync,
     hourlyForecast: hourlyForecast,
