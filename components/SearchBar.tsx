@@ -33,7 +33,7 @@ export default function SearchBar(
       containerStyle={[styles.searchBarContainer, containerStyle]}
       inputContainerStyle={styles.inputContainer}
       inputStyle={styles.inputStyle}
-      placeholderTextColor={Colors[colorScheme].medium}
+      placeholderTextColor={Colors[colorScheme].text}
       // showCancel={true}
       // cancelButtonTitle='asdf'
       cancelButtonProps={{ color: Colors[colorScheme].tint, buttonStyle: styles.cancelButton }}
@@ -59,12 +59,12 @@ function makeStyles() {
       height: 75
     },
     inputContainer: {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
     inputStyle: {
       backgroundColor: 'transparent',
       color: Colors[theme].text,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     },
     cancelButton: {
       margin: Layout.margin
