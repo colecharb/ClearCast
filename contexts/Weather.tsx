@@ -9,7 +9,7 @@ export type Coordinates = {
 
 export type WeatherContextData = {
   coordinates: Coordinates | undefined,
-  getCoordinatesAsync: () => Promise<void>,
+  getCoordinatesAsync: (address?: string) => Promise<void>,
   currentWeather: Weather | undefined,
   // getCurrentWeatherAsync: () => Promise<void>,
   hourlyForecast: HourlyForecast | undefined,
@@ -67,18 +67,28 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   )
 
-  async function getCoordinatesAsync() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMessage('Permission to access location was denied');
-      return;
-    }
-    Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced,
-    }).then((loc: Location.LocationObject) => {
-      const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
+  async function getCoordinatesAsync(address?: string) {
+    if (address) {
+      const potentialLocations = await Location.geocodeAsync(address)
+      const theCoords: Coordinates = {
+        latitude: potentialLocations[0].latitude,
+        longitude: potentialLocations[0].longitude
+      }
       setCoordinates(theCoords)
-    });
+    } else {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMessage('Permission to access location was denied');
+        return;
+      }
+      Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      }).then((loc: Location.LocationObject) => {
+        const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
+        setCoordinates(theCoords)
+      });
+    }
+
   }
 
   async function getCurrentWeatherAsync() {
