@@ -65,31 +65,35 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         }}
       >
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
           <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
-            <Text style={[styles.dayText, { flex: 4, textAlign: 'right', paddingHorizontal: Layout.margin }]}>{index === 0 ? 'Today' : day}</Text>
+            <Text style={[styles.dayText, { flex: 4, textAlign: 'right', paddingRight: Layout.margin }]}>{index === 0 ? 'Today' : day}</Text>
             <Text style={[styles.emojiLg, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
-            <Text style={[styles.statsText, { flex: 3, opacity: (dayInterval.pop ? undefined : 0.25) }]}>{(dayInterval.pop * 100).toFixed(0)}%💧</Text>
+            <Text style={[styles.statsText, { flex: 3 }]}>{(dayInterval.pop * 100).toFixed(0)}%{'\n'}💧</Text>
 
           </View>
 
           <View style={styles.rightSideContainer}>
-            <View style={{ flexDirection: 'row', marginBottom: Layout.margin / 2 }}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+              {showHours ? (
+                <View style={{ flexDirection: 'row', marginBottom: Layout.margin / 2 }}>
+                  <Text style={[styles.statsText, { flex: 1, textAlign: 'left', color: Colors[theme].medium }]}>{dayInterval.weather[0].description}</Text>
+                </View>
+              ) : (
+                null
+              )}
 
 
-              <Text style={[styles.statsText, { flex: 1, textAlign: 'center', color: Colors[theme].medium }]}>{dayInterval.weather[0].description}</Text>
 
+              <LowHighTempInterval
+                minLow={dailyForecast.minLow}
+                low={dayInterval.temp.min}
+                high={dayInterval.temp.max}
+                maxHigh={dailyForecast.maxHigh}
+              />
             </View>
-
-
-            <LowHighTempInterval
-              minLow={dailyForecast.minLow}
-              low={dayInterval.temp.min}
-              high={dayInterval.temp.max}
-              maxHigh={dailyForecast.maxHigh}
-            />
           </View>
 
 
@@ -148,9 +152,9 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
   return (
     <View style={{ marginVertical: Layout.margin / 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
-        <View style={{ flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
+      <View style={{ height: '100%', flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
-        <Text style={[styles.hourText, { flex: 4, textAlign: 'right', paddingHorizontal: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
+        <Text style={[styles.hourText, { flex: 4, textAlign: 'right', paddingRight: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
         <Text style={[styles.emojiSm, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
         <Text style={[styles.statsText, { flex: 3 }]}>{hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}%` : null}</Text>
 
@@ -176,7 +180,7 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
 const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number, low: number, temp: number, high: number, maxHigh: number }) => {
   const styles = makeStyles()
   // todo: figure out what this stretch factor should be, and where it should go. 
-  const STRETCH_FACTOR = 2.2
+  const STRETCH_FACTOR = 3.6
 
   return (
     <View style={styles.intervalContainer}>
@@ -184,16 +188,17 @@ const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number
 
       {/* <View style={styles.intervalExtremeContainer} />
       <View style={[{ marginRight: -50, borderWidth: 2, borderColor: 'red' }]} /> */}
-      <View style={[styles.intervalContainerHighlight, { flex: (high - low) * STRETCH_FACTOR }]}>
+      <View style={[styles.intervalContainerHighlight, { flex: (high - low) * 3.3 }]}>
 
         <View style={{ flex: temp - low }} />
 
+
         <View style={[styles.intervalTempContainer]}>
-          <Text style={[styles.intervalTemp, styles.hourText]}>{temp.toFixed(0)}˚</Text>
+          <Text style={[styles.intervalTemp]}>{temp.toFixed(0)}˚</Text>
         </View>
 
-        <View style={{ flex: high - temp }} />
 
+        <View style={{ flex: high - temp }} />
 
       </View>
       {/* <View style={[{ marginLeft: -50, borderWidth: 2, borderColor: 'red' }]} />
@@ -212,7 +217,8 @@ const makeStyles = () => {
       fontSize: 18,
     },
     hourText: {
-      fontSize: 16,
+      fontSize: 16
+      // lineHeight: 20
     },
     smallText: {
       fontSize: 14,
@@ -222,8 +228,8 @@ const makeStyles = () => {
       lineHeight: 45,
     },
     emojiSm: {
-      fontSize: 20,
-      lineHeight: 25,
+      fontSize: 25,
+      lineHeight: 30,
     },
     statsText: {
       fontSize: 14,
@@ -236,22 +242,24 @@ const makeStyles = () => {
     //   height: 45
     // },
     intervalContainer: {
-      flex: 6,
-      // height: '100%',
+      // flex: 1,
+      height: 30,
       flexDirection: 'row',
       alignItems: 'center',
     },
     rightSideContainer: {
       flex: 3,
-      // height: 100,
+      justifyContent: 'space-between',
+      // height: '100%',
     },
     intervalContainerHighlight: {
       backgroundColor: Colors[theme].subtle,
       borderRadius: Layout.borderRadius - Layout.margin,
       flexDirection: 'row',
+      // height: '100%'
     },
     intervalExtremeContainer: {
-      // height: 'auto',
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
       padding: Layout.margin / 2,
@@ -261,18 +269,21 @@ const makeStyles = () => {
       aspectRatio: 1.4
     },
     intervalTempContainer: {
-      // height: 'auto',
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
       padding: Layout.margin / 2,
       borderColor: Colors[theme].light,
       borderRadius: Layout.borderRadius - Layout.margin,
       borderWidth: Layout.borderWidth,
-      aspectRatio: 1.4
+      aspectRatio: 1.4,
+      // marginHorizontal: -60
     },
     intervalTemp: {
-      fontSize: 16,
+      fontSize: 14,
+      // lineHeight: 18,
       fontWeight: 'bold',
+      // textAlign: 'center'
     }
   })
 }
