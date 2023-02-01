@@ -25,11 +25,11 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
   const styles = makeStyles();
 
   // weather context
-  const weather = useWeather();
+  const weather = useContext(WeatherContext);
   if (weather.errorMessage) return (<Text>{weather.errorMessage}</Text>);
 
   // States
-  const [refreshing, setRefreshing] = useState(false);
+  // const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   useCityNameInHeaderTitle(navigation, weather)
@@ -110,30 +110,15 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
   );
 }
 
-
-const getWeatherAsync = async (weather: WeatherContextData) => {
-  // const weather = useContext(WeatherContext)
-  weather.getHourlyForecastAsync()
-  weather.getDailyForecastAsync()
-}
-
-const useWeather = () => {
-  const weather = useContext(WeatherContext);
-  useEffect(() => {
-    getWeatherAsync(weather)
-  }, [])
-  return weather
-}
-
-const useRefreshWeather = (weather: WeatherContextData, setRefreshing: React.Dispatch<React.SetStateAction<boolean>>) => {
-  useCallback(() => {
-    setRefreshing(true);
-    Promise.all([
-      refreshDelay(),
-      getWeatherAsync(weather)
-    ]).then(() => setRefreshing(false));
-  }, []);
-}
+// const useRefreshWeather = (weather: WeatherContextData, setRefreshing: React.Dispatch<React.SetStateAction<boolean>>) => {
+//   useCallback(() => {
+//     setRefreshing(true);
+//     Promise.all([
+//       refreshDelay(),
+//       getWeatherAsync(weather)
+//     ]).then(() => setRefreshing(false));
+//   }, []);
+// }
 
 const useCityNameInHeaderTitle = (navigation: any, weather: WeatherContextData) => {
   useEffect(() => {
