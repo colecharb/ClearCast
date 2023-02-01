@@ -95,7 +95,7 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
             containerStyle={{ height: tabBarHeight }}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholder="Search Locations"
+            placeholder="Search"
             onSubmitEditing={() => weather.getCoordinatesAsync(searchQuery)}
           />
         </LinearGradient>
