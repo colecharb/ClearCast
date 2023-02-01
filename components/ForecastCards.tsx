@@ -71,7 +71,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
             <Text style={[styles.dayText, { flex: 4, textAlign: 'right', paddingHorizontal: Layout.margin }]}>{index === 0 ? 'Today' : day}</Text>
             <Text style={[styles.emojiLg, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
-            <Text style={[styles.statsText, { flex: 3 }]}>{(dayInterval.pop * 100).toFixed(0)}%💧</Text>
+            <Text style={[styles.statsText, { flex: 3, opacity: (dayInterval.pop ? undefined : 0.25) }]}>{(dayInterval.pop * 100).toFixed(0)}%💧</Text>
 
           </View>
 
