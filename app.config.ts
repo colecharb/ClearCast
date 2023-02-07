@@ -1,4 +1,5 @@
-{
+import 'dotenv/config'
+export default {
   "expo": {
     "owner": "clearcast",
     "name": "ClearCast",
@@ -30,6 +31,9 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "owmApiKey": process.env.OWM_API_KEY,
     }
   }
 }

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useRef } from 'react';
 import * as Location from 'expo-location';
 import { DailyForecast, HourlyForecast, Weather } from '../types';
-import { refreshDelay } from '../utils/wait';
+import Constants from 'expo-constants';
 
 export type Coordinates = {
   latitude: number,
@@ -52,22 +52,19 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [dailyForecast, setDailyForecast] = useState<DailyForecast>()
   const [loading, setLoading] = useState<boolean>(false)
 
-
-  // TODO! hide this key from the frontend; use Expo secrets?
-  const API_KEY = 'f82f1ad0af0d696e1c657915946d75c2'
+  const OWM_API_KEY = Constants.expoConfig?.extra?.owmApiKey;
 
   const CURRENT_WEATHER_URL = `https://pro.openweathermap.org/data/2.5/weather`
   const makeCurrentWeatherUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric') => (
-    `?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=${units}`
   )
   const HOURLY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/hourly`
   const makeHourlyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 96) => (
-    `?lat=${lat}&lon=${lon}&appid=${API_KEY}&cnt=${cnt}&units=${units}`
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
   )
   const DAILY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/daily`
   const makeDailyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 5) => (
-    `?lat=${lat}&lon=${lon}&appid=${API_KEY}&cnt=${cnt}&units=${units}`
-
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
   )
 
   async function getCoordinatesAsync(address?: string) {
