@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+import { Text, TextInput } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WeatherProvider } from './contexts/Weather';
 
@@ -9,7 +10,14 @@ import Navigation from './navigation';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+  const theme = useColorScheme();
+
+  Text.defaultProps = Text.defaultProps || {};
+  Text.defaultProps.allowFontScaling = false;
+
+  TextInput.defaultProps = TextInput.defaultProps || {};
+  TextInput.defaultProps.allowFontScaling = false;
+
 
   if (!isLoadingComplete) {
     return null;
@@ -17,7 +25,7 @@ export default function App() {
     return (
       <WeatherProvider>
         <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
+          <Navigation colorScheme={theme} />
           <StatusBar />
         </SafeAreaProvider>
       </WeatherProvider>
