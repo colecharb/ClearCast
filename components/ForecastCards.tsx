@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import { FlatList, Image, LayoutAnimation, Pressable, StyleSheet } from "react-native";
+import { FlatList, LayoutAnimation, Pressable, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import { WeatherContext, WeatherContextData } from "../contexts/Weather";
 import useColorScheme from "../hooks/useColorScheme";
-import { DailyForecast, HourlyForecast, DayInterval, HourInterval } from "../types";
+import { DailyForecast, HourInterval } from "../types";
 import emojiFromIcon from "../utils/emojiFromIcon";
 import Card from "./Card";
 import { Text, View } from "./Themed";
@@ -13,6 +13,7 @@ import { Text, View } from "./Themed";
 export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
 
   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  // LayoutAnimation.configureNext(LayoutAnimation.create(200, 'easeInEaseOut', 'opacity'));
 
   const theme = useColorScheme();
   const styles = makeStyles();

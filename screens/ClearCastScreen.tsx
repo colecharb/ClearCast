@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, RefreshControl, ScrollView, SectionList } from 'react-native';
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, LayoutAnimation, Platform, RefreshControl, ScrollView, SectionList } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
 import { Text, View } from '../components/Themed';
-import { DailyForecast, HourInterval, HourlyForecast, RootTabScreenProps } from '../types';
+import { DailyForecast, HourInterval, HourlyForecast, RootStackScreenProps, RootTabScreenProps } from '../types';
 import { WeatherContext, WeatherContextData } from '../contexts/Weather';
 import { refreshDelay } from '../utils/wait';
 import Colors from '../constants/Colors';
@@ -16,13 +16,12 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LinearGradient } from 'expo-linear-gradient';
 import Layout from '../constants/Layout';
 
-
-export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
+export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
   // hooks
   const theme = useColorScheme();
   const headerHeight = useHeaderHeight();
-  const tabBarHeight = useBottomTabBarHeight();
+  const tabBarHeight = 100 //useBottomTabBarHeight();
   const styles = makeStyles();
 
   // weather context
@@ -49,7 +48,7 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={-tabBarHeight}
+        keyboardVerticalOffset={-tabBarHeight / 2}
         style={{ flex: 1 }}
       >
         {weather.loading ? (
@@ -61,7 +60,7 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
           <FlatList
           contentContainerStyle={[
             styles.container,
-            { paddingTop: headerHeight, paddingBottom: tabBarHeight * 2.5 }
+                { paddingTop: headerHeight, paddingBottom: tabBarHeight * 2.5 }
           ]}
           style={{ flex: 1 }}
           // contentInset={{ top: headerHeight, left: 0, right: 0, bottom: 0 }}
@@ -88,11 +87,10 @@ export default function ({ navigation }: RootTabScreenProps<'ClearCast'>) {
           pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
           locations={[0, 0.3, 1]}
-          // style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
-          style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
+          style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight / 2, paddingTop: tabBarHeight / 2 }}
         >
           <SearchBar
-            containerStyle={{ height: tabBarHeight }}
+            // containerStyle={{ height: tabBarHeight }}
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Search"

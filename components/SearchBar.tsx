@@ -4,7 +4,6 @@ import useColorScheme from "../hooks/useColorScheme"
 import Colors from "../constants/Colors"
 import { StyleProp, StyleSheet, ViewStyle } from "react-native"
 import Layout from "../constants/Layout"
-import { FontAwesome } from "@expo/vector-icons"
 
 export default function SearchBar(
   {
@@ -35,7 +34,7 @@ export default function SearchBar(
       inputStyle={styles.inputStyle}
       placeholderTextColor={Colors[colorScheme].text}
       // showCancel={true}
-      // cancelButtonTitle='asdf'
+      cancelButtonTitle='Cancel'
       cancelButtonProps={{ color: Colors[colorScheme].tint, buttonStyle: styles.cancelButton }}
       returnKeyType='go'
 
@@ -43,7 +42,7 @@ export default function SearchBar(
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       // onClear={onSubmitEditing}
-      onCancel={onSubmitEditing}
+      // onCancel={onSubmitEditing}
       placeholder={placeholder}
     />
   )
