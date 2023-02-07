@@ -14,34 +14,32 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
 
   const theme = useColorScheme();
-
-  // for showing or hiding the hours view
-  const [showHours, setShowHours] = useState<boolean>(false)
-
-  const weather = useContext(WeatherContext)
-
-  if (!dailyForecast) return null
-
   const styles = makeStyles();
 
-  const dayInterval = dailyForecast.list[index];
-  if (!dayInterval) return null
+  const weather = useContext(WeatherContext);
 
-  const date = new Date(dayInterval.dt * 1000)
-  const day = date.toLocaleDateString(navigator.language, { weekday: 'short' })
+  // for showing or hiding the hours view
+  const [showHours, setShowHours] = useState<boolean>(false);
+
+  if (!dailyForecast) return null;
+
+  const dayInterval = dailyForecast.list[index];
+  if (!dayInterval) return null;
+
+  const date = new Date(dayInterval.dt * 1000);
+  const day = date.toLocaleDateString(navigator.language, { weekday: 'short' });
 
   // filter hours:
   // only want this day and only want evey two hours
   const hoursThisDay = weather.hourlyForecast?.list.filter(
     hourInterval => {
-      const hourDate = new Date(hourInterval.dt * 1000)
+      const hourDate = new Date(hourInterval.dt * 1000);
       // console.log(hourDate.getDate(), date.getDate());
-      return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0))
+      return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0));
     }
-  )
+  );
 
-  if (hoursThisDay?.length === 0) return null
-
+  if (hoursThisDay?.length === 0) return null;
 
 
   const renderHourForecast = ({ item }: { item: HourInterval }) => (
@@ -52,7 +50,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
       high={dayInterval.temp.max}
       maxHigh={dailyForecast.maxHigh}
     />
-  )
+  );
 
   return (
     <Card>
@@ -65,7 +63,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         }}
       >
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
           <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
@@ -115,11 +113,11 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
       )}
 
     </Card>
-  )
-}
+  );
+};
 
 const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, low: number, high: number, maxHigh: number }) => {
-  const styles = makeStyles()
+  const styles = makeStyles();
 
   return (
     <View style={[styles.intervalContainer, styles.intervalContainerHighlight]}>
@@ -138,16 +136,16 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
 
       <View style={{ flex: maxHigh - high }} />
     </View>
-  )
-}
+  );
+};
 
 export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: { hourInterval: HourInterval, minLow: number, low: number, high: number, maxHigh: number }) {
 
-  const styles = makeStyles()
-  const theme = useColorScheme()
+  const styles = makeStyles();
+  const theme = useColorScheme();
 
-  const date = new Date(hourInterval.dt * 1000)
-  const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' })
+  const date = new Date(hourInterval.dt * 1000);
+  const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' });
 
   return (
     <View style={{ marginVertical: Layout.margin / 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -174,13 +172,13 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
         {/* <Text>{forecastInterval.main.temp.toFixed(0)}˚</Text> */}
 
     </View>
-  )
-}
+  );
+};
 
 const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number, low: number, temp: number, high: number, maxHigh: number }) => {
-  const styles = makeStyles()
+  const styles = makeStyles();
   // todo: figure out what this stretch factor should be, and where it should go. 
-  const STRETCH_FACTOR = 3.6
+  const STRETCH_FACTOR = 3.6;
 
   return (
     <View style={styles.intervalContainer}>
@@ -207,11 +205,11 @@ const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number
       <View style={{ flex: maxHigh - high }} />
     </View>
 
-  )
-}
+  );
+};
 
 const makeStyles = () => {
-  const theme = useColorScheme()
+  const theme = useColorScheme();
   return StyleSheet.create({
     dayText: {
       fontSize: 18,
@@ -285,5 +283,5 @@ const makeStyles = () => {
       fontWeight: 'bold',
       // textAlign: 'center'
     }
-  })
-}
+  });
+};
