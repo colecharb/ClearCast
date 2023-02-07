@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { FlatList, Image, Pressable, StyleSheet } from "react-native";
+import { FlatList, Image, LayoutAnimation, Pressable, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import { WeatherContext, WeatherContextData } from "../contexts/Weather";
@@ -12,6 +12,7 @@ import { Text, View } from "./Themed";
 
 export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
 
+  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
   const theme = useColorScheme();
   const styles = makeStyles();
