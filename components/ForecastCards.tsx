@@ -13,7 +13,6 @@ import { Text, View } from "./Themed";
 export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
 
   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  // LayoutAnimation.configureNext(LayoutAnimation.create(200, 'easeInEaseOut', 'opacity'));
 
   const theme = useColorScheme();
   const styles = makeStyles();
