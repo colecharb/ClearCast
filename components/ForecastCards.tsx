@@ -64,21 +64,31 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         }}
       >
 
-        <View style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
           <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
             <Text style={[styles.dayText, { flex: 4, textAlign: 'right', paddingRight: Layout.margin }]}>{index === 0 ? 'Today' : day}</Text>
-            <Text style={[styles.emojiLg, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
-            <Text style={[styles.statsText, { flex: 3 }]}>{(dayInterval.pop * 100).toFixed(0)}%{'\n'}💧</Text>
+            <View style={{ flex: 7, flexDirection: 'row' }}>
+              <Text style={[styles.emojiLg, { flex: 1, textAlign: 'center' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
+              {showHours ? (
+                <Text style={[styles.statsText, { flex: 1 }]}>{(dayInterval.pop * 100).toFixed(0)}%{'\n'}💧</Text>
+              ) : (
+                null
+              )
+              }
+            </View>
+
 
           </View>
 
           <View style={styles.rightSideContainer}>
-            <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ flex: 1, justifyContent: (showHours ? 'space-between' : 'center') }}>
               {showHours ? (
                 <View style={{ flexDirection: 'row', marginBottom: Layout.margin / 2 }}>
-                  <Text style={[styles.statsText, { flex: 1, textAlign: 'left', color: Colors[theme].medium }]}>{dayInterval.weather[0].description}</Text>
+                  <Text style={[styles.statsText, { flex: 1, textAlign: 'left', color: Colors[theme].medium }]}>
+                    {dayInterval.weather[0].description}.
+                  </Text>
                 </View>
               ) : (
                 null
