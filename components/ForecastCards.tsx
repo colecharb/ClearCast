@@ -71,7 +71,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
-          <View style={{ flex: 3, marginRight: Layout.margin, marginBottom: Layout.margin }}>
+          <View style={{ flex: 3, marginRight: Layout.margin, marginBottom: Layout.margin / 2 }}>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
@@ -92,7 +92,9 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
                   <Text style={styles.riseSetText}>🌙 {sunset}</Text>
                 </View>
 
-                <Text style={[styles.statsText, { flex: 1, textAlign: 'center', alignSelf: 'flex-end' }]}>💧{(dayInterval.pop * 100).toFixed(0)}%</Text>
+                <Text style={[styles.statsText, { flex: 1, textAlign: 'center', alignSelf: 'flex-end' }]}>
+                  💧{(dayInterval.pop * 100).toFixed(0)}%
+                </Text>
               </View>
             ) : (
               null
@@ -104,8 +106,8 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
           <View style={styles.rightSideContainer}>
             <View style={{ flex: 1, justifyContent: (showHours ? 'space-between' : 'center') }}>
               {showHours ? (
-                <View style={{ flexDirection: 'row', marginBottom: Layout.margin / 2 }}>
-                  <Text style={[styles.statsText, { flex: 1, textAlign: 'left', color: Colors[theme].medium }]}>
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                  <Text style={[styles.statsText, { textAlign: 'left', color: Colors[theme].medium }]}>
                     {dayInterval.weather[0].description}.
                   </Text>
                 </View>
