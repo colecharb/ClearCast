@@ -1,28 +1,28 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, LayoutAnimation, Platform, RefreshControl, ScrollView, SectionList } from 'react-native';
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, LayoutAnimation, Platform } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
 import { Text, View } from '../components/Themed';
-import { DailyForecast, HourInterval, HourlyForecast, RootStackScreenProps, RootTabScreenProps } from '../types';
+import { RootStackScreenProps } from '../types';
 import { WeatherContext, WeatherContextData } from '../contexts/Weather';
-import { refreshDelay } from '../utils/wait';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
 import { DayForecastCard } from '../components/ForecastCards';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LinearGradient } from 'expo-linear-gradient';
 import Layout from '../constants/Layout';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
   // hooks
   const theme = useColorScheme();
+  const styles = makeStyles();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = 100 //useBottomTabBarHeight();
-  const styles = makeStyles();
+  const safeAreaInsets = useSafeAreaInsets();
 
   // weather context
   const weather = useContext(WeatherContext);
@@ -31,8 +31,24 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   // States
   // const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [listHeaderLocation, setListHeaderLocation] = useState<string>('');
 
-  useCityNameInHeaderTitle(navigation, weather)
+  // useCityNameInHeaderTitle(navigation, weather)
+  // useLocationInSearchBar(weather, setSearchQuery);
+  useLocationInListHeader(setListHeaderLocation, weather);
+
+  const ListHeaderComponent = () => {
+    return (
+      <View style={{ height: 60, justifyContent: 'center' }}>
+        <Text style={{ fontWeight: '400', textAlign: 'center', fontSize: 20 }}>
+          {'ClearCast\n'}
+          <Text style={{ fontSize: 18, fontWeight: '900' }}>
+            {listHeaderLocation}
+          </Text>
+        </Text>
+      </View>
+    )
+  }
 
   const renderDayForecastCard = ({ index }: { index: number }) => (
     <DayForecastCard
@@ -40,11 +56,11 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
       dailyForecast={weather.dailyForecast}
       index={index}
     />
-  )
+  );
 
   return (
 
-    <ScreenContainer >
+    <ScreenContainer>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -58,31 +74,18 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           />
         ) : (
           <FlatList
-          contentContainerStyle={[
-            styles.container,
-                { paddingTop: headerHeight, paddingBottom: tabBarHeight * 2.5 }
-          ]}
-          style={{ flex: 1 }}
-          // contentInset={{ top: headerHeight, left: 0, right: 0, bottom: 0 }}
-          // initialScrollIndex={1}
-          // getItemLayout={(data, index) => ({
-          //   length: styles,
-          //   offset: Layout.margin,
-          //   index:
-          // })}
-          showsVerticalScrollIndicator={false}
-          automaticallyAdjustContentInsets={false}
-          automaticallyAdjustsScrollIndicatorInsets={false}
-          // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshWeather} />}
-          data={weather.dailyForecast?.list}
-          renderItem={renderDayForecastCard}
-        // ItemSeparatorComponent={() => <View style={{ height: Layout.margin }} />}
-        />
+              contentContainerStyle={[styles.container, { paddingTop: safeAreaInsets.top, paddingBottom: tabBarHeight * 2.5 }]}
+              style={{ flex: 1 }}
+              showsVerticalScrollIndicator={false}
+              automaticallyAdjustContentInsets={false}
+              automaticallyAdjustsScrollIndicatorInsets={false}
+              // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshWeather} />}
+              data={weather.dailyForecast?.list}
+              renderItem={renderDayForecastCard}
+              ListHeaderComponent={ListHeaderComponent}
+            />
         )}
 
-
-
-        {/* <View style={{ zIndex: Layout.gradientOverlayZIndex + 1, position: 'relative', bottom: 0, backgroundColor: 'transparent' }}> */}
         <LinearGradient
           pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
@@ -90,11 +93,14 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight / 2, paddingTop: tabBarHeight / 2 }}
         >
           <SearchBar
-            // containerStyle={{ height: tabBarHeight }}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholder="Search"
-            onSubmitEditing={() => weather.getCoordinatesAsync(searchQuery)}
+            placeholder={'Search'}
+            onSubmitEditing={() => {
+              weather.getCoordinatesAsync(searchQuery);
+            }}
+            // onCancel={() => setSearchQueryToLocation(weather, setSearchQuery)}
+            // onEndEditing={() => setSearchQueryToLocation(weather, setSearchQuery)}
           />
         </LinearGradient>
 
@@ -119,12 +125,10 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 //   }, []);
 // }
 
-const useCityNameInHeaderTitle = (navigation: any, weather: WeatherContextData) => {
+const useLocationInListHeader = (setListHeaderLocation: any, weather: WeatherContextData) => {
   useEffect(() => {
-    const city = weather.dailyForecast?.city
-    // const country = forecast?.city.country
-    if (city) {
-      navigation.setOptions({ title: `ClearCast: ${city.name}` })
+    if (weather.place) {
+      setListHeaderLocation(`${weather.place.city}, ${weather.place.region}`)
     }
-  }, [weather.dailyForecast?.city])
-}
+  }, [weather.place]);
+};
