@@ -36,12 +36,19 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const styles = makeStyles();
+
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="ClearCast"
         component={ClearCastScreen}
-        options={{ animation: 'fade', headerTransparent: true }}
+        options={{
+          animation: 'fade',
+          headerTransparent: true,
+          headerTitleStyle: styles.navigationHeaderTitle,
+          headerShown: false,
+        }}
       />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -136,13 +143,13 @@ const makeStyles = () => {
       navigationHeaderTitle: {
         color: Colors[theme].text,
       },
-      navigationTabBar: {
-        backgroundColor: Colors[theme].background + '00',
-        borderTopWidth: 0,
-        // marginTop: -100,
-        // height: 100,
-        position: 'absolute'
-      }
+      // navigationTabBar: {
+      //   backgroundColor: Colors[theme].background + '00',
+      //   borderTopWidth: 0,
+      //   // marginTop: -100,
+      //   // height: 100,
+      //   position: 'absolute'
+      // }
     })
   )
 }
