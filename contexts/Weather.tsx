@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useRef } from 'react';
 import * as Location from 'expo-location';
-import { DailyForecast, HourlyForecast, Weather } from '../types';
+import { DailyForecast, HourlyForecast, CurrentWeather } from '../types';
 import Constants from 'expo-constants';
 
 export type Coordinates = {
@@ -11,7 +11,8 @@ export type Coordinates = {
 export type WeatherContextData = {
   coordinates: Coordinates | undefined,
   getCoordinatesAsync: (address?: string) => Promise<void>,
-  currentWeather: Weather | undefined,
+  place: LocationGeocodedAddress | undefined,
+  currentWeather: CurrentWeather | undefined,
   // getCurrentWeatherAsync: () => Promise<void>,
   hourlyForecast: HourlyForecast | undefined,
   // getHourlyForecastAsync: () => Promise<void>,
@@ -19,6 +20,20 @@ export type WeatherContextData = {
   // getDailyForecastAsync: () => Promise<void>,
   loading: boolean,
   errorMessage: string | undefined,
+};
+
+export type LocationGeocodedAddress = {
+  city: string | null,
+  country: string | null,
+  district: string | null,
+  isoCountryCode: string | null,
+  name: string | null,
+  postalCode: string | null,
+  region: string | null,
+  street: string | null,
+  streetNumber: string | null,
+  subregion: string | null,
+  timezone: string | null,
 };
 
 const addExtremesToHourlyForecast = (forecast: HourlyForecast) => {
@@ -47,7 +62,8 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   // hooks
   const [coordinates, setCoordinates] = useState<Coordinates>()
-  const [currentWeather, setCurrentWeather] = useState<Weather>()
+  const [place, setPlace] = useState<LocationGeocodedAddress>()
+  const [currentWeather, setCurrentWeather] = useState<CurrentWeather>()
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast>()
   const [dailyForecast, setDailyForecast] = useState<DailyForecast>()
   const [loading, setLoading] = useState<boolean>(false)
@@ -57,15 +73,15 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const CURRENT_WEATHER_URL = `https://pro.openweathermap.org/data/2.5/weather`
   const makeCurrentWeatherUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric') => (
     `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=${units}`
-  )
+  );
   const HOURLY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/hourly`
   const makeHourlyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 96) => (
     `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
-  )
+  );
   const DAILY_FORECAST_URL = `https://pro.openweathermap.org/data/2.5/forecast/daily`
   const makeDailyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 5) => (
     `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
-  )
+  );
 
   async function getCoordinatesAsync(address?: string) {
     if (address) {
@@ -74,21 +90,26 @@ export const WeatherProvider = ({ children }: { children: any }) => {
         latitude: potentialLocations[0].latitude,
         longitude: potentialLocations[0].longitude
       }
-      setCoordinates(theCoords)
+      setCoordinates(theCoords);
+
+      const places = await Location.reverseGeocodeAsync({ ...theCoords });
+      setPlace(places[0]);
+
     } else {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMessage('Permission to access location was denied');
         return;
       }
-      Location.getCurrentPositionAsync({
+      const theLocation = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced,
-      }).then((loc: Location.LocationObject) => {
-        const theCoords: Coordinates = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
-        setCoordinates(theCoords)
-      });
-    }
+      })
+      const theCoords: Coordinates = { latitude: theLocation.coords.latitude, longitude: theLocation.coords.longitude }
+      setCoordinates(theCoords)
 
+      const places = await Location.reverseGeocodeAsync({ ...theCoords });
+      setPlace(places[0]);
+    }
   }
 
   async function getCurrentWeatherAsync() {
@@ -138,13 +159,14 @@ export const WeatherProvider = ({ children }: { children: any }) => {
         // refreshDelay()
       ])
       setLoading(false)
-      console.log('got weather');
+      // console.log('got weather');
     }
     getWeather()
   }, [coordinates])
 
   const weatherContextData = {
     coordinates: coordinates,
+    place: place,
     getCoordinatesAsync: getCoordinatesAsync,
     currentWeather: currentWeather,
     // getCurrentWeatherAsync: getCurrentWeatherAsync,
