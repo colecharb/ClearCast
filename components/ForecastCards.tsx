@@ -30,6 +30,11 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   const date = new Date(dayInterval.dt * 1000);
   const day = date.toLocaleDateString(navigator.language, { weekday: 'short' });
 
+  const sunriseDate = new Date(dayInterval.sunrise * 1000);
+  const sunsetDate = new Date(dayInterval.sunset * 1000);
+  const sunrise = sunriseDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
+  const sunset = sunsetDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
+
   // filter hours:
   // only want this day and only want evey two hours
   const hoursThisDay = weather.hourlyForecast?.list.filter(
@@ -64,20 +69,34 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         }}
       >
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
-          <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
+          <View style={{ flex: 3, marginRight: Layout.margin, marginBottom: Layout.margin }}>
 
-            <Text style={[styles.dayText, { flex: 4, textAlign: 'right', paddingRight: Layout.margin }]}>{index === 0 ? 'Today' : day}</Text>
-            <View style={{ flex: 7, flexDirection: 'row' }}>
-              <Text style={[styles.emojiLg, { flex: 1, textAlign: 'center' }]}>{emojiFromIcon(dayInterval.weather[0].icon)}</Text>
-              {showHours ? (
-                <Text style={[styles.statsText, { flex: 1 }]}>{(dayInterval.pop * 100).toFixed(0)}%{'\n'}💧</Text>
-              ) : (
-                null
-              )
-              }
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
+              <Text style={[styles.dayText, { flex: 1, textAlign: 'center' }]}>
+                {index === 0 ? 'Today' : day}
+              </Text>
+
+              <Text style={[styles.emojiLg, { flex: 1, textAlign: 'center', marginVertical: -Layout.margin }]}>
+                {emojiFromIcon(dayInterval.weather[0].icon)}
+              </Text>
+
             </View>
+
+            {showHours ? (
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: Layout.margin }}>
+                <View style={{ flex: 1, opacity: 0.5, marginTop: -Layout.margin, alignItems: 'center' }}>
+                  <Text style={styles.riseSetText}>☀️ {sunrise}</Text>
+                  <Text style={styles.riseSetText}>🌙 {sunset}</Text>
+                </View>
+
+                <Text style={[styles.statsText, { flex: 1, textAlign: 'center', alignSelf: 'flex-end' }]}>💧{(dayInterval.pop * 100).toFixed(0)}%</Text>
+              </View>
+            ) : (
+              null
+            )}
 
 
           </View>
@@ -226,14 +245,20 @@ const makeStyles = () => {
       fontSize: 18,
     },
     hourText: {
-      fontSize: 16
+      fontSize: 16,
       // lineHeight: 20
+      // fontVariant: ['tabular-nums']
     },
     smallText: {
       fontSize: 14,
     },
+    riseSetText: {
+      fontSize: 12,
+      lineHeight: 16,
+      fontVariant: ['tabular-nums']
+    },
     emojiLg: {
-      fontSize: 40,
+      fontSize: 42,
       lineHeight: 45,
     },
     emojiSm: {
@@ -244,7 +269,8 @@ const makeStyles = () => {
       fontSize: 14,
       // flex: 1,
       // marginHorizontal: Layout.margin / 2,
-      textAlign: 'center',
+      textAlign: 'right',
+      fontVariant: ['tabular-nums']
     },
     // weatherIcon: {
     //   aspectRatio: 1,
