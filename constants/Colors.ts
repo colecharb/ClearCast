@@ -5,7 +5,7 @@ const tintColorDark = '#33aaff';
 export default {
   light: {
     text: '#ffffff',
-    medium: '#ffffff99',
+    medium: '#ffffffbb',
     light: '#ffffff33',
     subtle: '#ffffff11',
     background: '#257bb2',
