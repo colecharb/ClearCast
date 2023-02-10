@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, LayoutAnimation, Platform } from 'react-native';
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
@@ -31,7 +31,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   // States
   // const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [listHeaderLocation, setListHeaderLocation] = useState<string>('');
+  const [listHeaderLocation, setListHeaderLocation] = useState<string>()
 
   // useCityNameInHeaderTitle(navigation, weather)
   // useLocationInSearchBar(weather, setSearchQuery);
@@ -39,12 +39,12 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
   const ListHeaderComponent = () => {
     return (
-      <View style={{ height: 60, justifyContent: 'center' }}>
-        <Text style={{ fontWeight: '400', textAlign: 'center', fontSize: 20 }}>
-          {'ClearCast\n'}
-          <Text style={{ fontSize: 18, fontWeight: '900' }}>
-            {listHeaderLocation}
-          </Text>
+      <View style={{ margin: Layout.margin, justifyContent: 'center' }}>
+        <Text style={{ fontWeight: '200', textAlign: 'center', fontSize: 24, color: Colors[theme].text, marginBottom: Layout.margin / 2 }}>
+          {'ClearCast'}
+        </Text>
+        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '900' }}>
+          {listHeaderLocation}
         </Text>
       </View>
     )
@@ -125,7 +125,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 //   }, []);
 // }
 
-const useLocationInListHeader = (setListHeaderLocation: any, weather: WeatherContextData) => {
+const useLocationInListHeader = (setListHeaderLocation: React.Dispatch<React.SetStateAction<string | undefined>>, weather: WeatherContextData) => {
   useEffect(() => {
     if (weather.place) {
       setListHeaderLocation(`${weather.place.city}, ${weather.place.region}`)
