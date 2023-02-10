@@ -42,7 +42,7 @@ export type Conditions = {
   "icon": string
 }
 
-export type Weather = {
+export type CurrentWeather = {
   "coord": {
     "lon": number,
     "lat": number
