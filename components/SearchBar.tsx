@@ -1,24 +1,12 @@
 import { SearchBar as _SearchBar_ } from "@rneui/themed"
+import { SearchBarProps } from "@rneui/themed"
 import React from "react"
 import useColorScheme from "../hooks/useColorScheme"
 import Colors from "../constants/Colors"
-import { StyleProp, StyleSheet, ViewStyle } from "react-native"
+import { StyleProp, StyleSheet, TextInputProps, ViewStyle } from "react-native"
 import Layout from "../constants/Layout"
 
-export default function SearchBar(
-  {
-    containerStyle,
-    value,
-    onChangeText,
-    placeholder = 'Search',
-    onSubmitEditing
-  }: {
-      containerStyle?: StyleProp<ViewStyle>,
-    value: string,
-    onChangeText: (s: string) => void,
-    placeholder?: string,
-      onSubmitEditing: (() => void) | undefined
-  }) {
+export default function SearchBar({ ...props }: SearchBarProps) {
 
   const colorScheme = useColorScheme()
   const styles = makeStyles()
@@ -27,23 +15,25 @@ export default function SearchBar(
     <_SearchBar_
       selectionColor={Colors[colorScheme].tint}
       platform='ios'
-
       searchIcon={styles.searchIcon}
-      containerStyle={[styles.searchBarContainer, containerStyle]}
+      containerStyle={[styles.searchBarContainer]}
       inputContainerStyle={styles.inputContainer}
       inputStyle={styles.inputStyle}
-      placeholderTextColor={Colors[colorScheme].text}
+      placeholderTextColor={Colors[colorScheme].medium}
       // showCancel={true}
-      cancelButtonTitle='Cancel'
+      // cancelButtonTitle='Cancel'
       cancelButtonProps={{ color: Colors[colorScheme].tint, buttonStyle: styles.cancelButton }}
       returnKeyType='go'
+      clearIcon={styles.clearIcon}
+      // value={value}
+      // onChangeText={onChangeText}
+      // onSubmitEditing={onSubmitEditing}
+      // // onClear={onSubmitEditing}
+      // onCancel={onCancel}
+      // onEndEditing={onEn}
+      // placeholder={placeholder}
+      {...props}
 
-      value={value}
-      onChangeText={onChangeText}
-      onSubmitEditing={onSubmitEditing}
-      // onClear={onSubmitEditing}
-      // onCancel={onSubmitEditing}
-      placeholder={placeholder}
     />
   )
 
@@ -69,6 +59,9 @@ function makeStyles() {
       margin: Layout.margin
     },
     searchIcon: {
+      color: Colors[theme].text
+    },
+    clearIcon: {
       color: Colors[theme].medium
     }
   })
