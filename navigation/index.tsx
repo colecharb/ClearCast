@@ -17,6 +17,7 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import ClearCastScreen from '../screens/ClearCastScreen';
+import ClearCastHeader from '../components/ClearCastHeader';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const theme = useColorScheme()
@@ -43,11 +44,14 @@ function RootNavigator() {
       <Stack.Screen
         name="ClearCast"
         component={ClearCastScreen}
-        options={{
-          animation: 'fade',
-          headerTransparent: true,
-          headerTitleStyle: styles.navigationHeaderTitle,
-          headerShown: false,
+        options={() => {
+          return {
+            animation: 'fade',
+            headerTransparent: true,
+            headerTitleStyle: styles.navigationHeaderTitle,
+            header: ClearCastHeader,
+            // headerShown: false,
+          }
         }}
       />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />

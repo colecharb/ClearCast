@@ -17,12 +17,12 @@ export default function (props: ViewProps) {
         {...props}
         style={[{ flex: 1, backgroundColor: Colors[theme].background }, style]}
       />
-      <LinearGradient
+      {/* <LinearGradient
         pointerEvents="none"
         style={{ position: 'absolute', top: 0, left: 0, right: 0, height: safeAreaInsets.top * 1.25 }}
         colors={[Colors[theme].background, Colors[theme].background + 'aa', Colors[theme].background + '00']}
         locations={[0, 3 / 4, 1]}
-      />
+      /> */}
     </>
   )
 }

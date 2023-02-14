@@ -14,6 +14,7 @@ import { DayForecastCard } from '../components/ForecastCards';
 import { LinearGradient } from 'expo-linear-gradient';
 import Layout from '../constants/Layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ClearCastHeader from '../components/ClearCastHeader';
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
@@ -35,20 +36,20 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
   // useCityNameInHeaderTitle(navigation, weather)
   // useLocationInSearchBar(weather, setSearchQuery);
-  useLocationInListHeader(setListHeaderLocation, weather);
+  // useLocationInListHeader(setListHeaderLocation, weather);
 
-  const ListHeaderComponent = () => {
-    return (
-      <View style={{ margin: Layout.margin, justifyContent: 'center' }}>
-        <Text style={{ fontWeight: '200', textAlign: 'center', fontSize: 24, color: Colors[theme].text, marginBottom: Layout.margin / 2 }}>
-          {'ClearCast'}
-        </Text>
-        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '900' }}>
-          {listHeaderLocation}
-        </Text>
-      </View>
-    )
-  }
+  // const ListHeaderComponent = () => {
+  //   return (
+  //     <View style={{ margin: Layout.margin, justifyContent: 'center' }}>
+  //       <Text style={{ fontWeight: '200', textAlign: 'center', fontSize: 24, color: Colors[theme].text, marginBottom: Layout.margin / 2 }}>
+  //         {'ClearCast'}
+  //       </Text>
+  //       <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '900' }}>
+  //         {listHeaderLocation}
+  //       </Text>
+  //     </View>
+  //   )
+  // }
 
   const renderDayForecastCard = ({ index }: { index: number }) => (
     <DayForecastCard
@@ -74,7 +75,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           />
         ) : (
           <FlatList
-              contentContainerStyle={[styles.container, { paddingTop: safeAreaInsets.top, paddingBottom: tabBarHeight * 2.5 }]}
+              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: tabBarHeight * 2.5 }]}
               style={{ flex: 1 }}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
@@ -82,7 +83,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
               // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshWeather} />}
               data={weather.dailyForecast?.list}
               renderItem={renderDayForecastCard}
-              ListHeaderComponent={ListHeaderComponent}
+              // ListHeaderComponent={ClearCastHeader}
             />
         )}
 
@@ -125,10 +126,10 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 //   }, []);
 // }
 
-const useLocationInListHeader = (setListHeaderLocation: React.Dispatch<React.SetStateAction<string | undefined>>, weather: WeatherContextData) => {
-  useEffect(() => {
-    if (weather.place) {
-      setListHeaderLocation(`${weather.place.city}, ${weather.place.region}`)
-    }
-  }, [weather.place]);
-};
+// const useLocationInListHeader = (setListHeaderLocation: React.Dispatch<React.SetStateAction<string | undefined>>, weather: WeatherContextData) => {
+//   useEffect(() => {
+//     if (weather.place) {
+//       setListHeaderLocation(`${weather.place.city}, ${weather.place.region}`)
+//     }
+//   }, [weather.place]);
+// };
