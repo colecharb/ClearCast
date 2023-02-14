@@ -24,8 +24,8 @@ export default function () {
 
   return (
     <LinearGradient
-      colors={[Colors[theme].background, Colors[theme].background + 'cc', Colors[theme].background + '00']}
-      locations={[0, 3 / 4, 1]}
+      colors={[Colors[theme].background + 'ff', Colors[theme].background + 'cc', Colors[theme].background + '00']}
+      locations={[0, 1 / 2, 1]} //{[0, 1 / 4, 2 / 4, 3 / 4, 1]}
       style={{ padding: Layout.margin, justifyContent: 'center', paddingTop: safeAreaInsets.top }}
       pointerEvents='box-none'
     >
