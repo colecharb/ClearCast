@@ -6,6 +6,7 @@ import { Text, View } from "./Themed";
 import { WeatherContext } from "../contexts/Weather";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator } from "react-native";
 
 export default function () {
 
@@ -17,7 +18,7 @@ export default function () {
     weather.place ? (
       `${weather.place.city}, ${weather.place.region}`
     ) : (
-      "asdf"
+        null
     )
   )
 
@@ -31,9 +32,14 @@ export default function () {
       <Text style={{ fontWeight: '200', textAlign: 'center', fontSize: 24, color: Colors[theme].text, marginBottom: Layout.margin / 2 }}>
         {'ClearCast'}
       </Text>
-      <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '900' }}>
-        {placeName}
-      </Text>
+      {!weather.loading ? (
+        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '900' }}>
+          {placeName}
+        </Text>
+      ) : (
+        <ActivityIndicator />
+      )}
+
     </LinearGradient>
   )
 }
