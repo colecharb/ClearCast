@@ -12,6 +12,7 @@ import { Text, View } from "./Themed";
 export default function () {
   const weather = useContext(WeatherContext);
   const currrentWeather = weather.currentWeather;
+  const theme = useColorScheme();
 
   const styles = makeLocalStyles();
   const globalStyles = makeStyles();
@@ -24,15 +25,15 @@ export default function () {
     <View style={[{ marginBottom: Layout.margin * 3 }]}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={[{ flex: 1, textAlign: "right", fontSize: 100 }]}>
-          {emojiFromIcon('10d')}
+          {emojiFromIcon(currrentWeather.weather[0].icon)}
         </Text>
         <Text style={[{ flex: 1, textAlign: "left", fontSize: 80 }]}>
           {currrentWeather.main.temp.toFixed(0)}˚
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        <Text style={[styles.detailsText, { textAlign: "right" }]}>
-          {currrentWeather?.weather[0].description}.
+        <Text style={[styles.detailsText, { color: Colors[theme].text }]}>
+          {currrentWeather?.weather[0].description}
         </Text>
         <View style={{ width: Layout.margin }} />
         <Text style={[styles.detailsText, { textAlign: "left" }]}>
@@ -49,7 +50,8 @@ const makeLocalStyles = () => {
   return StyleSheet.create({
     detailsText: {
       fontSize: 16,
-      color: Colors[theme].medium
+      color: Colors[theme].medium,
+      textTransform: 'capitalize'
     }
   });
 }
