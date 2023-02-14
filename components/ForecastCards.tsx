@@ -111,7 +111,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
             <View style={{ flex: 1, justifyContent: (showHours ? 'space-between' : 'center') }}>
               {showHours ? (
                 <View style={{ flex: 1, justifyContent: 'center' }}>
-                  <Text style={[styles.statsText, { textAlign: 'left', color: Colors[theme].medium }]}>
+                  <Text style={[styles.statsText, { textAlign: 'left', color: Colors[theme].medium, textTransform: 'capitalize' }]}>
                     {dayInterval.weather[0].description}.
                   </Text>
                 </View>
