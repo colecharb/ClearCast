@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useRef } from 'react';
 import * as Location from 'expo-location';
 import { DailyForecast, HourlyForecast, CurrentWeather } from '../types';
 import Constants from 'expo-constants';
+import { refreshDelay } from '../utils/wait';
 
 export type Coordinates = {
   latitude: number,
@@ -92,8 +93,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       }
       setCoordinates(theCoords);
 
-      const places = await Location.reverseGeocodeAsync({ ...theCoords });
-      setPlace(places[0]);
+      getWeathersAndPlaceAsync(theCoords);
 
     } else {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -106,15 +106,20 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       })
       const theCoords: Coordinates = { latitude: theLocation.coords.latitude, longitude: theLocation.coords.longitude }
       setCoordinates(theCoords)
+      console.log(theCoords);
 
-      const places = await Location.reverseGeocodeAsync({ ...theCoords });
-      setPlace(places[0]);
+      getWeathersAndPlaceAsync(theCoords);
     }
   }
 
-  async function getCurrentWeatherAsync() {
-    if (!coordinates) return;
-    fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(coordinates.latitude, coordinates.longitude, 'imperial'))
+  async function getPlaceAsync(coords: Coordinates) {
+    const places = await Location.reverseGeocodeAsync({ ...coords });
+    setPlace(places[0]);
+  }
+
+  async function getCurrentWeatherAsync(coords: Coordinates) {
+    // if (!coordinates) return;
+    fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(coords.latitude, coords.longitude, 'imperial'))
       .then((response) => response.json())
       .then((response) => {
         setCurrentWeather(response)
@@ -123,9 +128,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       .catch((error) => console.error(error))
   }
 
-  async function getHourlyForecastAsync() {
-    if (!coordinates) return;
-    fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(coordinates.latitude, coordinates.longitude, 'imperial'))
+  async function getHourlyForecastAsync(coords: Coordinates) {
+    // if (!coordinates) return;
+    fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(coords.latitude, coords.longitude, 'imperial'))
       .then((response) => response.json())
       .then((hourlyForecast) => {
         setHourlyForecast(addExtremesToHourlyForecast(hourlyForecast))
@@ -134,9 +139,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       .catch((error) => console.error(error))
   }
 
-  async function getDailyForecastAsync() {
-    if (!coordinates) return;
-    fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(coordinates.latitude, coordinates.longitude, 'imperial'))
+  async function getDailyForecastAsync(coords: Coordinates) {
+    // if (!coordinates) return;
+    fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(coords.latitude, coords.longitude, 'imperial'))
       .then((response) => response.json())
       .then((dailyForecast) => {
         setDailyForecast(addExtremesToDailyForecast(dailyForecast))
@@ -145,24 +150,25 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       .catch((error) => console.error(error))
   }
 
-  useEffect(() => {
-    getCoordinatesAsync()
-  }, [])
+  async function getWeathersAndPlaceAsync(coords: Coordinates) {
+    setLoading(true)
+    await Promise.all([
+      getPlaceAsync(coords),
+      getCurrentWeatherAsync(coords),
+      getDailyForecastAsync(coords),
+      getHourlyForecastAsync(coords),
+    ])
+    setLoading(false)
+    // console.log('got weather');
+  }
 
   useEffect(() => {
-    async function getWeather() {
-      setLoading(true)
-      await Promise.all([
-        getCurrentWeatherAsync(),
-        getDailyForecastAsync(),
-        getHourlyForecastAsync(),
-        // refreshDelay()
-      ])
-      setLoading(false)
-      // console.log('got weather');
-    }
-    getWeather()
-  }, [coordinates])
+    getCoordinatesAsync();
+  }, [])
+
+  // useEffect(() => {
+  //   getAllWeatherAsync()
+  // }, [coordinates])
 
   const weatherContextData = {
     coordinates: coordinates,
