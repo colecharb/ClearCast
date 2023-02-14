@@ -6,6 +6,7 @@ import { WeatherContext, WeatherContextData } from "../contexts/Weather";
 import useColorScheme from "../hooks/useColorScheme";
 import { DailyForecast, HourInterval } from "../types";
 import emojiFromIcon from "../utils/emojiFromIcon";
+import rescale from "../utils/rescale";
 import Card from "./Card";
 import { Text, View } from "./Themed";
 
@@ -92,7 +93,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
                   <Text style={styles.riseSetText}>🌙 {sunset}</Text>
                 </View>
 
-                <Text style={[styles.statsText, { flex: 1, textAlign: 'center', alignSelf: 'flex-end' }]}>
+                <Text style={[styles.statsText, { fontWeight: '900', flex: 1, textAlign: 'right', alignSelf: 'flex-end' }]}>
                   💧{(dayInterval.pop * 100).toFixed(0)}%
                 </Text>
               </View>
@@ -186,7 +187,21 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
 
         <Text style={[styles.hourText, { flex: 4, textAlign: 'right', paddingRight: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
         <Text style={[styles.emojiSm, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
-        <Text style={[styles.statsText, { flex: 3 }]}>{hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}%` : null}</Text>
+        <Text style={[
+          styles.statsText,
+          {
+            flex: 3,
+            opacity: rescale({
+              value: hourInterval.pop,
+              oldMin: 0,
+              oldMax: 1,
+              newMin: 0.3,
+              newMax: 1,
+            })
+          }
+        ]}>
+          {hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}%` : null}
+        </Text>
 
         </View>
 
