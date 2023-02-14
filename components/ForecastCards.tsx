@@ -9,6 +9,7 @@ import emojiFromIcon from "../utils/emojiFromIcon";
 import rescale from "../utils/rescale";
 import Card from "./Card";
 import { Text, View } from "./Themed";
+import makeStyles from "../constants/Styles";
 
 
 export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
@@ -16,7 +17,8 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
   const theme = useColorScheme();
-  const styles = makeStyles();
+  const styles = makeLocalStyles();
+  const globalStyles = makeStyles();
 
   const weather = useContext(WeatherContext);
 
@@ -60,8 +62,9 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   );
 
   return (
-    <Card>
+    <>
       <Pressable
+        style={[globalStyles.card, globalStyles.container]}
         hitSlop={Layout.margin}
         onPress={() => {
           setShowHours(!showHours)
@@ -145,12 +148,12 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         null
       )}
 
-    </Card>
+    </>
   );
 };
 
 const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, low: number, high: number, maxHigh: number }) => {
-  const styles = makeStyles();
+  const styles = makeLocalStyles();
 
   return (
     <View style={[styles.intervalContainer, styles.intervalContainerHighlight]}>
@@ -174,7 +177,7 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
 
 export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: { hourInterval: HourInterval, minLow: number, low: number, high: number, maxHigh: number }) {
 
-  const styles = makeStyles();
+  const styles = makeLocalStyles();
   const theme = useColorScheme();
 
   const date = new Date(hourInterval.dt * 1000);
@@ -223,7 +226,7 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
 };
 
 const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number, low: number, temp: number, high: number, maxHigh: number }) => {
-  const styles = makeStyles();
+  const styles = makeLocalStyles();
   // todo: figure out what this stretch factor should be, and where it should go. 
   const STRETCH_FACTOR = 3.6;
 
@@ -255,7 +258,7 @@ const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number
   );
 };
 
-const makeStyles = () => {
+const makeLocalStyles = () => {
   const theme = useColorScheme();
   return StyleSheet.create({
     dayText: {
