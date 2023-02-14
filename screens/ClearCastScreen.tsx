@@ -23,7 +23,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   const styles = makeStyles();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = 100 //useBottomTabBarHeight();
-  const safeAreaInsets = useSafeAreaInsets();
+  // const safeAreaInsets = useSafeAreaInsets();
 
   // weather context
   const weather = useContext(WeatherContext);
@@ -32,7 +32,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   // States
   // const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [listHeaderLocation, setListHeaderLocation] = useState<string>()
+  // const [listHeaderLocation, setListHeaderLocation] = useState<string>()
 
   // useCityNameInHeaderTitle(navigation, weather)
   // useLocationInSearchBar(weather, setSearchQuery);
@@ -60,18 +60,17 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   );
 
   return (
-
-    <ScreenContainer>
+    <ScreenContainer >
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={-tabBarHeight / 2}
         style={{ flex: 1 }}
       >
-        {weather.loading ? (
+        {!weather.dailyForecast ? (
           <ActivityIndicator
             size='large'
-            style={{ marginTop: headerHeight + Layout.margin }}
+            style={{ flex: 1, paddingBottom: tabBarHeight }}
           />
         ) : (
           <FlatList
