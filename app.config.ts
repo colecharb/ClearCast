@@ -25,6 +25,7 @@ export default {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.clearcast.ClearCast",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
