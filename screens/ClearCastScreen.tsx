@@ -1,22 +1,20 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
-import { Text, View } from '../components/Themed';
+import { Text } from '../components/Themed';
 import { RootStackScreenProps } from '../types';
-import { WeatherContext, WeatherContextData } from '../contexts/Weather';
+import { WeatherContext } from '../contexts/Weather';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import makeStyles from '../constants/Styles';
 import { DayForecastCard } from '../components/ForecastCards';
 import { LinearGradient } from 'expo-linear-gradient';
-import Layout from '../constants/Layout';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ClearCastHeader from '../components/ClearCastHeader';
 import CurrentWeather from '../components/CurrentWeather';
 import HorizontalLine from '../components/HorizontalLine';
+import Layout from '../constants/Layout';
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
@@ -25,33 +23,13 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   const styles = makeStyles();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = 100 //useBottomTabBarHeight();
-  // const safeAreaInsets = useSafeAreaInsets();
 
   // weather context
   const weather = useContext(WeatherContext);
   if (weather.errorMessage) return (<Text>{weather.errorMessage}</Text>);
 
   // States
-  // const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  // const [listHeaderLocation, setListHeaderLocation] = useState<string>()
-
-  // useCityNameInHeaderTitle(navigation, weather)
-  // useLocationInSearchBar(weather, setSearchQuery);
-  // useLocationInListHeader(setListHeaderLocation, weather);
-
-  // const ListHeaderComponent = () => {
-  //   return (
-  //     <View style={{ margin: Layout.margin, justifyContent: 'center' }}>
-  //       <Text style={{ fontWeight: '200', textAlign: 'center', fontSize: 24, color: Colors[theme].text, marginBottom: Layout.margin / 2 }}>
-  //         {'ClearCast'}
-  //       </Text>
-  //       <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '900' }}>
-  //         {listHeaderLocation}
-  //       </Text>
-  //     </View>
-  //   )
-  // }
 
   const renderDayForecastCard = ({ index }: { index: number }) => (
     <DayForecastCard
@@ -66,7 +44,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={-tabBarHeight / 2}
+        keyboardVerticalOffset={-tabBarHeight}
         style={{ flex: 1 }}
       >
         {!weather.dailyForecast ? (
@@ -76,12 +54,11 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           />
         ) : (
           <FlatList
-              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: tabBarHeight * 2.5 }]}
+              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 2 }]}
               style={{ flex: 1 }}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
               automaticallyAdjustsScrollIndicatorInsets={false}
-              // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshWeather} />}
               data={weather.dailyForecast?.list}
               renderItem={renderDayForecastCard}
               ItemSeparatorComponent={HorizontalLine}
@@ -93,7 +70,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
           locations={[0, 0.3, 1]}
-          style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight / 2, paddingTop: tabBarHeight / 2 }}
+          style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight }}
         >
           <SearchBar
             value={searchQuery}
