@@ -16,6 +16,7 @@ import Layout from '../constants/Layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ClearCastHeader from '../components/ClearCastHeader';
 import CurrentWeather from '../components/CurrentWeather';
+import HorizontalLine from '../components/HorizontalLine';
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
@@ -83,6 +84,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
               // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshWeather} />}
               data={weather.dailyForecast?.list}
               renderItem={renderDayForecastCard}
+              ItemSeparatorComponent={HorizontalLine}
               ListHeaderComponent={CurrentWeather}
             />
         )}
