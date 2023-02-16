@@ -113,12 +113,13 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
                 </View> */}
 
                 {dayInterval.pop ? (<>
-                  <Text style={styles.statsText}>
+                  <Text style={[styles.statsText, { fontWeight: '600' }]}>
                     {precipType}
-                  </Text>
 
-                  <Text style={[styles.statsText, { fontWeight: '600', alignSelf: 'flex-end' }]}>
+
+                    <Text style={{}}>
                     {': ' + (dayInterval.pop * 100).toFixed(0)}%
+                  </Text>
                   </Text>
                 </>
                 ) : (
@@ -231,7 +232,8 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
             })
           }
         ]}>
-          {hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}%` : null}
+          {hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}` : '–'}
+          <Text style={{ opacity: hourInterval.pop ? 1 : 0 }}>%</Text>
         </Text>
 
         </View>
