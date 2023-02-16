@@ -202,3 +202,47 @@ export type DailyForecast = {
   "minLow": number,
   "maxHigh": number
 }
+
+export type HistoricalHourInterval = {
+  "dt": number,
+  "main": {
+    "temp": number,
+    "feels_like": number,
+    "pressure": number,
+    "humidity": number,
+    "temp_min": number,
+    "temp_max": number
+  },
+  "wind": {
+    "speed": number,
+    "deg": number
+  },
+  "clouds": {
+    "all": number
+  },
+  "weather": [
+    {
+      "id": number,
+      "main": string,
+      "description": string,
+      "icon": string
+    }
+  ],
+  "rain": {
+    "1h": number,
+    "3h": number
+  },
+  "snow": {
+    "1h": number,
+    "3h": number
+  }
+}
+
+export type HistoricalHours = {
+  "message": string,
+  "cod": string,
+  "city_id": number,
+  "calctime": number,
+  "cnt": number,
+  "list": HistoricalHourInterval[],
+}
