@@ -8,7 +8,7 @@ export default {
     medium: '#ffffffbb',
     light: '#ffffff33',
     subtle: '#ffffff11',
-    background: '#257bb2',
+    background: '#326aa2',
     tint: tintColorLight,
     tabIconDefault: '#ccccc',
     tabIconSelected: tintColorLight,
