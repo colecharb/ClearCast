@@ -4,7 +4,7 @@ import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import { WeatherContext, WeatherContextData } from "../contexts/Weather";
 import useColorScheme from "../hooks/useColorScheme";
-import { DailyForecast, HourInterval } from "../types";
+import { DailyForecast, HistoricalHourInterval, HourInterval } from "../types";
 import emojiFromIcon from "../utils/emojiFromIcon";
 import rescale from "../utils/rescale";
 import Card from "./Card";
@@ -33,10 +33,10 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   const date = new Date(dayInterval.dt * 1000);
   const day = date.toLocaleDateString(navigator.language, { weekday: 'short' });
 
-  const sunriseDate = new Date(dayInterval.sunrise * 1000);
-  const sunsetDate = new Date(dayInterval.sunset * 1000);
-  const sunrise = sunriseDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
-  const sunset = sunsetDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
+  // const sunriseDate = new Date(dayInterval.sunrise * 1000);
+  // const sunsetDate = new Date(dayInterval.sunset * 1000);
+  // const sunrise = sunriseDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
+  // const sunset = sunsetDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
 
   const precipType = (
     dayInterval.rain ? (
@@ -55,19 +55,39 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   )
 
   // filter hours:
-  // only want this day and only want evey two hours
-  const hoursThisDay = weather.hourlyForecast?.list.filter(
-    hourInterval => {
-      const hourDate = new Date(hourInterval.dt * 1000);
-      // console.log(hourDate.getDate(), date.getDate());
-      return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0));
-    }
+  // only want this day and only want every two hours
+  const pastHours = weather.historicalHours?.list ? (
+    weather.historicalHours.list.filter(
+      (historicalHourInterval: HistoricalHourInterval) => {
+        const hourDate = new Date(historicalHourInterval.dt * 1000);
+        // console.log(hourDate.getDate(), date.getDate());
+        return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0));
+      }
+    )
+  ) : (
+    []
   );
+
+  console.log(JSON.stringify(weather.historicalHours?.list, null, '  '))
+
+  const forecastedHours = weather.hourlyForecast?.list ? (
+    weather.hourlyForecast.list.filter(
+      hourInterval => {
+        const hourDate = new Date(hourInterval.dt * 1000);
+        // console.log(hourDate.getDate(), date.getDate());
+        return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0));
+      }
+    )
+  ) : (
+    []
+  );
+
+  const hoursThisDay = [...pastHours, ...forecastedHours]
 
   if (hoursThisDay?.length === 0) return null;
 
 
-  const renderHourForecast = ({ item }: { item: HourInterval }) => (
+  const renderHourForecast = ({ item }: { item: HourInterval | HistoricalHourInterval }) => (
     <HourForecastCard
       hourInterval={item}
       minLow={dailyForecast.minLow}
@@ -203,27 +223,41 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
   );
 };
 
-export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: { hourInterval: HourInterval, minLow: number, low: number, high: number, maxHigh: number }) {
+export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: { hourInterval: HourInterval | HistoricalHourInterval, minLow: number, low: number, high: number, maxHigh: number }) {
 
   const styles = makeLocalStyles();
   const theme = useColorScheme();
 
+  const now = new Date();
+
   const date = new Date(hourInterval.dt * 1000);
   const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' });
+
+  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
 
   return (
     <View style={{ marginVertical: Layout.margin / 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
       <View style={{ height: '100%', flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
 
-        <Text style={[styles.hourText, { flex: 4, textAlign: 'right', paddingRight: Layout.margin, color: Colors[theme].medium }]}>{hour}</Text>
+        <Text style={[
+          styles.hourText,
+          {
+            flex: 4,
+            textAlign: 'right',
+            paddingRight: Layout.margin,
+            color: thisIntervalIsNow ? Colors[theme].text : Colors[theme].medium,
+          }
+        ]}>
+          {thisIntervalIsNow ? 'Now' : hour}
+        </Text>
         <Text style={[styles.emojiSm, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
         <Text style={[
           styles.statsText,
           {
             flex: 3,
             opacity: rescale({
-              value: hourInterval.pop,
+              value: hourInterval.pop ? hourInterval.pop : 0,
               oldMin: 0,
               oldMax: 1,
               newMin: 0.3,
