@@ -2,7 +2,7 @@ import { Dimensions } from 'react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const margin = 10
+const margin = 8
 
 export default {
   margin,
