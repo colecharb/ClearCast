@@ -23,11 +23,12 @@ export default function () {
 
   return (
     <View style={[{ marginBottom: Layout.margin * 3 }]}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={[{ flex: 1, textAlign: "right", fontSize: 100 }]}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={[{ fontSize: 100 }]}>
           {emojiFromIcon(currrentWeather.weather[0].icon)}
         </Text>
-        <Text style={[{ flex: 1, textAlign: "left", fontSize: 80 }]}>
+        {/* <View style={{ width: Layout.margin }} /> */}
+        <Text style={[{ fontSize: 80 }]}>
           {currrentWeather.main.temp.toFixed(0)}˚
         </Text>
       </View>
