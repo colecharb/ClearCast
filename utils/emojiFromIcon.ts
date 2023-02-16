@@ -57,7 +57,7 @@ export default (icon: string) => {
       break;
     case '50':
       // todo: this one sucks... is there an alternative?
-      emoji = '🌫️'
+      emoji = '☁️'
       break;
     default:
       emoji = '??';
