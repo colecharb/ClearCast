@@ -38,6 +38,22 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   const sunrise = sunriseDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
   const sunset = sunsetDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
 
+  const precipType = (
+    dayInterval.rain ? (
+      dayInterval.snow ? (
+        'Rain and Snow'
+      ) : (
+        'Rain'
+      )
+    ) : (
+      dayInterval.snow ? (
+        'Snow'
+      ) : (
+        'Precip'
+      )
+    )
+  )
+
   // filter hours:
   // only want this day and only want evey two hours
   const hoursThisDay = weather.hourlyForecast?.list.filter(
@@ -62,9 +78,9 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   );
 
   return (
-    <>
+    <View style={[globalStyles.card, globalStyles.container]}>
       <Pressable
-        style={[globalStyles.card, globalStyles.container]}
+        // style={[globalStyles.card]}
         hitSlop={Layout.margin}
         onPress={() => {
           setShowHours(!showHours)
@@ -77,28 +93,40 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
           <View style={{ flex: 3, marginRight: Layout.margin, marginBottom: Layout.margin / 2 }}>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
               <Text style={[styles.dayText, { flex: 1, textAlign: 'center' }]}>
                 {index === 0 ? 'Today' : day}
               </Text>
 
-              <Text style={[styles.emojiLg, { flex: 1, textAlign: 'center', marginVertical: -Layout.margin }]}>
+              <Text style={[styles.emojiLg, { flex: 1, textAlign: 'center', marginBottom: -Layout.margin }]}>
                 {emojiFromIcon(dayInterval.weather[0].icon)}
               </Text>
 
             </View>
 
             {showHours ? (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: Layout.margin }}>
-                <View style={{ flex: 1, opacity: 0.5, marginTop: -Layout.margin, alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: Layout.margin }}>
+                {/* <View style={{ flex: 1, opacity: 0.5, marginTop: -Layout.margin, alignItems: 'center' }}>
                   <Text style={styles.riseSetText}>☀️ {sunrise}</Text>
                   <Text style={styles.riseSetText}>🌙 {sunset}</Text>
-                </View>
+                </View> */}
 
-                <Text style={[styles.statsText, { fontWeight: '900', flex: 1, textAlign: 'right', alignSelf: 'flex-end' }]}>
-                  💧{(dayInterval.pop * 100).toFixed(0)}%
-                </Text>
+                {dayInterval.pop ? (<>
+                  <Text style={styles.statsText}>
+                    {precipType}
+                  </Text>
+
+                  <Text style={[styles.statsText, { fontWeight: '600', alignSelf: 'flex-end' }]}>
+                    {': ' + (dayInterval.pop * 100).toFixed(0)}%
+                  </Text>
+                </>
+                ) : (
+                  null
+                )}
+
+
+
               </View>
             ) : (
               null
@@ -112,7 +140,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
               {showHours ? (
                 <View style={{ flex: 1, justifyContent: 'center' }}>
                   <Text style={[styles.statsText, { textAlign: 'left', color: Colors[theme].medium, textTransform: 'capitalize' }]}>
-                    {dayInterval.weather[0].description}.
+                    {dayInterval.weather[0].description}
                   </Text>
                 </View>
               ) : (
@@ -148,7 +176,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         null
       )}
 
-    </>
+    </View>
   );
 };
 
