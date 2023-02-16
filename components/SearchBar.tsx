@@ -3,7 +3,7 @@ import { SearchBarProps } from "@rneui/themed"
 import React from "react"
 import useColorScheme from "../hooks/useColorScheme"
 import Colors from "../constants/Colors"
-import { StyleProp, StyleSheet, TextInputProps, ViewStyle } from "react-native"
+import { StyleSheet } from "react-native"
 import Layout from "../constants/Layout"
 
 export default function SearchBar({ ...props }: SearchBarProps) {

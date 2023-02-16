@@ -7,7 +7,6 @@ import useColorScheme from "../hooks/useColorScheme";
 import { DailyForecast, HistoricalHourInterval, HourInterval } from "../types";
 import emojiFromIcon from "../utils/emojiFromIcon";
 import rescale from "../utils/rescale";
-import Card from "./Card";
 import { Text, View } from "./Themed";
 import makeStyles from "../constants/Styles";
 
