@@ -6,7 +6,8 @@ import { Text, View } from "./Themed";
 import { WeatherContext } from "../contexts/Weather";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Alert, Pressable } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function () {
 
@@ -41,6 +42,14 @@ export default function () {
           {placeName}
           </Text>
       )}
+
+      <Pressable
+        style={{ position: 'absolute', right: 0, margin: Layout.margin }}
+        onPress={() => Alert.alert('Settings', 'you pressed the settings button')}
+      // hitSlop={Layout.margin}
+      >
+        <FontAwesome size={30} color={Colors[theme].light} name='gears' />
+      </Pressable>
 
     </LinearGradient>
   )
