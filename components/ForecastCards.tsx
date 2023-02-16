@@ -112,16 +112,15 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
                   <Text style={styles.riseSetText}>🌙 {sunset}</Text>
                 </View> */}
 
-                {dayInterval.pop ? (<>
-                  <Text style={[styles.statsText, { fontWeight: '600' }]}>
-                    {precipType}
-
-
-                    <Text style={{}}>
-                    {': ' + (dayInterval.pop * 100).toFixed(0)}%
-                  </Text>
-                  </Text>
-                </>
+                {dayInterval.pop ? (
+                  <>
+                    <Text style={[styles.statsText, { fontWeight: '600' }]}>
+                      {precipType}
+                      <Text style={{}}>
+                        {': ' + (dayInterval.pop * 100).toFixed(0)}%
+                      </Text>
+                    </Text>
+                  </>
                 ) : (
                   null
                 )}
