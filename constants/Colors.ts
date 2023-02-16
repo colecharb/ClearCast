@@ -6,7 +6,7 @@ export default {
   light: {
     text: '#ffffff',
     medium: '#ffffffbb',
-    light: '#ffffff33',
+    light: '#ffffff66',
     subtle: '#ffffff11',
     background: '#326aa2',
     tint: tintColorLight,
@@ -15,8 +15,8 @@ export default {
   },
   dark: {
     text: '#ffffff',
-    medium: '#ffffff77',
-    light: '#ffffff33',
+    medium: '#ffffff99',
+    light: '#ffffff55',
     subtle: '#ffffff11',
     background: '#000000',
     tint: tintColorDark,
