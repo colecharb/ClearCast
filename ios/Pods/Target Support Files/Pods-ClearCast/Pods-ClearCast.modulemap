@@ -1,0 +1,6 @@
+module Pods_ClearCast {
+  umbrella header "Pods-ClearCast-umbrella.h"
+
+  export *
+  module * { export * }
+}

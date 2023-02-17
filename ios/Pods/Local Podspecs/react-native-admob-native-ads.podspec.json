@@ -1,0 +1,29 @@
+{
+  "name": "react-native-admob-native-ads",
+  "version": "0.6.0",
+  "summary": "A simple and robust library for creating & displaying Admob Native Ads in your React Native App using Native Views!",
+  "homepage": "https://github.com/ammarahm-ed/react-native-admob-native-ads",
+  "license": "MIT",
+  "authors": "Ammar Ahmed <ammarahmed6506@gmail.com>",
+  "platforms": {
+    "ios": "9.0",
+    "tvos": "9.2"
+  },
+  "source": {
+    "git": "https://github.com/ammarahm-ed/react-native-admob-native-ads.git",
+    "tag": "v0.6.0"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "weak_frameworks": [
+    "GoogleMobileAds",
+    "FacebookAdapter"
+  ],
+  "pod_target_xcconfig": {
+    "FRAMEWORK_SEARCH_PATHS": "\"$(PODS_ROOT)/Google-Mobile-Ads-SDK/Frameworks/**\" \"$(PODS_ROOT)/FBAudienceNetwork/**\" \"$(PODS_ROOT)/GoogleMobileAdsMediationFacebook/**\" "
+  },
+  "dependencies": {
+    "React-Core": [
+
+    ]
+  }
+}
