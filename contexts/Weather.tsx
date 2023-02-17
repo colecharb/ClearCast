@@ -166,7 +166,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     const thisTimeYesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const startOfYesterday = new Date(thisTimeYesterday.getFullYear(), thisTimeYesterday.getMonth(), thisTimeYesterday.getDate());
 
-    console.log(startOfYesterday.getTime(), now.getTime());
+    // console.log(startOfYesterday.getTime(), now.getTime());
 
 
 
@@ -175,7 +175,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     ).then((response) => (
       response.json()
     )).then((historicalHours: HistoricalHours) => {
-      console.log(historicalHours)
+      // console.log(historicalHours)
       setHistoricalHours(historicalHours)
     }).catch((error) => {
       console.error(error)

@@ -67,7 +67,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
     []
   );
 
-  console.log(JSON.stringify(weather.historicalHours?.list, null, '  '))
+  // console.log(JSON.stringify(weather.historicalHours?.list, null, '  '))
 
   const forecastedHours = weather.hourlyForecast?.list ? (
     weather.hourlyForecast.list.filter(
