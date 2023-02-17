@@ -9,6 +9,7 @@ import emojiFromIcon from "../utils/emojiFromIcon";
 import rescale from "../utils/rescale";
 import { Text, View } from "./Themed";
 import makeStyles from "../constants/Styles";
+import { LinearGradient } from "expo-linear-gradient";
 
 
 export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
@@ -29,13 +30,22 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   const dayInterval = dailyForecast.list[index];
   if (!dayInterval) return null;
 
-  const date = new Date(dayInterval.dt * 1000);
+  const date = new Date((dayInterval.dt - 12 * 60 * 60) * 1000);
+  // date.setHours(0, 0, 0, 0);
+
+  const tomorrowDate = new Date((dayInterval.dt + 12 * 60 * 60) * 1000);
+  // tomorrowDate.setHours(0, 0, 0, 0);
+
   const day = date.toLocaleDateString(navigator.language, { weekday: 'short' });
 
-  // const sunriseDate = new Date(dayInterval.sunrise * 1000);
-  // const sunsetDate = new Date(dayInterval.sunset * 1000);
+  const sunriseDate = new Date(dayInterval.sunrise * 1000);
+  const sunsetDate = new Date(dayInterval.sunset * 1000);
   // const sunrise = sunriseDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
   // const sunset = sunsetDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
+  const sunriseTimeProportion = (sunriseDate.getTime() - date.getTime()) / (tomorrowDate.getTime() - date.getTime());
+  const sunsetTimeProportion = (sunsetDate.getTime() - date.getTime()) / (tomorrowDate.getTime() - date.getTime());
+
+  const DAYLIGHT_GRADIENT_FEATHER = 0.01;
 
   const precipType = (
     dayInterval.rain ? (
@@ -185,12 +195,41 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
       </Pressable>
 
       {showHours ? (
-        <FlatList
-          style={{ marginTop: Layout.margin / 4, marginBottom: -Layout.margin / 4 }}
-          scrollEnabled={false}
-          data={hoursThisDay}
-          renderItem={renderHourForecast}
-        />
+        <View>
+
+          <FlatList
+            style={{ marginTop: Layout.margin / 4, marginBottom: -Layout.margin / 4 }}
+            scrollEnabled={false}
+            data={hoursThisDay}
+            renderItem={renderHourForecast}
+          />
+
+          <LinearGradient
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: `${4.5 / 22 * 100}%`,
+              right: `${14 / 22 * 100}%`
+            }}
+            colors={[
+              Colors[theme].daylight + '00',
+              Colors[theme].daylight + '00',
+              Colors[theme].daylight + '13',
+              Colors[theme].daylight + '13',
+              Colors[theme].daylight + '00',
+              Colors[theme].daylight + '00'
+            ]}
+            locations={[
+              0,
+              sunriseTimeProportion - DAYLIGHT_GRADIENT_FEATHER,
+              sunriseTimeProportion + DAYLIGHT_GRADIENT_FEATHER,
+              sunsetTimeProportion - DAYLIGHT_GRADIENT_FEATHER,
+              sunsetTimeProportion + DAYLIGHT_GRADIENT_FEATHER,
+              1
+            ]}
+          />
+        </View>
       ) : (
         null
       )}
@@ -235,9 +274,9 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
   const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
 
   return (
-    <View style={{ marginVertical: Layout.margin / 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+    <View style={{ marginVertical: Layout.margin / 4, flexDirection: 'row', alignItems: 'center' }}>
 
-      <View style={{ height: '100%', flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between', marginRight: Layout.margin }}>
+      <View style={{ height: '100%', flexDirection: 'row', alignSelf: 'flex-start', flex: 3, alignItems: 'center', justifyContent: 'space-between' }}>
 
         <Text style={[
           styles.hourText,
@@ -268,7 +307,7 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
           <Text style={{ opacity: hourInterval.pop ? 1 : 0 }}>%</Text>
         </Text>
 
-        </View>
+      </View>
 
       <View style={styles.rightSideContainer}>
         <HourTempInterval

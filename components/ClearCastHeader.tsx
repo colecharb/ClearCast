@@ -44,7 +44,7 @@ export default function () {
       )}
 
       <Pressable
-        style={{ position: 'absolute', right: 0, margin: Layout.margin }}
+        style={{ position: 'absolute', right: 0, margin: Layout.margin * 2 }}
         onPress={() => Alert.alert('Settings', 'you pressed the settings button')}
       // hitSlop={Layout.margin}
       >
