@@ -36,6 +36,13 @@ export default {
     },
     "extra": {
       "owmApiKey": process.env.OWM_API_KEY,
+      "eas": {
+        "projectId": "74f6f17f-7821-4e6d-abb4-f88f456b6997"
+      }
     }
+  },
+  "react-native-google-mobile-ads": {
+    "andriod-app-id": "ca-app-pub-7430206445028643~4211580278",
+    "ios-app-id": "ca-app-pub-7430206445028643~7723449871"
   }
 }
