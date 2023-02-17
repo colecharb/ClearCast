@@ -54,7 +54,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           />
         ) : (
           <FlatList
-              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 2 }]}
+              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 4 }]}
               style={{ flex: 1 }}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
@@ -70,7 +70,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
           locations={[0, 0.3, 1]}
-          style={{ marginTop: -3 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight }}
+          style={{ marginTop: -2 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
         >
           <SearchBar
             value={searchQuery}
