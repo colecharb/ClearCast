@@ -120,15 +120,15 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
-          <View style={{ flex: 3, marginRight: Layout.margin, marginBottom: Layout.margin / 2 }}>
+          <View style={{ flex: 3, marginBottom: Layout.margin / 2 }}>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
-              <Text style={[styles.dayText, { flex: 1, textAlign: 'center' }]}>
+              <Text style={[styles.dayText, { flex: 4, textAlign: 'right' }]}>
                 {index === 0 ? 'Today' : day}
               </Text>
 
-              <Text style={[styles.emojiLg, { flex: 1, textAlign: 'center', marginBottom: -Layout.margin }]}>
+              <Text style={[styles.emojiLg, { flex: 8, textAlign: 'center', marginBottom: -Layout.margin }]}>
                 {emojiFromIcon(dayInterval.weather[0].icon)}
               </Text>
 
@@ -143,7 +143,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
                 {dayInterval.pop ? (
                   <>
-                    <Text style={[styles.statsText, { fontWeight: '600' }]}>
+                    <Text style={[styles.statsText, { marginRight: Layout.margin, fontWeight: '700' }]}>
                       {precipType}
                       <Text style={{}}>
                         {': ' + (dayInterval.pop * 100).toFixed(0)}%
@@ -209,16 +209,16 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
               position: 'absolute',
               top: 0,
               bottom: 0,
-              left: `${4.5 / 22 * 100}%`,
-              right: `${14 / 22 * 100}%`
+              left: `${4.5 / 24 * 100}%`,
+              right: `${16.5 / 24 * 100}%`
             }}
             colors={[
-              Colors[theme].daylight + '00',
-              Colors[theme].daylight + '00',
-              Colors[theme].daylight + '13',
-              Colors[theme].daylight + '13',
-              Colors[theme].daylight + '00',
-              Colors[theme].daylight + '00'
+              Colors[theme].night,
+              Colors[theme].night,
+              Colors[theme].daylight,
+              Colors[theme].daylight,
+              Colors[theme].night,
+              Colors[theme].night
             ]}
             locations={[
               0,
@@ -283,29 +283,32 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
           {
             flex: 4,
             textAlign: 'right',
-            paddingRight: Layout.margin,
+            // paddingRight: Layout.margin,
             color: thisIntervalIsNow ? Colors[theme].text : Colors[theme].medium,
           }
         ]}>
           {thisIntervalIsNow ? 'Now' : hour}
         </Text>
         <Text style={[styles.emojiSm, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
-        <Text style={[
-          styles.statsText,
-          {
-            flex: 3,
-            opacity: rescale({
-              value: hourInterval.pop ? hourInterval.pop : 0,
-              oldMin: 0,
-              oldMax: 1,
-              newMin: 0.3,
-              newMax: 1,
-            })
-          }
-        ]}>
-          {hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}` : '–'}
-          <Text style={{ opacity: hourInterval.pop ? 1 : 0 }}>%</Text>
-        </Text>
+        <View style={{ flex: 4 }}>
+          <Text style={[
+            styles.statsText,
+            {
+              fontWeight: '600',
+              marginRight: Layout.margin,
+              opacity: rescale({
+                value: hourInterval.pop ? hourInterval.pop : 0,
+                oldMin: 0,
+                oldMax: 1,
+                newMin: 0.3,
+                newMax: 1,
+              })
+            }
+          ]}>
+            {hourInterval.pop ? `${(hourInterval.pop * 100).toFixed(0)}` : '–'}
+            <Text style={{ opacity: hourInterval.pop ? 1 : 0 }}>%</Text>
+          </Text>
+        </View>
 
       </View>
 
@@ -364,6 +367,7 @@ const makeLocalStyles = () => {
   return StyleSheet.create({
     dayText: {
       fontSize: 18,
+      fontWeight: '500'
     },
     hourText: {
       fontSize: 16,
