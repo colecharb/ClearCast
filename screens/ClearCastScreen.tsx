@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { ActivityIndicator, FlatList, Keyboard, KeyboardAvoidingView, LayoutAnimation, Platform } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
@@ -30,6 +30,10 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
   // States
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false);
+
+  Keyboard.addListener('keyboardWillShow', () => setKeyboardOpen(true));
+  Keyboard.addListener('keyboardWillHide', () => setKeyboardOpen(false));
 
   const renderDayForecastCard = ({ index }: { index: number }) => (
     <DayForecastCard
@@ -55,7 +59,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
         ) : (
           <FlatList
               contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 4 }]}
-              style={{ flex: 1 }}
+              style={{ flex: 1, opacity: (keyboardOpen ? 0.5 : 1) }}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
               automaticallyAdjustsScrollIndicatorInsets={false}
@@ -68,12 +72,13 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
         <LinearGradient
           pointerEvents='box-none'
-          colors={[Colors[theme].background + '00', Colors[theme].background + 'aa', Colors[theme].background]}
+          colors={[Colors[theme].background + '00', Colors[theme].background + 'bb', Colors[theme].background]}
           locations={[0, 0.3, 1]}
-          style={{ marginTop: -2 * tabBarHeight, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
+          style={{ marginTop: -1.5 * tabBarHeight - 100, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
         >
           <SearchBar
             value={searchQuery}
+            style={{ height: 100 }}
             onChangeText={setSearchQuery}
             placeholder={'Search'}
             onSubmitEditing={() => {
