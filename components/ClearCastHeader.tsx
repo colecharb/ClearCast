@@ -8,15 +8,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator, Alert, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function () {
 
   const theme = useColorScheme();
   const weather = useContext(WeatherContext);
   const safeAreaInsets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
-
-  // todo: do this intelligently: ignore null entries and make it less wordy
+  // TODO: do this intelligently: ignore null entries and make it less wordy
   const placeName = (
     weather.place ? (
       `${weather.place.city}, ${weather.place.region}`
@@ -45,7 +46,7 @@ export default function () {
 
       <Pressable
         style={{ position: 'absolute', right: 0, margin: Layout.margin * 2 }}
-        onPress={() => Alert.alert('Settings', 'you pressed the settings button')}
+        onPress={() => navigation.navigate('Settings')}
       // hitSlop={Layout.margin}
       >
         <FontAwesome size={30} color={Colors[theme].light} name='gears' />

@@ -17,6 +17,7 @@ import { RootStackParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import ClearCastScreen from '../screens/ClearCastScreen';
 import ClearCastHeader from '../components/ClearCastHeader';
+import SettingsScreen from '../screens/SettingsScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const theme = useColorScheme()
@@ -39,7 +40,7 @@ function RootNavigator() {
   const styles = makeStyles();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='ClearCast'>
       <Stack.Screen
         name="ClearCast"
         component={ClearCastScreen}
@@ -53,6 +54,7 @@ function RootNavigator() {
           }
         }}
       />
+      <Stack.Screen name='Settings' component={SettingsScreen} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
@@ -60,69 +62,6 @@ function RootNavigator() {
     </Stack.Navigator>
   );
 }
-
-/**
- * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
-// const BottomTab = createBottomTabNavigator<RootTabParamList>();
-
-// function BottomTabNavigator() {
-//   const theme = useColorScheme();
-//   const styles = makeStyles();
-
-//   return (
-//     <BottomTab.Navigator
-//       initialRouteName="ClearCast"
-//       screenOptions={{
-//         headerTitleStyle: styles.navigationHeaderTitle,
-//         headerStyle: styles.navigationHeader,
-//         // headerBackTitleStyle: styles.navigationBackTitleStyle,
-//         // headerTintColor: Colors[colorScheme].tint,
-//         headerShadowVisible: false,
-//         // headerShown: false,
-//         headerTransparent: true,
-
-//         tabBarActiveTintColor: Colors[theme].tint,
-//         tabBarInactiveTintColor: Colors[theme].medium,
-//         tabBarStyle: styles.navigationTabBar,
-//         tabBarShowLabel: false
-//       }}>
-
-//       <BottomTab.Screen
-//         name="ClearCast"
-//         component={ClearCastScreen}
-//         options={{
-//           title: 'ClearCast',
-//           tabBarIcon: ({ color }) => <TabBarIcon name="list-ul" color={color} />,
-//         }}
-//       />
-//       <BottomTab.Screen
-//         name="SettingsTab"
-//         component={NotFoundScreen}
-//         options={({ navigation }: RootTabScreenProps<'SettingsTab'>) => ({
-//           // headerShown: false,
-//           title: 'Hourly',
-//           tabBarIcon: ({ color }) => <TabBarIcon name='clock-o' color={color} />,
-//           // headerRight: () => (
-//           //   <Pressable
-//           //     onPress={() => navigation.navigate('Modal')}
-//           //     style={({ pressed }) => ({
-//           //       opacity: pressed ? 0.5 : 1,
-//           //     })}>
-//           //     <FontAwesome
-//           //       name="info-circle"
-//           //       size={25}
-//           //       color={Colors[colorScheme].text}
-//           //       style={{ marginRight: 15 }}
-//           //     />
-//           //   </Pressable>
-//           // ),
-//         })}
-//       />
-//     </BottomTab.Navigator>
-//   );
-// }
 
 // /**
 //  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -146,13 +85,6 @@ const makeStyles = () => {
       navigationHeaderTitle: {
         color: Colors[theme].text,
       },
-      // navigationTabBar: {
-      //   backgroundColor: Colors[theme].background + '00',
-      //   borderTopWidth: 0,
-      //   // marginTop: -100,
-      //   // height: 100,
-      //   position: 'absolute'
-      // }
     })
   )
 }

@@ -1,8 +1,7 @@
-import React, { createContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import * as Location from 'expo-location';
-import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours } from '../types';
+import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours, TemperatureUnits } from '../types';
 import Constants from 'expo-constants';
-import { refreshDelay } from '../utils/wait';
 
 export type Coordinates = {
   latitude: number,
@@ -10,6 +9,8 @@ export type Coordinates = {
 }
 
 export type WeatherContextData = {
+  temperatureUnits: keyof typeof TemperatureUnits,
+  toggleTemperatureUnits: () => void,
   coordinates: Coordinates | undefined,
   getCoordinatesAsync: (address?: string) => Promise<void>,
   place: LocationGeocodedAddress | undefined,
@@ -60,6 +61,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   // hooks
+  const [temperatureUnits, setTemperatureUnits] = useState<keyof typeof TemperatureUnits>('imperial')
   const [coordinates, setCoordinates] = useState<Coordinates>();
   const [place, setPlace] = useState<LocationGeocodedAddress>();
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather>();
@@ -71,19 +73,33 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const OWM_API_KEY = Constants.expoConfig?.extra?.owmApiKey;
 
   const CURRENT_WEATHER_URL = "https://pro.openweathermap.org/data/2.5/weather";
-  const makeCurrentWeatherUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric') => (
-    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=${units}`
+  const makeCurrentWeatherUrlParams = (lat: number, lon: number) => (
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=${temperatureUnits}`
   );
   const HOURLY_FORECAST_URL = "https://pro.openweathermap.org/data/2.5/forecast/hourly";
-  const makeHourlyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 96) => (
-    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
+  const makeHourlyForecastUrlParams = (lat: number, lon: number, cnt: number = 96) => (
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${temperatureUnits}`
   );
   const DAILY_FORECAST_URL = "https://pro.openweathermap.org/data/2.5/forecast/daily";
-  const makeDailyForecastUrlParams = (lat: number, lon: number, units: 'imperial' | 'metric', cnt: number = 5) => (
-    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
+  const makeDailyForecastUrlParams = (lat: number, lon: number, cnt: number = 5) => (
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${temperatureUnits}`
   );
+  const HISTORICAL_HOURLY_URL = "https://history.openweathermap.org/data/2.5/history/city";
+  const makeHistoricalHourlyUrlParams = (lat: number, lon: number, start: number, end: number) => (
+    `?lat=${lat}&lon=${lon}&type=hour&start=${start}&end=${end}&units=${temperatureUnits}&appid=${OWM_API_KEY}`
+  );
+  // const HISTORICAL_DAILY_URL = `https://history.openweathermap.org/data/2.5/aggregated/day`;
+  // const makeHistoricalDailyUrlParams = (lat: number, lon: number, month: number, day: number) => (
+  //   `?lat=${lat}&lon=${lon}&month=${month}&day=${day}&appid=${OWM_API_KEY}`
+  // );
 
-
+  const toggleTemperatureUnits = () => {
+    const options = Object.keys(TemperatureUnits);
+    const numOptions = options.length;
+    const index = TemperatureUnits[temperatureUnits];
+    const newIndex = (index + 1) % numOptions;
+    setTemperatureUnits(options[newIndex] as keyof typeof TemperatureUnits)
+  }
 
   async function getCoordinatesAsync(address?: string) {
     if (address) {
@@ -120,7 +136,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   async function getCurrentWeatherAsync(coords: Coordinates) {
     // if (!coordinates) return;
-    fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(coords.latitude, coords.longitude, 'imperial'))
+    fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(coords.latitude, coords.longitude))
       .then((response) => response.json())
       .then((response) => {
         setCurrentWeather(response)
@@ -131,7 +147,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   async function getHourlyForecastAsync(coords: Coordinates) {
     // if (!coordinates) return;
-    fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(coords.latitude, coords.longitude, 'imperial'))
+    fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(coords.latitude, coords.longitude))
       .then((response) => response.json())
       .then((hourlyForecast) => {
         setHourlyForecast(addExtremesToHourlyForecast(hourlyForecast))
@@ -142,7 +158,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   async function getDailyForecastAsync(coords: Coordinates) {
     // if (!coordinates) return;
-    fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(coords.latitude, coords.longitude, 'imperial'))
+    fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(coords.latitude, coords.longitude))
       .then((response) => response.json())
       .then((dailyForecast) => {
         setDailyForecast(addExtremesToDailyForecast(dailyForecast))
@@ -152,14 +168,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   }
 
   async function getHistoricalWeatherAsync(coords: Coordinates) {
-    const HISTORICAL_HOURLY_URL = "https://history.openweathermap.org/data/2.5/history/city";
-    const makeHistoricalHourlyUrlParams = (lat: number, lon: number, start: number, end: number, units: 'imperial' | 'metric') => (
-      `?lat=${lat}&lon=${lon}&type=hour&start=${start}&end=${end}&units=${units}&appid=${OWM_API_KEY}`
-    );
-    // const HISTORICAL_DAILY_URL = `https://history.openweathermap.org/data/2.5/aggregated/day`;
-    // const makeHistoricalDailyUrlParams = (lat: number, lon: number, month: number, day: number) => (
-    //   `?lat=${lat}&lon=${lon}&month=${month}&day=${day}&appid=${OWM_API_KEY}`
-    // );
+
 
     const now = new Date();
     now.setMinutes(0, 0, 0)
@@ -171,7 +180,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
 
     fetch(
-      HISTORICAL_HOURLY_URL + makeHistoricalHourlyUrlParams(coords.latitude, coords.longitude, startOfYesterday.getTime() / 1000, now.getTime() / 1000, 'imperial')
+      HISTORICAL_HOURLY_URL + makeHistoricalHourlyUrlParams(coords.latitude, coords.longitude, startOfYesterday.getTime() / 1000, now.getTime() / 1000)
     ).then((response) => (
       response.json()
     )).then((historicalHours: HistoricalHours) => {
@@ -188,10 +197,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     // )).then((yesterday))
   }
 
-  async function getWeathersAndPlaceAsync(coords: Coordinates) {
+  async function getAllWeatherAsync(coords: Coordinates) {
     setLoading(true)
     await Promise.all([
-      getPlaceAsync(coords),
       getCurrentWeatherAsync(coords),
       getDailyForecastAsync(coords),
       getHourlyForecastAsync(coords),
@@ -201,15 +209,27 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     // console.log('got weather');
   }
 
+  async function getWeathersAndPlaceAsync(coords: Coordinates) {
+    setLoading(true)
+    await Promise.all([
+      getPlaceAsync(coords),
+      getAllWeatherAsync(coords)
+    ])
+    setLoading(false)
+    // console.log('got weather');
+  }
+
   useEffect(() => {
     getCoordinatesAsync();
   }, [])
 
-  // useEffect(() => {
-  //   getAllWeatherAsync()
-  // }, [coordinates])
+  useEffect(() => {
+    coordinates ? getAllWeatherAsync(coordinates) : null;
+  }, [temperatureUnits])
 
   const weatherContextData = {
+    temperatureUnits: temperatureUnits,
+    toggleTemperatureUnits: toggleTemperatureUnits,
     coordinates: coordinates,
     place: place,
     getCoordinatesAsync: getCoordinatesAsync,

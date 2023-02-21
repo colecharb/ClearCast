@@ -16,7 +16,7 @@ declare global {
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   ClearCast: undefined;
-  Modal: undefined;
+  Settings: undefined;
   NotFound: undefined;
 };
 
@@ -34,6 +34,12 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >;
+
+export const TemperatureUnits = {
+  'imperial': 0,
+  'metric': 1,
+  'kelvin': 2
+} as const;
 
 export type Conditions = {
   "id": number,
