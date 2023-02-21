@@ -8,8 +8,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function (props: ViewProps) {
   const theme = useColorScheme();
-  // const headerHeight = useHeaderHeight();
-  // const safeAreaInsets = useSafeAreaInsets();
   const { style } = props;
   return (
     <>
