@@ -40,15 +40,20 @@ function RootNavigator() {
   const styles = makeStyles();
 
   return (
-    <Stack.Navigator initialRouteName='ClearCast'>
+    <Stack.Navigator
+      initialRouteName='ClearCast'
+      screenOptions={{
+        headerTransparent: true,
+        headerTitleStyle: styles.navigationHeaderTitle,
+      }}
+    >
       <Stack.Screen
         name="ClearCast"
         component={ClearCastScreen}
         options={() => {
           return {
             animation: 'fade',
-            headerTransparent: true,
-            headerTitleStyle: styles.navigationHeaderTitle,
+
             header: ClearCastHeader,
             // headerShown: false,
           }
