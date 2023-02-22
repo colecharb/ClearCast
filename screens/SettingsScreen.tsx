@@ -94,6 +94,7 @@ const makeStyles = () => {
       textTransform: 'uppercase',
       color: Colors[theme].medium,
       padding: Layout.margin,
+      marginLeft: Layout.margin,
       marginTop: Layout.margin,
     }
   })
