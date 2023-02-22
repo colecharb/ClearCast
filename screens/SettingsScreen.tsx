@@ -1,19 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Button, FlatList, LayoutAnimation, ScrollView, StyleSheet } from "react-native";
+import React, { useContext, useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from "../components/ScreenContainer";
-import SettingBase from "../components/SettingBase";
+import { SettingSelection } from "../components/Settings";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { WeatherContext } from "../contexts/Weather";
 import useColorScheme from "../hooks/useColorScheme";
 import { ALL_UNITS, RootStackScreenProps, Units } from "../types";
-import DropDownPicker from 'react-native-dropdown-picker';
 import Layout from "../constants/Layout";
-import { FontAwesome } from "@expo/vector-icons";
 import HorizontalLine from "../components/HorizontalLine";
 import { HeaderBackButton } from '@react-navigation/elements'
-import { color } from "@rneui/themed/dist/config";
 
 export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
 
@@ -39,20 +36,9 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
     )
   })
 
-  const SettingSelection = ({ item, value, onPress }: { item: string, value: string, onPress: () => void }) => {
-    return (
-      <SettingBase
-        text={item}
-        onPress={onPress}
-      >
-        {value === item ? (
-          <FontAwesome name='check' color={Colors[theme].tint} />
-        ) : (
-          null
-        )}
-      </SettingBase>
-    )
-  }
+  const SettingSeparator = () => (
+    <HorizontalLine style={{ marginLeft: Layout.margin }} />
+  )
 
   return (
     <ScreenContainer>
@@ -63,10 +49,10 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
         </Text>
         <View style={styles.settingsView}>
           {ALL_UNITS.map((theUnits, index) => <>
-            {index === 0 ? null : <HorizontalLine key={-index} />}
+            {index === 0 ? null : <SettingSeparator key={-index} />}
             <SettingSelection
               item={theUnits}
-              value={units}
+              selected={theUnits === units}
               onPress={() => setUnits(theUnits)}
               key={theUnits}
             />
@@ -78,10 +64,10 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
         </Text>
         <View style={styles.settingsView}>
           {['light', 'dark', 'automatic'].map((selection, index) => <>
-            {index === 0 ? null : <HorizontalLine key={-index} />}
+            {index === 0 ? null : <SettingSeparator key={-index} />}
             <SettingSelection
               item={selection ?? 'automatic'}
-              value={manualTheme}
+              selected={selection === manualTheme}
               onPress={() => setManualTheme(selection)}
               key={units}
             />

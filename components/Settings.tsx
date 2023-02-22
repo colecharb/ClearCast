@@ -6,7 +6,7 @@ import Layout from "../constants/Layout";
 import useColorScheme from "../hooks/useColorScheme";
 import { Text, View } from "./Themed";
 
-export default function ({ text, onPress, children }: { text: string, onPress?: () => void, children: any }) {
+export function SettingBase({ text, onPress, children }: { text: string, onPress?: () => void, children: any }) {
 
   const styles = makeStyles();
 
@@ -15,6 +15,26 @@ export default function ({ text, onPress, children }: { text: string, onPress?: 
       <Text style={styles.settingText}>{text}</Text>
       {children}
     </Pressable>
+  )
+}
+
+export const SettingSelection = ({ item, selected, onPress }: { item: string, selected: boolean, onPress: () => void }) => {
+
+  const styles = makeStyles();
+
+  return (
+    <SettingBase
+      text={item}
+      onPress={onPress}
+    >
+      {selected ? (
+        <Text style={styles.settingText}>
+          ✓
+        </Text>
+      ) : (
+        null
+      )}
+    </SettingBase>
   )
 }
 
@@ -30,7 +50,6 @@ const makeStyles = () => {
       padding: Layout.margin
     },
     settingText: {
-      flex: 1, 
       fontSize: 18,
       fontWeight: 'normal',
       color: Colors[theme].text,
