@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FlatList, LayoutAnimation, Pressable, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
@@ -13,8 +13,6 @@ import { LinearGradient } from "expo-linear-gradient";
 
 
 export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
-
-  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
   const theme = useColorScheme();
   const styles = makeLocalStyles();
@@ -112,6 +110,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
         // style={[globalStyles.card]}
         hitSlop={Layout.margin}
         onPress={() => {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
           setShowHours(!showHours)
           // console.log(showHours);
           // console.log(hoursThisDay)
