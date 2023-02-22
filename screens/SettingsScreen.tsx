@@ -37,7 +37,7 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
   })
 
   const SettingSeparator = () => (
-    <HorizontalLine style={{ marginLeft: Layout.margin }} />
+    <HorizontalLine style={{ marginLeft: Layout.margin * 2 }} />
   )
 
   return (

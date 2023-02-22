@@ -21,6 +21,7 @@ export function SettingBase({ text, onPress, children }: { text: string, onPress
 export const SettingSelection = ({ item, selected, onPress }: { item: string, selected: boolean, onPress: () => void }) => {
 
   const styles = makeStyles();
+  const theme = useColorScheme();
 
   return (
     <SettingBase
@@ -28,7 +29,7 @@ export const SettingSelection = ({ item, selected, onPress }: { item: string, se
       onPress={onPress}
     >
       {selected ? (
-        <Text style={styles.settingText}>
+        <Text style={[styles.settingText, { color: Colors[theme].tint, fontWeight: 'bold' }]}>
           ✓
         </Text>
       ) : (
@@ -47,7 +48,8 @@ const makeStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: Layout.margin
+      paddingVertical: Layout.margin,
+      paddingHorizontal: Layout.margin * 2,
     },
     settingText: {
       fontSize: 18,
