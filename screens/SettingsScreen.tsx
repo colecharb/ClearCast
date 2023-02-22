@@ -60,7 +60,7 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
         </Text>
         <View style={styles.settingsView}>
           {ALL_UNITS.map((units, index) => <>
-            {index === 0 ? null : <HorizontalLine />}
+            {index === 0 ? null : <HorizontalLine key={-index} />}
             <UnitsSelection item={units} key={units} />
           </>)}
         </View>
