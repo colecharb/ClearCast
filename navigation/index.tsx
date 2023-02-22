@@ -45,6 +45,7 @@ function RootNavigator() {
       initialRouteName='ClearCast'
       screenOptions={{
         headerTransparent: true,
+        headerBlurEffect: 'regular',
         headerTitleStyle: styles.navigationHeaderTitle,
         headerTintColor: Colors[theme].tint,
       }}
@@ -55,7 +56,6 @@ function RootNavigator() {
         options={() => {
           return {
             animation: 'fade',
-
             header: ClearCastHeader,
             // headerShown: false,
           }
