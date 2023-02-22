@@ -18,11 +18,13 @@ import { color } from "@rneui/themed/dist/config";
 export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
 
   const weather = useContext(WeatherContext);
-  const theme = useColorScheme();
+
   const headerHeight = useHeaderHeight();
   const styles = makeStyles();
 
   const [units, setUnits] = useState(weather.units);
+  const [manualTheme, setManualTheme] = useState<'light' | 'dark' | 'automatic'>('automatic')
+  const theme = useColorScheme();
 
   navigation.setOptions({
     headerLeft: () => (
@@ -37,13 +39,13 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
     )
   })
 
-  const UnitsSelection = ({ item }: { item: Units }) => {
+  const SettingSelection = ({ item, value, onPress }: { item: string, value: string, onPress: () => void }) => {
     return (
       <SettingBase
         text={item}
-        onPress={() => setUnits(item)}
+        onPress={onPress}
       >
-        {units === item ? (
+        {value === item ? (
           <FontAwesome name='check' color={Colors[theme].tint} />
         ) : (
           null
@@ -55,15 +57,37 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
   return (
     <ScreenContainer>
       <ScrollView contentContainerStyle={{ padding: Layout.margin, paddingTop: headerHeight }}>
+
         <Text style={styles.settingTitle}>
           units
         </Text>
         <View style={styles.settingsView}>
-          {ALL_UNITS.map((units, index) => <>
+          {ALL_UNITS.map((theUnits, index) => <>
             {index === 0 ? null : <HorizontalLine key={-index} />}
-            <UnitsSelection item={units} key={units} />
+            <SettingSelection
+              item={theUnits}
+              value={units}
+              onPress={() => setUnits(theUnits)}
+              key={theUnits}
+            />
           </>)}
         </View>
+
+        <Text style={styles.settingTitle}>
+          Theme <Text style={[styles.settingTitle, { textTransform: 'none', color: Colors[theme].light }]}>(not working yet)</Text>
+        </Text>
+        <View style={styles.settingsView}>
+          {['light', 'dark', 'automatic'].map((selection, index) => <>
+            {index === 0 ? null : <HorizontalLine key={-index} />}
+            <SettingSelection
+              item={selection ?? 'automatic'}
+              value={manualTheme}
+              onPress={() => setManualTheme(selection)}
+              key={units}
+            />
+          </>)}
+        </View>
+
       </ScrollView>
     </ScreenContainer>
   )
