@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { Button, ScrollView, StyleSheet } from "react-native";
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from "../components/ScreenContainer";
 import { SettingSelection } from "../components/Settings";
@@ -24,10 +24,10 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
   const theme = useColorScheme();
 
   navigation.setOptions({
-    headerLeft: () => (
-      <HeaderBackButton
-        labelVisible
-        tintColor={Colors[theme].tint}
+    headerRight: () => (
+      <Button
+        title="Save"
+        color={Colors[theme].tint}
         onPress={() => {
           weather.setUnits(units);
           navigation.goBack();
