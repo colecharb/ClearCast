@@ -34,6 +34,7 @@ const makeStyles = () => {
       fontSize: 18,
       fontWeight: 'normal',
       color: Colors[theme].text,
+      textTransform: 'capitalize',
     }
   })
 }
