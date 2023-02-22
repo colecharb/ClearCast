@@ -1,7 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
 import * as Location from 'expo-location';
-import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours, TemperatureUnits } from '../types';
+import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours, Units } from '../types';
 import Constants from 'expo-constants';
+import { LayoutAnimation } from 'react-native';
 
 export type Coordinates = {
   latitude: number,
@@ -9,8 +10,9 @@ export type Coordinates = {
 }
 
 export type WeatherContextData = {
-  temperatureUnits: keyof typeof TemperatureUnits,
-  toggleTemperatureUnits: () => void,
+  units: Units,
+  setUnits: React.Dispatch<React.SetStateAction<"imperial" | "metric" | "kelvin">>,
+  // toggleTemperatureUnits: () => void,
   coordinates: Coordinates | undefined,
   getCoordinatesAsync: (address?: string) => Promise<void>,
   place: LocationGeocodedAddress | undefined,
@@ -61,7 +63,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   // hooks
-  const [temperatureUnits, setTemperatureUnits] = useState<keyof typeof TemperatureUnits>('imperial')
+  const [units, setUnits] = useState<Units>('imperial')
   const [coordinates, setCoordinates] = useState<Coordinates>();
   const [place, setPlace] = useState<LocationGeocodedAddress>();
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather>();
@@ -74,32 +76,24 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   const CURRENT_WEATHER_URL = "https://pro.openweathermap.org/data/2.5/weather";
   const makeCurrentWeatherUrlParams = (lat: number, lon: number) => (
-    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=${temperatureUnits}`
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=${units}`
   );
   const HOURLY_FORECAST_URL = "https://pro.openweathermap.org/data/2.5/forecast/hourly";
   const makeHourlyForecastUrlParams = (lat: number, lon: number, cnt: number = 96) => (
-    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${temperatureUnits}`
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
   );
   const DAILY_FORECAST_URL = "https://pro.openweathermap.org/data/2.5/forecast/daily";
   const makeDailyForecastUrlParams = (lat: number, lon: number, cnt: number = 5) => (
-    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${temperatureUnits}`
+    `?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&cnt=${cnt}&units=${units}`
   );
   const HISTORICAL_HOURLY_URL = "https://history.openweathermap.org/data/2.5/history/city";
   const makeHistoricalHourlyUrlParams = (lat: number, lon: number, start: number, end: number) => (
-    `?lat=${lat}&lon=${lon}&type=hour&start=${start}&end=${end}&units=${temperatureUnits}&appid=${OWM_API_KEY}`
+    `?lat=${lat}&lon=${lon}&type=hour&start=${start}&end=${end}&units=${units}&appid=${OWM_API_KEY}`
   );
   // const HISTORICAL_DAILY_URL = `https://history.openweathermap.org/data/2.5/aggregated/day`;
   // const makeHistoricalDailyUrlParams = (lat: number, lon: number, month: number, day: number) => (
   //   `?lat=${lat}&lon=${lon}&month=${month}&day=${day}&appid=${OWM_API_KEY}`
   // );
-
-  const toggleTemperatureUnits = () => {
-    const options = Object.keys(TemperatureUnits);
-    const numOptions = options.length;
-    const index = TemperatureUnits[temperatureUnits];
-    const newIndex = (index + 1) % numOptions;
-    setTemperatureUnits(options[newIndex] as keyof typeof TemperatureUnits)
-  }
 
   async function getCoordinatesAsync(address?: string) {
     if (address) {
@@ -131,6 +125,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   async function getPlaceAsync(coords: Coordinates) {
     const places = await Location.reverseGeocodeAsync({ ...coords });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setPlace(places[0]);
   }
 
@@ -139,6 +134,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     fetch(CURRENT_WEATHER_URL + makeCurrentWeatherUrlParams(coords.latitude, coords.longitude))
       .then((response) => response.json())
       .then((response) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setCurrentWeather(response)
         // console.log('here');
       })
@@ -150,6 +146,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     fetch(HOURLY_FORECAST_URL + makeHourlyForecastUrlParams(coords.latitude, coords.longitude))
       .then((response) => response.json())
       .then((hourlyForecast) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setHourlyForecast(addExtremesToHourlyForecast(hourlyForecast))
         // console.log('here');
       })
@@ -161,6 +158,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     fetch(DAILY_FORECAST_URL + makeDailyForecastUrlParams(coords.latitude, coords.longitude))
       .then((response) => response.json())
       .then((dailyForecast) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setDailyForecast(addExtremesToDailyForecast(dailyForecast))
         // console.log('here');
       })
@@ -185,6 +183,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       response.json()
     )).then((historicalHours: HistoricalHours) => {
       // console.log(historicalHours)
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setHistoricalHours(historicalHours)
     }).catch((error) => {
       console.error(error)
@@ -225,11 +224,12 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     coordinates ? getAllWeatherAsync(coordinates) : null;
-  }, [temperatureUnits])
+  }, [units])
 
   const weatherContextData = {
-    temperatureUnits: temperatureUnits,
-    toggleTemperatureUnits: toggleTemperatureUnits,
+    units: units,
+    setUnits: setUnits,
+    // toggleTemperatureUnits: toggleTemperatureUnits,
     coordinates: coordinates,
     place: place,
     getCoordinatesAsync: getCoordinatesAsync,
