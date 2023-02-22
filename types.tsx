@@ -35,11 +35,9 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   NativeStackScreenProps<RootStackParamList>
 >;
 
-export const TemperatureUnits = {
-  'imperial': 0,
-  'metric': 1,
-  'kelvin': 2
-} as const;
+export const ALL_UNITS = ['imperial', 'metric', 'kelvin'] as const;
+type UnitTuple = typeof ALL_UNITS;
+export type Units = UnitTuple[number];
 
 export type Conditions = {
   "id": number,
