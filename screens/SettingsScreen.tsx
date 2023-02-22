@@ -24,10 +24,10 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
   const theme = useColorScheme();
 
   navigation.setOptions({
-    headerRight: () => (
-      <Button
-        title="Save"
-        color={Colors[theme].tint}
+    headerLeft: () => (
+      <HeaderBackButton
+        // labelVisible
+        tintColor={Colors[theme].tint}
         onPress={() => {
           weather.setUnits(units);
           navigation.goBack();
