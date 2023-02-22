@@ -38,6 +38,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const styles = makeStyles();
+  const theme = useColorScheme();
 
   return (
     <Stack.Navigator
@@ -45,6 +46,7 @@ function RootNavigator() {
       screenOptions={{
         headerTransparent: true,
         headerTitleStyle: styles.navigationHeaderTitle,
+        headerTintColor: Colors[theme].tint,
       }}
     >
       <Stack.Screen
