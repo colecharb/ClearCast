@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, memo } from "react";
 import { FlatList, LayoutAnimation, Pressable, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
@@ -12,7 +12,7 @@ import makeStyles from "../constants/Styles";
 import { LinearGradient } from "expo-linear-gradient";
 
 
-export function DayForecastCard({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
+export const DayForecastCard = memo(function ({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
 
   const theme = useColorScheme();
   const styles = makeLocalStyles();
@@ -28,11 +28,18 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
   const dayInterval = dailyForecast.list[index];
   if (!dayInterval) return null;
 
-  const date = new Date((dayInterval.dt - 12 * 60 * 60) * 1000);
+  // const dateNow = new Date();
+  // dateNow.setHours(0, 0, 0, 0);
+
+  const date = new Date((dayInterval.dt) * 1000);
+  date.setHours(0, 0, 0, 0);
   // date.setHours(0, 0, 0, 0);
 
-  const tomorrowDate = new Date((dayInterval.dt + 12 * 60 * 60) * 1000);
-  // tomorrowDate.setHours(0, 0, 0, 0);
+  // console.log(date, dateNow);
+
+
+  const tomorrowDate = new Date((dayInterval.dt + 24 * 60 * 60) * 1000);
+  tomorrowDate.setHours(0, 0, 0, 0);
 
   const day = date.toLocaleDateString(navigator.language, { weekday: 'short' });
 
@@ -235,7 +242,7 @@ export function DayForecastCard({ dailyForecast, index }: { weather: WeatherCont
 
     </View>
   );
-};
+});
 
 const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, low: number, high: number, maxHigh: number }) => {
   const styles = makeLocalStyles();
@@ -260,17 +267,25 @@ const LowHighTempInterval = ({ minLow, low, high, maxHigh }: { minLow: number, l
   );
 };
 
-export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: { hourInterval: HourInterval | HistoricalHourInterval, minLow: number, low: number, high: number, maxHigh: number }) {
+const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHigh }: { hourInterval: HourInterval | HistoricalHourInterval, minLow: number, low: number, high: number, maxHigh: number }) {
 
   const styles = makeLocalStyles();
   const theme = useColorScheme();
 
+  const weather = useContext(WeatherContext);
+  const locale = weather.hourlyForecast?.city.country;
+
   const now = new Date();
 
   const date = new Date(hourInterval.dt * 1000);
-  const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' });
+  const hour = date.toLocaleTimeString(locale, { hour: 'numeric' });
 
   const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
+
+  // console.log(date.toLocaleDateString(locale, { dateStyle: 'short' }));
+  // console.log(navigator.language);
+
+
 
   return (
     <View style={{ marginVertical: Layout.margin / 4, flexDirection: 'row', alignItems: 'center' }}>
@@ -326,7 +341,7 @@ export function HourForecastCard({ hourInterval, minLow, low, high, maxHigh }: {
 
     </View>
   );
-};
+});
 
 const HourTempInterval = ({ minLow, low, temp, high, maxHigh }: { minLow: number, low: number, temp: number, high: number, maxHigh: number }) => {
   const styles = makeLocalStyles();
