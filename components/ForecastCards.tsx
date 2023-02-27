@@ -276,12 +276,12 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
   const theme = useColorScheme();
 
   const weather = useContext(WeatherContext);
-  const locale = weather.hourlyForecast?.city.country;
+  // const locale = weather.hourlyForecast?.city.country;
 
   const now = new Date();
 
   const date = new Date(hourInterval.dt * 1000);
-  const hour = date.toLocaleTimeString(locale, { hour: 'numeric' });
+  const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' });
 
   const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
 
