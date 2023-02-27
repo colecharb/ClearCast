@@ -50,7 +50,8 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
   const sunriseTimeProportion = (sunriseDate.getTime() - date.getTime()) / (tomorrowDate.getTime() - date.getTime());
   const sunsetTimeProportion = (sunsetDate.getTime() - date.getTime()) / (tomorrowDate.getTime() - date.getTime());
 
-  const DAYLIGHT_GRADIENT_FEATHER = 0.01;
+  const DAYLIGHT_GRADIENT_FEATHER = 0.02;
+  const VERTICAL_OFFSET = 1 / 24;
 
   const precipType = (
     dayInterval.rain ? (
@@ -203,18 +204,12 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
       {showHours ? (
         <View>
 
-          <FlatList
-            style={{ marginTop: Layout.margin / 4, marginBottom: -Layout.margin / 4 }}
-            scrollEnabled={false}
-            data={hoursThisDay}
-            renderItem={renderHourForecast}
-          />
 
           <LinearGradient
             style={{
               position: 'absolute',
-              top: 0,
-              bottom: 0,
+              top: Layout.margin / 4,
+              bottom: -Layout.margin / 4,
               left: `${4.5 / 24 * 100}%`,
               right: `${16.5 / 24 * 100}%`
             }}
@@ -228,13 +223,21 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
             ]}
             locations={[
               0,
-              sunriseTimeProportion - DAYLIGHT_GRADIENT_FEATHER,
-              sunriseTimeProportion + DAYLIGHT_GRADIENT_FEATHER,
-              sunsetTimeProportion - DAYLIGHT_GRADIENT_FEATHER,
-              sunsetTimeProportion + DAYLIGHT_GRADIENT_FEATHER,
+              sunriseTimeProportion - DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
+              sunriseTimeProportion + DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
+              sunsetTimeProportion - DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
+              sunsetTimeProportion + DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
               1
             ]}
           />
+
+          <FlatList
+            style={{ marginTop: Layout.margin / 4, marginBottom: -Layout.margin / 4 }}
+            scrollEnabled={false}
+            data={hoursThisDay}
+            renderItem={renderHourForecast}
+          />
+
         </View>
       ) : (
         null
