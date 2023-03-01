@@ -3,7 +3,7 @@ import { SearchBarProps } from "@rneui/themed"
 import React from "react"
 import useColorScheme from "../hooks/useColorScheme"
 import Colors from "../constants/Colors"
-import { StyleSheet } from "react-native"
+import { Platform, StyleSheet } from "react-native"
 import Layout from "../constants/Layout"
 
 export default function SearchBar({ ...props }: SearchBarProps) {
@@ -14,7 +14,7 @@ export default function SearchBar({ ...props }: SearchBarProps) {
   return (
     <_SearchBar_
       selectionColor={Colors[colorScheme].tint}
-      platform='ios'
+      platform="ios"
       searchIcon={styles.searchIcon}
       containerStyle={[styles.searchBarContainer]}
       inputContainerStyle={styles.inputContainer}
@@ -45,10 +45,15 @@ function makeStyles() {
   return StyleSheet.create({
     searchBarContainer: {
       backgroundColor: 'transparent',
-      height: 75
+      // height: 75,
     },
     inputContainer: {
       backgroundColor: 'transparent',
+      borderColor: Colors[theme].light,
+      borderWidth: Layout.borderWidth,
+      borderBottomWidth: Layout.borderWidth,
+      borderRadius: Layout.borderRadius,
+      height: 40,
     },
     inputStyle: {
       backgroundColor: 'transparent',

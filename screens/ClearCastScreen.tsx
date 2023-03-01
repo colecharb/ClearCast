@@ -15,6 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import CurrentWeather from '../components/CurrentWeather';
 import HorizontalLine from '../components/HorizontalLine';
 import Layout from '../constants/Layout';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
@@ -22,7 +23,8 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   const theme = useColorScheme();
   const styles = makeStyles();
   const headerHeight = useHeaderHeight();
-  const tabBarHeight = 100 //useBottomTabBarHeight();
+  const searchBarHeight = 100 //useBottomTabBarHeight();
+  const safeAreaInsets = useSafeAreaInsets();
 
   // weather context
   const weather = useContext(WeatherContext);
@@ -48,13 +50,13 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={-tabBarHeight}
+        keyboardVerticalOffset={-safeAreaInsets.bottom}
         style={{ flex: 1 }}
       >
         {!weather.dailyForecast ? (
           <ActivityIndicator
             size='large'
-            style={{ flex: 1, paddingBottom: tabBarHeight }}
+            style={{ flex: 1 }}
           />
         ) : (
           <FlatList
@@ -74,11 +76,11 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'bb', Colors[theme].background]}
           locations={[0, 0.3, 1]}
-          style={{ marginTop: -1.5 * tabBarHeight - 100, paddingBottom: tabBarHeight, paddingTop: tabBarHeight / 2 }}
+          style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom }}
         >
           <SearchBar
             value={searchQuery}
-            style={{ height: 100 }}
+            style={{ height: searchBarHeight }}
             onChangeText={setSearchQuery}
             placeholder={'Search'}
             onSubmitEditing={() => {
