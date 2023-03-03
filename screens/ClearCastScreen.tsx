@@ -80,7 +80,10 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom, flexDirection: 'row', alignItems: 'center' }}
         >
 
-          <Pressable onPress={() => { weather.getCoordinatesAsync(undefined) }}>
+          <Pressable onPress={() => {
+            weather.getCoordinatesAsync(undefined);
+            setSearchQuery('');
+          }}>
             <Icon
               name='location-arrow'
               size={25}
