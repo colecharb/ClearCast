@@ -64,7 +64,8 @@ function makeStyles() {
       margin: Layout.margin
     },
     searchIcon: {
-      color: Colors[theme].text
+      color: Colors[theme].text,
+      display: 'none',
     },
     clearIcon: {
       color: Colors[theme].medium
