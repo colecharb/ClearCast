@@ -80,7 +80,10 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom, flexDirection: 'row', alignItems: 'center' }}
         >
 
-          <Pressable onPress={() => {
+          {keyboardOpen ? (
+            null
+          ) : (
+              <Pressable onPress={() => {
             weather.getCoordinatesAsync(undefined);
             setSearchQuery('');
           }}>
@@ -91,6 +94,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
               style={{ margin: Layout.margin }}
             />
           </Pressable>
+          )}
 
           <SearchBar
             value={searchQuery}
@@ -105,7 +109,10 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
             // onEndEditing={() => setSearchQueryToLocation(weather, setSearchQuery)}
           />
 
-          <Pressable onPress={() => Alert.alert("Recent Places", "You opened the Recent Places list.")}>
+          {keyboardOpen ? (
+            null
+          ) : (
+              <Pressable onPress={() => Alert.alert("Recent Places", "You opened the Recent Places list.")}>
             <Icon
               name='list-ul'
               size={25}
@@ -113,6 +120,8 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
               style={{ margin: Layout.margin }}
             />
           </Pressable>
+          )}
+
 
         </LinearGradient>
 
