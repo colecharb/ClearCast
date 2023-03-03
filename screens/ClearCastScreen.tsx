@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, Keyboard, KeyboardAvoidingView, LayoutAnimation, Platform } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Keyboard, KeyboardAvoidingView, LayoutAnimation, Platform, Pressable } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
@@ -16,6 +16,7 @@ import CurrentWeather from '../components/CurrentWeather';
 import HorizontalLine from '../components/HorizontalLine';
 import Layout from '../constants/Layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
@@ -76,11 +77,22 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'bb', Colors[theme].background]}
           locations={[0, 0.3, 1]}
-          style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom }}
+          style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom, flexDirection: 'row', alignItems: 'center' }}
         >
+
+          <Pressable onPress={() => { weather.getCoordinatesAsync(undefined) }}>
+            <Icon
+              name='location-arrow'
+              size={25}
+              color={Colors[theme].text}
+              style={{ margin: Layout.margin }}
+            />
+          </Pressable>
+
           <SearchBar
             value={searchQuery}
             style={{ height: searchBarHeight }}
+            containerStyle={{ backgroundColor: 'transparent', flex: 1 }}
             onChangeText={setSearchQuery}
             placeholder={'Search'}
             onSubmitEditing={() => {
@@ -89,6 +101,16 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
             // onCancel={() => setSearchQueryToLocation(weather, setSearchQuery)}
             // onEndEditing={() => setSearchQueryToLocation(weather, setSearchQuery)}
           />
+
+          <Pressable onPress={() => Alert.alert("Recent Places", "You opened the Recent Places list.")}>
+            <Icon
+              name='list-ul'
+              size={25}
+              color={Colors[theme].text}
+              style={{ margin: Layout.margin }}
+            />
+          </Pressable>
+
         </LinearGradient>
 
 
