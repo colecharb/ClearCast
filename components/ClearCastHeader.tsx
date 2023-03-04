@@ -18,13 +18,7 @@ export default function () {
   const navigation = useNavigation();
 
   // TODO: do this intelligently: ignore null entries and make it less wordy
-  const placeName = (
-    weather.place ? (
-      `${weather.place.city}, ${weather.place.region}`
-    ) : (
-        null
-    )
-  )
+  const placeName = weather.place?.name ?? null
 
   return (
     <LinearGradient

@@ -23,8 +23,9 @@ export default function SearchBar({ ...props }: SearchBarProps) {
       // showCancel={true}
       // cancelButtonTitle='Cancel'
       cancelButtonProps={{ color: Colors[colorScheme].tint, buttonStyle: styles.cancelButton }}
-      returnKeyType='go'
+      returnKeyType='none'
       clearIcon={styles.clearIcon}
+      autoCorrect={false}
       // value={value}
       // onChangeText={onChangeText}
       // onSubmitEditing={onSubmitEditing}
