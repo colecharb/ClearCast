@@ -137,7 +137,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
                   name='location-arrow'
                   size={25}
                   color={Colors[theme].text}
-                  style={{ margin: Layout.margin }}
+                    style={{ padding: Layout.margin, marginLeft: Layout.margin }}
                 />
               </Pressable>
             )}
@@ -163,7 +163,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
                   name='list-ul'
                   size={25}
                   color={Colors[theme].text}
-                  style={{ margin: Layout.margin }}
+                    style={{ padding: Layout.margin, marginRight: Layout.margin }}
                 />
               </Pressable>
             )}
