@@ -19,13 +19,13 @@ export default function ({ autocompleteResponse, onSelectPlace }: { autocomplete
 
   const renderItem = ({ item }: { item: PlaceAutocompletePrediction }) => (
     <Pressable
-      style={{ padding: Layout.margin, alignItems: 'center' }}
+      style={{ padding: Layout.margin, marginHorizontal: Layout.margin }}
       onPress={() => {
         weather.getCoordinatesAsync(item.place_id);
         onSelectPlace();
       }}
     >
-      <Text style={{ fontSize: 20 }}>
+      <Text style={{ fontSize: 20, fontWeight: '900' }}>
         {item.structured_formatting.main_text}
         {/* {item.structured_formatting.main_text}, {item.structured_formatting.secondary_text} */}
       </Text>
@@ -43,7 +43,7 @@ export default function ({ autocompleteResponse, onSelectPlace }: { autocomplete
       <FlatList
         inverted
         style={{}}
-        // scrollEnabled={false}
+        scrollEnabled={false}
         keyboardShouldPersistTaps='handled'
         // pointerEvents='box-none'
         // style={{ borderColor: 'red', borderWidth: 2 }}
