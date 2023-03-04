@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import * as Location from 'expo-location';
-import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours, Units } from '../types';
+import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours, Units, PlaceDetailsResponse, Place, PlaceNearbyResponse } from '../types';
 import Constants from 'expo-constants';
 import { LayoutAnimation } from 'react-native';
 
@@ -14,8 +14,8 @@ export type WeatherContextData = {
   setUnits: React.Dispatch<React.SetStateAction<"imperial" | "metric" | "kelvin">>,
   // toggleTemperatureUnits: () => void,
   coordinates: Coordinates | undefined,
-  getCoordinatesAsync: (address?: string) => Promise<void>,
-  place: LocationGeocodedAddress | undefined,
+  getCoordinatesAsync: (placeID?: string) => Promise<void>,
+  place: Place | undefined,
   currentWeather: CurrentWeather | undefined,
   hourlyForecast: HourlyForecast | undefined,
   dailyForecast: DailyForecast | undefined,
@@ -65,7 +65,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // hooks
   const [units, setUnits] = useState<Units>('imperial')
   const [coordinates, setCoordinates] = useState<Coordinates>();
-  const [place, setPlace] = useState<LocationGeocodedAddress>();
+  const [place, setPlace] = useState<Place>();
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather>();
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast>();
   const [dailyForecast, setDailyForecast] = useState<DailyForecast>();
@@ -73,6 +73,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const OWM_API_KEY = Constants.expoConfig?.extra?.owmApiKey;
+  const GOOGLE_API_KEY = Constants.manifest?.extra?.googleApiKey;
 
   const CURRENT_WEATHER_URL = "https://pro.openweathermap.org/data/2.5/weather";
   const makeCurrentWeatherUrlParams = (lat: number, lon: number) => (
@@ -94,17 +95,33 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // const makeHistoricalDailyUrlParams = (lat: number, lon: number, month: number, day: number) => (
   //   `?lat=${lat}&lon=${lon}&month=${month}&day=${day}&appid=${OWM_API_KEY}`
   // );
+  const GOOGLE_PLACES_DETAILS_API_URL = "https://maps.googleapis.com/maps/api/place/details/json?"
+  const makeGooglePlacesUrlParams = (placeID: string) => (
+    `place_id=${placeID}&fields=geometry,name,vicinity&key=${GOOGLE_API_KEY}`
+  )
 
-  async function getCoordinatesAsync(address?: string) {
-    if (address) {
-      const potentialLocations = await Location.geocodeAsync(address)
-      const theCoords: Coordinates = {
-        latitude: potentialLocations[0].latitude,
-        longitude: potentialLocations[0].longitude
-      }
-      setCoordinates(theCoords);
+  const GOOGLE_PLACES_NEARBY_API_URL = (theCoords: Coordinates) => (
+    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${theCoords.latitude},${theCoords.longitude}&type=sublocality&rankby=distance&key=${GOOGLE_API_KEY}`
+  );
 
-      getWeathersAndPlaceAsync(theCoords);
+  async function getCoordinatesAsync(placeID?: string) {
+    if (placeID) {
+      await fetch(GOOGLE_PLACES_DETAILS_API_URL + makeGooglePlacesUrlParams(placeID), {
+        method: 'get'
+      }).then((response) => {
+        return response.json();
+      }).then((response: PlaceDetailsResponse) => {
+        // console.log("the data:\n", JSON.stringify(response, null, '  '))
+        const theCoords: Coordinates = { latitude: response.result.geometry.location.lat, longitude: response.result.geometry.location.lng };
+        // console.log(theCoords);
+
+        setPlace(response.result)
+        setCoordinates(theCoords)
+        getAllWeatherAsync(theCoords);
+
+      }).catch((err) => {
+        console.log(err)
+      });
 
     } else {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -119,14 +136,25 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       setCoordinates(theCoords)
       // console.log(theCoords);
 
-      getWeathersAndPlaceAsync(theCoords);
+      getAllWeatherAsync(theCoords);
+      getPlaceAsync(theCoords)
     }
   }
 
-  async function getPlaceAsync(coords: Coordinates) {
-    const places = await Location.reverseGeocodeAsync({ ...coords });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setPlace(places[0]);
+  async function getPlaceAsync(theCoords: Coordinates) {
+
+    // console.log(theCoords);
+
+
+    await fetch(GOOGLE_PLACES_NEARBY_API_URL(theCoords), {
+      method: 'get'
+    }).then((response) => {
+      return response.json();
+    }).then((response: PlaceNearbyResponse) => {
+      // console.log(JSON.stringify(response, null, '  '));
+
+      setPlace(response.results[0]);
+    })
   }
 
   async function getCurrentWeatherAsync(coords: Coordinates) {

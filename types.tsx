@@ -250,3 +250,69 @@ export type HistoricalHours = {
   "cnt": number,
   "list": HistoricalHourInterval[],
 }
+
+// types for google places autocomplete responses
+export type PlaceAutocompletePrediction = {
+  "description": string,
+  "matched_substrings": { [key: string]: number }[], //[{ "length": 5, "offset": 0 }],
+  "place_id": string,
+  "reference": string,
+  "structured_formatting": {
+    "main_text": string,
+    "main_text_matched_substrings": { [key: string]: number }[], //[{ "length": 5, "offset": 0 }],
+    "secondary_text": string,
+  },
+  "terms": { [key: string]: number }[],
+  "types": string[], //["locality", "political", "geocode"],
+};
+
+export type PlacesAutocompleteStatus = ('OK' | 'ZERO_RESULTS' | 'INVALID_REQUEST' | 'OVER_QUERY_LIMIT' | 'REQUEST_DENIED' | 'UNKNOWN_ERROR');
+
+export type PlacesAutocompleteResponse = {
+  predictions: PlaceAutocompletePrediction[],
+  status: PlacesAutocompleteStatus,
+  error_message: string,
+  info_messages: string[],
+};
+
+
+// types for google places details responses
+type AddressComponent = {
+  long_name: string,
+  short_name: string,
+  types: string[],
+}
+
+export type Place = {
+  name: string,
+  vicinity: string,
+  geometry: {
+    location: { "lat": number, "lng": number },
+    viewport: {
+      northeast: { "lat": number, "lng": number },
+      southwest: { "lat": number, "lng": number },
+    },
+  },
+
+  // fill this type out with additional fields as necessary
+}
+
+type PlaceDetailsStatus = 'OK' | 'ZERO_RESULTS' | 'NOT_FOUND' | 'INVALID_REQUEST' | 'OVER_QUERY_LIMIT' | 'REQUEST_DENIED' | 'UNKNOWN_ERROR';
+
+export type PlaceDetailsResponse = {
+  html_attributions: string[],
+  result: Place,
+  status: PlaceDetailsStatus,
+  info_messages: string[],
+}
+
+type PlaceSearchStatus = 'OK' | 'ZERO_RESULTS' | 'INVALID_REQUEST' | 'OVER_QUERY_LIMIT' | 'REQUEST_DENIED' | 'UNKNOWN_ERROR';
+
+export type PlaceNearbyResponse = {
+  html_attributions: string[],
+  results: Place[],
+  status: PlaceSearchStatus,
+  info_messages: string[],
+  error_message: string,
+  next_page_token: string,
+}

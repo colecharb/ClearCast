@@ -36,6 +36,7 @@ export default {
     },
     "extra": {
       "owmApiKey": process.env.OWM_API_KEY,
+      "googleApiKey": process.env.GOOGLE_API_KEY,
     }
   }
 }

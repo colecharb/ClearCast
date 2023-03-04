@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Keyboard, KeyboardAvoidingView, LayoutAnimation, Platform, Pressable } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Keyboard, KeyboardAvoidingView, LayoutAnimation, Platform, Pressable, View } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
 import { Text } from '../components/Themed';
-import { RootStackScreenProps } from '../types';
+import { PlacesAutocompleteResponse, RootStackScreenProps } from '../types';
 import { WeatherContext } from '../contexts/Weather';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -17,6 +17,9 @@ import HorizontalLine from '../components/HorizontalLine';
 import Layout from '../constants/Layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Constants from "expo-constants";
+import AutocompleteResults from '../components/AutocompleteResults';
+
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
@@ -34,9 +37,38 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   // States
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false);
+  const [autocompleteResponse, setAutocompleteResponse] = useState<PlacesAutocompleteResponse>()
+
+  const GOOGLE_API_KEY = Constants.manifest?.extra?.googleApiKey;
+  const GOOGLE_PLACES_AUTOCOMPLETE_API_URL = (
+    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchQuery}&types=locality|sublocality|neighborhood|colloquial_area|postal_code&key=${GOOGLE_API_KEY}`
+  );
+  // &types=(cities)
 
   Keyboard.addListener('keyboardWillShow', () => setKeyboardOpen(true));
   Keyboard.addListener('keyboardWillHide', () => setKeyboardOpen(false));
+
+  async function placesAutoComplete() {
+    if (!GOOGLE_API_KEY) {
+      console.log('no goog maps api key found')
+      return null
+    }
+    fetch(GOOGLE_PLACES_AUTOCOMPLETE_API_URL, {
+      method: 'get'
+    }).then((response) => {
+      return response.json();
+    }).then((response) => {
+      // console.log("the data:\n", JSON.stringify(response, null, '  '))
+      setAutocompleteResponse(response)
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
+
+  // fetch autocomplete on evey change to search query
+  useEffect(() => {
+    placesAutoComplete()
+  }, [searchQuery])
 
   const renderDayForecastCard = ({ index }: { index: number }) => (
     <DayForecastCard
@@ -77,50 +109,66 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
           pointerEvents='box-none'
           colors={[Colors[theme].background + '00', Colors[theme].background + 'bb', Colors[theme].background]}
           locations={[0, 0.3, 1]}
-          style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom, flexDirection: 'row', alignItems: 'center' }}
+          style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom }}
         >
 
           {keyboardOpen ? (
-            null
-          ) : (
-              <Pressable onPress={() => {
-            weather.getCoordinatesAsync(undefined);
-            setSearchQuery('');
-          }}>
-            <Icon
-              name='location-arrow'
-              size={25}
-              color={Colors[theme].text}
-              style={{ margin: Layout.margin }}
+            <AutocompleteResults
+              autocompleteResponse={autocompleteResponse}
+              onSelectPlace={() => {
+                setSearchQuery('');
+                Keyboard.dismiss();
+              }}
             />
-          </Pressable>
+          ) : (
+            null
           )}
 
-          <SearchBar
-            value={searchQuery}
-            style={{ height: searchBarHeight }}
-            containerStyle={{ backgroundColor: 'transparent', flex: 1 }}
-            onChangeText={setSearchQuery}
-            placeholder={'Search'}
-            onSubmitEditing={() => {
-              weather.getCoordinatesAsync(searchQuery);
-            }}
+
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {keyboardOpen ? (
+              null
+            ) : (
+              <Pressable onPress={() => {
+                weather.getCoordinatesAsync(undefined);
+                setSearchQuery('');
+              }}>
+                <Icon
+                  name='location-arrow'
+                  size={25}
+                  color={Colors[theme].text}
+                  style={{ margin: Layout.margin }}
+                />
+              </Pressable>
+            )}
+
+            <SearchBar
+              value={searchQuery}
+              style={{ height: searchBarHeight }}
+              containerStyle={{ backgroundColor: 'transparent', flex: 1 }}
+              onChangeText={setSearchQuery}
+              placeholder={'Search'}
+              // onSubmitEditing={() => {
+              //   weather.getCoordinatesAsync(searchQuery);
+              // }}
             // onCancel={() => setSearchQueryToLocation(weather, setSearchQuery)}
             // onEndEditing={() => setSearchQueryToLocation(weather, setSearchQuery)}
-          />
-
-          {keyboardOpen ? (
-            null
-          ) : (
-              <Pressable onPress={() => Alert.alert("Recent Places", "You opened the Recent Places list.")}>
-            <Icon
-              name='list-ul'
-              size={25}
-              color={Colors[theme].text}
-              style={{ margin: Layout.margin }}
             />
-          </Pressable>
-          )}
+
+            {keyboardOpen ? (
+              null
+            ) : (
+              <Pressable onPress={() => Alert.alert("Recent Places", "You opened the Recent Places list.")}>
+                <Icon
+                  name='list-ul'
+                  size={25}
+                  color={Colors[theme].text}
+                  style={{ margin: Layout.margin }}
+                />
+              </Pressable>
+            )}
+          </View>
+
 
 
         </LinearGradient>
