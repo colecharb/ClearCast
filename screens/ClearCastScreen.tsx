@@ -35,18 +35,24 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   if (weather.errorMessage) return (<Text>{weather.errorMessage}</Text>);
 
   // States
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>();
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false);
   const [autocompleteResponse, setAutocompleteResponse] = useState<PlacesAutocompleteResponse>()
 
   const GOOGLE_API_KEY = Constants.manifest?.extra?.googleApiKey;
   const GOOGLE_PLACES_AUTOCOMPLETE_API_URL = (
-    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchQuery}&types=locality|sublocality|neighborhood|colloquial_area|postal_code&key=${GOOGLE_API_KEY}`
+    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchQuery}&key=${GOOGLE_API_KEY}`
   );
-  // &types=(cities)
+  // &types=locality|sublocality|neighborhood|colloquial_area|postal_code
 
-  Keyboard.addListener('keyboardWillShow', () => setKeyboardOpen(true));
-  Keyboard.addListener('keyboardWillHide', () => setKeyboardOpen(false));
+  Keyboard.addListener('keyboardWillShow', () => {
+    setKeyboardOpen(true);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  });
+  Keyboard.addListener('keyboardWillHide', () => {
+    setKeyboardOpen(false);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  });
 
   async function placesAutoComplete() {
     if (!GOOGLE_API_KEY) {
@@ -65,7 +71,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
     });
   }
 
-  // fetch autocomplete on evey change to search query
+  // fetch autocomplete upon changing search query
   useEffect(() => {
     placesAutoComplete()
   }, [searchQuery])
@@ -78,23 +84,107 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
     />
   );
 
+
+  const DailyForecastFlatList = (
+    weather.dailyForecast ? (
+      <FlatList
+        contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
+        style={{ flex: 1, opacity: (keyboardOpen ? 0.5 : 1), marginBottom: -1.5 * searchBarHeight - 100 }}
+        showsVerticalScrollIndicator={false}
+        automaticallyAdjustContentInsets={false}
+        automaticallyAdjustsScrollIndicatorInsets={false}
+        data={weather.dailyForecast?.list}
+        renderItem={renderDayForecastCard}
+        ItemSeparatorComponent={HorizontalLine}
+        ListHeaderComponent={CurrentWeather}
+      />
+    ) : (
+      <ActivityIndicator
+        size='large'
+        style={{ flex: 1 }}
+      />
+    )
+  )
+
+
+  const SearchZone = (
+    <LinearGradient
+      pointerEvents='box-none'
+      colors={[Colors[theme].background + '00', Colors[theme].background + 'bb', Colors[theme].background]}
+      locations={[0, 0.3, 1]}
+      style={{ bottom: 0, left: 0, right: 0, paddingTop: (keyboardOpen ? 0 : searchBarHeight / 2), paddingBottom: safeAreaInsets.bottom }}
+    >
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {keyboardOpen ? (
+          null
+        ) : (
+          <Pressable onPress={() => {
+            weather.getCoordinatesAsync(undefined);
+            setSearchQuery('');
+          }}>
+            <Icon
+              name='location-arrow'
+              size={25}
+              color={Colors[theme].text}
+              style={{ padding: Layout.margin, marginLeft: Layout.margin }}
+            />
+          </Pressable>
+        )}
+
+        <SearchBar
+          value={searchQuery}
+          style={{ height: searchBarHeight }}
+          containerStyle={{ backgroundColor: 'transparent', flex: 1 }}
+          onChangeText={setSearchQuery}
+          placeholder={'Search'}
+        // onSubmitEditing={() => {
+        //   weather.getCoordinatesAsync(searchQuery);
+        // }}
+        // onCancel={() => setSearchQueryToLocation(weather, setSearchQuery)}
+        // onEndEditing={() => setSearchQueryToLocation(weather, setSearchQuery)}
+        />
+
+        {keyboardOpen ? (
+          null
+        ) : (
+          <Pressable onPress={() => Alert.alert("Recent Places", "You opened the Recent Places list.")}>
+            <Icon
+              name='list-ul'
+              size={25}
+              color={Colors[theme].text}
+              style={{ padding: Layout.margin, marginRight: Layout.margin }}
+            />
+          </Pressable>
+        )}
+      </View>
+    </LinearGradient>
+  );
+
+
   return (
-    <ScreenContainer >
+    <ScreenContainer>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={-safeAreaInsets.bottom}
         style={{ flex: 1 }}
       >
-        {!weather.dailyForecast ? (
-          <ActivityIndicator
-            size='large'
-            style={{ flex: 1 }}
+
+        {keyboardOpen ? (
+          <AutocompleteResults
+            contentContainerStyle={{ paddingBottom: headerHeight }}
+            autocompleteResponse={autocompleteResponse}
+            onSelectPlace={() => {
+              setSearchQuery('');
+              Keyboard.dismiss();
+            }}
           />
         ) : (
-          <FlatList
-              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 4 }]}
-              style={{ flex: 1, opacity: (keyboardOpen ? 0.5 : 1) }}
+          weather.dailyForecast ? (
+            <FlatList
+              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
+              style={{ flex: 1, opacity: (keyboardOpen ? 0.5 : 1), marginBottom: -1.5 * searchBarHeight - 100 }}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
               automaticallyAdjustsScrollIndicatorInsets={false}
@@ -103,79 +193,15 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
               ItemSeparatorComponent={HorizontalLine}
               ListHeaderComponent={CurrentWeather}
             />
+          ) : (
+            <ActivityIndicator
+              size='large'
+              style={{ flex: 1 }}
+            />
+          )
         )}
 
-        <LinearGradient
-          pointerEvents='box-none'
-          colors={[Colors[theme].background + '00', Colors[theme].background + 'bb', Colors[theme].background]}
-          locations={[0, 0.3, 1]}
-          style={{ marginTop: -1.5 * searchBarHeight - 100, paddingTop: searchBarHeight / 2, paddingBottom: safeAreaInsets.bottom }}
-        >
-
-          {keyboardOpen ? (
-            <AutocompleteResults
-              autocompleteResponse={autocompleteResponse}
-              onSelectPlace={() => {
-                setSearchQuery('');
-                Keyboard.dismiss();
-              }}
-            />
-          ) : (
-            null
-          )}
-
-
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {keyboardOpen ? (
-              null
-            ) : (
-              <Pressable onPress={() => {
-                weather.getCoordinatesAsync(undefined);
-                setSearchQuery('');
-              }}>
-                <Icon
-                  name='location-arrow'
-                  size={25}
-                  color={Colors[theme].text}
-                    style={{ padding: Layout.margin, marginLeft: Layout.margin }}
-                />
-              </Pressable>
-            )}
-
-            <SearchBar
-              value={searchQuery}
-              style={{ height: searchBarHeight }}
-              containerStyle={{ backgroundColor: 'transparent', flex: 1 }}
-              onChangeText={setSearchQuery}
-              placeholder={'Search'}
-              // onSubmitEditing={() => {
-              //   weather.getCoordinatesAsync(searchQuery);
-              // }}
-            // onCancel={() => setSearchQueryToLocation(weather, setSearchQuery)}
-            // onEndEditing={() => setSearchQueryToLocation(weather, setSearchQuery)}
-            />
-
-            {keyboardOpen ? (
-              null
-            ) : (
-              <Pressable onPress={() => Alert.alert("Recent Places", "You opened the Recent Places list.")}>
-                <Icon
-                  name='list-ul'
-                  size={25}
-                  color={Colors[theme].text}
-                    style={{ padding: Layout.margin, marginRight: Layout.margin }}
-                />
-              </Pressable>
-            )}
-          </View>
-
-
-
-        </LinearGradient>
-
-
-        {/* </View> */}
-
+        {SearchZone}
 
       </KeyboardAvoidingView>
 
