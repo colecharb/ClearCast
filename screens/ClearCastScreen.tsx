@@ -35,7 +35,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   if (weather.errorMessage) return (<Text>{weather.errorMessage}</Text>);
 
   // States
-  const [searchQuery, setSearchQuery] = useState<string>();
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false);
   const [autocompleteResponse, setAutocompleteResponse] = useState<PlacesAutocompleteResponse>()
 
