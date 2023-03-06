@@ -187,7 +187,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
               const newToken = uuidv4();
               setSessionToken(newToken)
-              console.log(newToken);
+              // console.log(newToken);
 
               Keyboard.dismiss();
             }}
