@@ -10,7 +10,7 @@ import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 import rescale from "../utils/rescale";
 
-export default function ({ autocompleteResponse, onSelectPlace, style, contentContainerStyle }: { autocompleteResponse: PlacesAutocompleteResponse | undefined, onSelectPlace: () => void, style?: StyleProp<ViewStyle>, contentContainerStyle: StyleProp<ViewStyle> }) {
+export default function ({ autocompleteResponse, sessionToken, onSelectPlace, style, contentContainerStyle }: { autocompleteResponse: PlacesAutocompleteResponse | undefined, sessionToken: string, onSelectPlace: () => void, style?: StyleProp<ViewStyle>, contentContainerStyle: StyleProp<ViewStyle> }) {
 
   const weather = useContext(WeatherContext);
   const theme = useColorScheme();
@@ -31,7 +31,8 @@ export default function ({ autocompleteResponse, onSelectPlace, style, contentCo
       <Pressable
         style={{ padding: Layout.margin, marginHorizontal: 1.65 * Layout.margin }}
         onPress={() => {
-          weather.getCoordinatesAsync(item.place_id);
+          const params = { placeID: item.place_id, sessionToken: sessionToken };
+          weather.getCoordinatesAsync(params);
           onSelectPlace();
         }}
       >

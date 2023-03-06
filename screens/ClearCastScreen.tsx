@@ -19,6 +19,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Constants from "expo-constants";
 import AutocompleteResults from '../components/AutocompleteResults';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
@@ -35,13 +37,15 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
   if (weather.errorMessage) return (<Text>{weather.errorMessage}</Text>);
 
   // States
+  const initUuid = uuidv4();
+  const [sessionToken, setSessionToken] = useState<string>(initUuid);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false);
-  const [autocompleteResponse, setAutocompleteResponse] = useState<PlacesAutocompleteResponse>()
+  const [autocompleteResponse, setAutocompleteResponse] = useState<PlacesAutocompleteResponse>();
 
   const GOOGLE_API_KEY = Constants.manifest?.extra?.googleApiKey;
   const GOOGLE_PLACES_AUTOCOMPLETE_API_URL = (
-    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchQuery}&key=${GOOGLE_API_KEY}`
+    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchQuery}&sessiontoken=${sessionToken}&key=${GOOGLE_API_KEY}`
   );
   // &types=locality|sublocality|neighborhood|colloquial_area|postal_code
 
@@ -59,6 +63,8 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
       console.log('no goog maps api key found')
       return null
     }
+    console.log(GOOGLE_PLACES_AUTOCOMPLETE_API_URL);
+
     fetch(GOOGLE_PLACES_AUTOCOMPLETE_API_URL, {
       method: 'get'
     }).then((response) => {
@@ -173,10 +179,16 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
         {keyboardOpen ? (
           <AutocompleteResults
-            contentContainerStyle={{ paddingBottom: headerHeight }}
             autocompleteResponse={autocompleteResponse}
+            sessionToken={sessionToken}
+            contentContainerStyle={{ paddingBottom: headerHeight }}
             onSelectPlace={() => {
               setSearchQuery('');
+
+              const newToken = uuidv4();
+              setSessionToken(newToken)
+              console.log(newToken);
+
               Keyboard.dismiss();
             }}
           />
