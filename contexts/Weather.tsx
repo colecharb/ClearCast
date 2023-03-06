@@ -14,7 +14,7 @@ export type WeatherContextData = {
   setUnits: React.Dispatch<React.SetStateAction<"imperial" | "metric" | "kelvin">>,
   // toggleTemperatureUnits: () => void,
   coordinates: Coordinates | undefined,
-  getCoordinatesAsync: (placeID?: string) => Promise<void>,
+  getCoordinatesAsync: (params?: { placeID: string, sessionToken: string }) => Promise<void>,
   place: Place | undefined,
   currentWeather: CurrentWeather | undefined,
   hourlyForecast: HourlyForecast | undefined,
@@ -96,17 +96,17 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   //   `?lat=${lat}&lon=${lon}&month=${month}&day=${day}&appid=${OWM_API_KEY}`
   // );
   const GOOGLE_PLACES_DETAILS_API_URL = "https://maps.googleapis.com/maps/api/place/details/json?"
-  const makeGooglePlacesUrlParams = (placeID: string) => (
-    `place_id=${placeID}&fields=geometry,name,vicinity&key=${GOOGLE_API_KEY}`
+  const makeGooglePlacesUrlParams = (placeID: string, sessionToken: string) => (
+    `place_id=${placeID}&sessiontoken=${sessionToken}&fields=geometry,name,vicinity&key=${GOOGLE_API_KEY}`
   )
 
   const GOOGLE_PLACES_NEARBY_API_URL = (theCoords: Coordinates) => (
     `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${theCoords.latitude},${theCoords.longitude}&type=sublocality&rankby=distance&key=${GOOGLE_API_KEY}`
   );
 
-  async function getCoordinatesAsync(placeID?: string) {
-    if (placeID) {
-      await fetch(GOOGLE_PLACES_DETAILS_API_URL + makeGooglePlacesUrlParams(placeID), {
+  async function getCoordinatesAsync(obj?: { placeID: string, sessionToken: string }) {
+    if (obj) {
+      await fetch(GOOGLE_PLACES_DETAILS_API_URL + makeGooglePlacesUrlParams(obj.placeID, obj.sessionToken), {
         method: 'get'
       }).then((response) => {
         return response.json();
