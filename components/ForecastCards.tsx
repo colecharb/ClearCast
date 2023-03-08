@@ -283,7 +283,7 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
   const date = new Date(hourInterval.dt * 1000);
   const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' });
 
-  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
+  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.floor(now.getHours() / 2)) === date.getHours();
 
   // console.log(date.toLocaleDateString(locale, { dateStyle: 'short' }));
   // console.log(navigator.language);
