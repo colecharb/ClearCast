@@ -47,11 +47,11 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
   const sunsetDate = new Date(dayInterval.sunset * 1000);
   // const sunrise = sunriseDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
   // const sunset = sunsetDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
-  const sunriseTimeProportion = (sunriseDate.getTime() - date.getTime()) / (tomorrowDate.getTime() - date.getTime());
-  const sunsetTimeProportion = (sunsetDate.getTime() - date.getTime()) / (tomorrowDate.getTime() - date.getTime());
+  const sunriseTimeProportion = (sunriseDate.getTime() - date.getTime()) / (24 * 60 * 60 * 1000); // divide by # milliseconds in 25 h
+  const sunsetTimeProportion = (sunsetDate.getTime() - date.getTime()) / (24 * 60 * 60 * 1000);
 
   const DAYLIGHT_GRADIENT_FEATHER = 0.02;
-  const VERTICAL_OFFSET = 1 / 24;
+  const VERTICAL_OFFSET = 1 / 25;
 
   const precipType = (
     dayInterval.rain ? (
@@ -283,7 +283,7 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
   const date = new Date(hourInterval.dt * 1000);
   const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' });
 
-  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.floor(now.getHours() / 2)) === date.getHours();
+  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
 
   // console.log(date.toLocaleDateString(locale, { dateStyle: 'short' }));
   // console.log(navigator.language);
