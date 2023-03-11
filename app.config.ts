@@ -22,7 +22,8 @@ export default {
     ],
     "ios": {
       "bundleIdentifier": "com.clearcast.ClearCast",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bitcode": false  
     },
     "android": {
       "package": "com.clearcast.ClearCast",
@@ -37,6 +38,9 @@ export default {
     "extra": {
       "owmApiKey": process.env.OWM_API_KEY,
       "googleApiKey": process.env.GOOGLE_API_KEY,
+      "eas": {
+        "projectId": "74f6f17f-7821-4e6d-abb4-f88f456b6997"
+      }
     }
   }
 }
