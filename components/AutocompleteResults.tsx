@@ -51,10 +51,10 @@ export default function ({ autocompleteResponse, sessionToken, onSelectPlace, st
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    // <View style={{ flex: 1 }}>
       <FlatList
-        inverted
-        // style={style}
+      inverted={true}
+      style={style}
         contentContainerStyle={contentContainerStyle}
         // scrollEnabled={false}
         keyboardShouldPersistTaps='handled' // allows tapping of results while keeb is open
@@ -62,11 +62,6 @@ export default function ({ autocompleteResponse, sessionToken, onSelectPlace, st
         data={autocompleteResponse.predictions}
         renderItem={renderItem}
       />
-      {/* <LinearGradient
-        pointerEvents="none"
-        style={{ zIndex: 10, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
-        colors={[Colors[theme].background + '77', Colors[theme].background + '00']}
-      /> */}
-    </View>
+    // </View>
   )
 }
