@@ -26,6 +26,13 @@
     }
   },
   "submit": {
+    "internal": {
+      "ios": {
+        "appleId": "colecharbconneau@gmail.com",
+        "ascAppId": "6446231556",
+        "appleTeamId": "N65826X3KR"
+      }
+    },
     "production": {}
   }
 }
