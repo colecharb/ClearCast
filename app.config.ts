@@ -1,4 +1,4 @@
-import 'dotenv/config'
+require('dotenv').config();
 export default {
   "expo": {
     "owner": "clearcast",
@@ -7,7 +7,7 @@ export default {
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "clearcast",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
