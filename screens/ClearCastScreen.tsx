@@ -21,6 +21,7 @@ import Constants from "expo-constants";
 import AutocompleteResults from '../components/AutocompleteResults';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import ClearCastHeader from '../components/ClearCastHeader';
 
 
 export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
@@ -90,29 +91,6 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
     />
   );
 
-
-  const DailyForecastFlatList = (
-    weather.dailyForecast ? (
-      <FlatList
-        contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
-        style={{ flex: 1, opacity: (keyboardOpen ? 0.5 : 1), marginBottom: -1.5 * searchBarHeight - 100 }}
-        showsVerticalScrollIndicator={false}
-        automaticallyAdjustContentInsets={false}
-        automaticallyAdjustsScrollIndicatorInsets={false}
-        data={weather.dailyForecast?.list}
-        renderItem={renderDayForecastCard}
-        ItemSeparatorComponent={HorizontalLine}
-        ListHeaderComponent={CurrentWeather}
-      />
-    ) : (
-      <ActivityIndicator
-        size='large'
-        style={{ flex: 1 }}
-      />
-    )
-  )
-
-
   const SearchZone = (
     <LinearGradient
       pointerEvents='box-none'
@@ -179,6 +157,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
 
         {keyboardOpen ? (
           <AutocompleteResults
+            style={{ flex: 1 }}
             autocompleteResponse={autocompleteResponse}
             sessionToken={sessionToken}
             contentContainerStyle={{ paddingBottom: headerHeight }}
