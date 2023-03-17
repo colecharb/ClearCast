@@ -49,19 +49,21 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
     <ScreenContainer>
       <ScrollView contentContainerStyle={{ padding: Layout.margin, paddingTop: headerHeight }}>
 
-        <Text style={styles.settingTitle}>
+        <Text style={styles.settingTitle} key='title'>
           units
         </Text>
         <View style={styles.settingsView}>
-          {ALL_UNITS.map((theUnits, index) => <>
-            {index === 0 ? null : <SettingSeparator key={-index} />}
-            <SettingSelection
-              item={theUnits}
-              selected={theUnits === units}
-              onPress={() => changeUnits(theUnits)}
-              key={theUnits}
-            />
-          </>)}
+          {ALL_UNITS.map((theUnits, index) => (
+            <View key={index}>
+              {index === 0 ? null : <SettingSeparator />}
+              <SettingSelection
+                item={theUnits}
+                selected={theUnits === units}
+                onPress={() => changeUnits(theUnits)}
+              // key={theUnits}
+              />
+            </View>
+          ))}
         </View>
 
         {/* <Text style={styles.settingTitle}>

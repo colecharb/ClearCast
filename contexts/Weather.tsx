@@ -188,7 +188,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     ).then((response) => {
 
       const geocodedAddress = response[0];
-      console.log(JSON.stringify(geocodedAddress, null, '  '));
+      // console.log(JSON.stringify(geocodedAddress, null, '  '));
 
       const addressComponents = OrderedKeys_LocationGeocodedAddress.map((value) =>
         geocodedAddress[value] ?? null
@@ -199,8 +199,8 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       const name = addressComponents[0];
       const formatted_address = addressComponents.join(', ')
 
-      console.log(name);
-      console.log(formatted_address);
+      // console.log(name);
+      // console.log(formatted_address);
 
       setPlace({
         name,
@@ -304,6 +304,10 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   useEffect(() => {
     coordinates ? getAllWeatherAsync(coordinates) : null;
   }, [units])
+
+  // useEffect(() => {
+  //   console.log('LOADING:', loading);
+  // }, [loading])
 
   const weatherContextData = {
     units: units,
