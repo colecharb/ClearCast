@@ -24,22 +24,27 @@ export default function () {
     <LinearGradient
       colors={[Colors[theme].background + 'ff', Colors[theme].background + 'cc', Colors[theme].background + '00']}
       locations={[0, 1 / 2, 1]} //{[0, 1 / 4, 2 / 4, 3 / 4, 1]}
-      style={{ paddingBottom: Layout.margin * 4, justifyContent: 'center', paddingTop: safeAreaInsets.top, marginBottom: -Layout.margin * 3 }}
+      style={{ paddingBottom: Layout.margin * 4, justifyContent: 'center', paddingTop: safeAreaInsets.top, marginBottom: -Layout.margin * 3, }}
       pointerEvents='box-none'
     >
-      <Text style={{ fontWeight: '200', textAlign: 'center', fontSize: 24, color: Colors[theme].text, marginBottom: Layout.margin / 2 }}>
-        {'ClearCast'}
-      </Text>
-      {weather.loading ? (
-        <ActivityIndicator />
-      ) : (
-        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '900' }}>
-          {placeName}
+      <View style={{ marginTop: Layout.margin / 2 }}>
+        {weather.loading ? (
+          <ActivityIndicator size={30} />
+        ) : (
+            <Text style={{ textAlign: 'center', fontSize: 30, lineHeight: 30, fontWeight: '900', paddingHorizontal: Layout.margin * 2 + 30 }}>
+              {weather.place?.name}
           </Text>
-      )}
+        )}
+
+        <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 25, fontWeight: 'normal', color: Colors[theme].medium }}>
+          {weather.loading ? ' ' : weather.place?.formatted_address}
+        </Text>
+      </View>
+
+
 
       <Pressable
-        style={{ position: 'absolute', right: 0, margin: Layout.margin * 2 }}
+        style={{ position: 'absolute', right: 0, top: safeAreaInsets.top, marginRight: Layout.margin, marginTop: Layout.margin / 2 }}
         onPress={() => navigation.navigate('Settings')}
       // hitSlop={Layout.margin}
       >

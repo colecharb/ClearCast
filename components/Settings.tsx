@@ -1,8 +1,9 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import React, { Children } from "react";
-import { LayoutAnimation, Pressable, StyleSheet } from "react-native";
+import React, { Children, useContext } from "react";
+import { ActivityIndicator, LayoutAnimation, Pressable, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
+import { WeatherContext } from "../contexts/Weather";
 import useColorScheme from "../hooks/useColorScheme";
 import { Text, View } from "./Themed";
 
@@ -22,6 +23,7 @@ export const SettingSelection = ({ item, selected, onPress }: { item: string, se
 
   const styles = makeStyles();
   const theme = useColorScheme();
+  const weather = useContext(WeatherContext);
 
   return (
     <SettingBase
@@ -29,9 +31,13 @@ export const SettingSelection = ({ item, selected, onPress }: { item: string, se
       onPress={onPress}
     >
       {selected ? (
-        <Text style={[styles.settingText, { color: Colors[theme].tint, fontWeight: 'bold' }]}>
-          ✓
-        </Text>
+        weather.loading ? (
+          <ActivityIndicator size='small' />
+        ) : (
+            <Text style={[styles.settingText, { color: Colors[theme].tint, fontWeight: 'bold' }]}>
+              ✓
+            </Text>
+          )
       ) : (
         null
       )}

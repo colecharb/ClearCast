@@ -38,6 +38,15 @@ export type LocationGeocodedAddress = {
   timezone: string | null,
 }
 
+const OrderedKeys_LocationGeocodedAddress: (keyof LocationGeocodedAddress)[] = [
+  // 'street',
+  'city',
+  'district',
+  // 'subregion',
+  'region',
+  'country',
+]
+
 const addExtremesToHourlyForecast = (forecast: HourlyForecast) => {
   const temps = forecast.list.map((interval) => interval.main.temp);
   forecast.minTemp = Math.min(...temps);
@@ -62,7 +71,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // console.log('AuthProvider has been called.');
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  // hooks
+  // hooks to return
   const [units, setUnits] = useState<Units>('imperial')
   const [coordinates, setCoordinates] = useState<Coordinates>();
   const [place, setPlace] = useState<Place>();
@@ -70,7 +79,15 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast>();
   const [dailyForecast, setDailyForecast] = useState<DailyForecast>();
   const [historicalHours, setHistoricalHours] = useState<HistoricalHours>();
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
+
+  // internal loading hooks
+  const [weatherLoading, setWeatherLoading] = useState<boolean>(false);
+  const [placeLoading, setPlaceLoading] = useState<boolean>(false);
+
+  // loading is included in context data
+  const loading = (weatherLoading || placeLoading);
+
 
   const OWM_API_KEY = Constants.expoConfig?.extra?.owmApiKey;
   const GOOGLE_API_KEY = Constants.manifest?.extra?.googleApiKey;
@@ -97,14 +114,17 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // );
   const GOOGLE_PLACES_DETAILS_API_URL = "https://maps.googleapis.com/maps/api/place/details/json?"
   const makeGooglePlacesUrlParams = (placeID: string, sessionToken: string) => (
-    `place_id=${placeID}&sessiontoken=${sessionToken}&fields=geometry,name,vicinity&key=${GOOGLE_API_KEY}`
+    `place_id=${placeID}&sessiontoken=${sessionToken}&fields=geometry,name,vicinity,formatted_address&key=${GOOGLE_API_KEY}`
   )
 
-  const GOOGLE_PLACES_NEARBY_API_URL = (theCoords: Coordinates) => (
-    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${theCoords.latitude},${theCoords.longitude}&type=sublocality&rankby=distance&key=${GOOGLE_API_KEY}`
-  );
+  // const GOOGLE_PLACES_NEARBY_API_URL = (theCoords: Coordinates) => (
+  //   `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${theCoords.latitude},${theCoords.longitude}&type=sublocality&rankby=distance&key=${GOOGLE_API_KEY}`
+  // );
 
   async function getCoordinatesAsync(obj?: { placeID: string, sessionToken: string }) {
+
+    // setLoading(true);
+
     if (obj) {
       await fetch(GOOGLE_PLACES_DETAILS_API_URL + makeGooglePlacesUrlParams(obj.placeID, obj.sessionToken), {
         method: 'get'
@@ -136,25 +156,60 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       setCoordinates(theCoords)
       // console.log(theCoords);
 
-      getAllWeatherAsync(theCoords);
-      getPlaceAsync(theCoords)
+      await Promise.all([
+        getAllWeatherAsync(theCoords),
+        getPlaceAsync(theCoords),
+      ])
     }
+
+    // setLoading(false);
   }
 
   async function getPlaceAsync(theCoords: Coordinates) {
 
+    setPlaceLoading(true);
+
     // console.log(theCoords);
 
 
-    await fetch(GOOGLE_PLACES_NEARBY_API_URL(theCoords), {
-      method: 'get'
-    }).then((response) => {
-      return response.json();
-    }).then((response: PlaceNearbyResponse) => {
-      // console.log(JSON.stringify(response, null, '  '));
+    // await fetch(GOOGLE_PLACES_NEARBY_API_URL(theCoords), {
+    //   method: 'get'
+    // }).then((response) => {
+    //   return response.json();
+    // }).then((response: PlaceNearbyResponse) => {
+    //   console.log(JSON.stringify(response, null, '  '));
 
-      setPlace(response.results[0]);
+    //   setPlace(response.results[0]);
+    // })
+
+
+    await Location.reverseGeocodeAsync(
+      theCoords
+    ).then((response) => {
+
+      const geocodedAddress = response[0];
+      console.log(JSON.stringify(geocodedAddress, null, '  '));
+
+      const addressComponents = OrderedKeys_LocationGeocodedAddress.map((value) =>
+        geocodedAddress[value] ?? null
+      ).filter((value) =>
+        !(!value)
+      ) as string[];
+
+      const name = addressComponents[0];
+      const formatted_address = addressComponents.join(', ')
+
+      console.log(name);
+      console.log(formatted_address);
+
+      setPlace({
+        name,
+        formatted_address
+      })  
+
     })
+
+    setPlaceLoading(false);
   }
 
   async function getCurrentWeatherAsync(coords: Coordinates) {
@@ -203,8 +258,6 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
     // console.log(startOfYesterday.getTime(), now.getTime());
 
-
-
     fetch(
       HISTORICAL_HOURLY_URL + makeHistoricalHourlyUrlParams(coords.latitude, coords.longitude, startOfYesterday.getTime() / 1000, now.getTime() / 1000)
     ).then((response) => (
@@ -225,24 +278,22 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   }
 
   async function getAllWeatherAsync(coords: Coordinates) {
-    setLoading(true)
+    setWeatherLoading(true)
     await Promise.all([
       getCurrentWeatherAsync(coords),
       getDailyForecastAsync(coords),
       getHourlyForecastAsync(coords),
       getHistoricalWeatherAsync(coords),
     ])
-    setLoading(false)
+    setWeatherLoading(false)
     // console.log('got weather');
   }
 
   async function getWeathersAndPlaceAsync(coords: Coordinates) {
-    setLoading(true)
     await Promise.all([
       getPlaceAsync(coords),
       getAllWeatherAsync(coords)
     ])
-    setLoading(false)
     // console.log('got weather');
   }
 

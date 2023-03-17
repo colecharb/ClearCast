@@ -23,18 +23,23 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
   const [manualTheme, setManualTheme] = useState<'light' | 'dark' | 'automatic'>('automatic')
   const theme = useColorScheme();
 
-  navigation.setOptions({
-    headerLeft: () => (
-      <HeaderBackButton
-        // labelVisible
-        tintColor={Colors[theme].tint}
-        onPress={() => {
-          weather.setUnits(units);
-          navigation.goBack();
-        }}
-      />
-    )
-  })
+  const changeUnits = (units: Units) => {
+    setUnits(units);
+    weather.setUnits(units)
+  }
+
+  // navigation.setOptions({
+  //   headerLeft: () => (
+  //     <HeaderBackButton
+  //       // labelVisible
+  //       tintColor={Colors[theme].tint}
+  //       onPress={() => {
+  //         weather.setUnits(units);
+  //         navigation.goBack();
+  //       }}
+  //     />
+  //   )
+  // })
 
   const SettingSeparator = () => (
     <HorizontalLine style={{ marginLeft: Layout.margin * 2 }} />
@@ -53,13 +58,13 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
             <SettingSelection
               item={theUnits}
               selected={theUnits === units}
-              onPress={() => setUnits(theUnits)}
+              onPress={() => changeUnits(theUnits)}
               key={theUnits}
             />
           </>)}
         </View>
 
-        <Text style={styles.settingTitle}>
+        {/* <Text style={styles.settingTitle}>
           Theme <Text style={[styles.settingTitle, { textTransform: 'none', color: Colors[theme].light }]}>(not working yet)</Text>
         </Text>
         <View style={styles.settingsView}>
@@ -72,7 +77,7 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
               key={units}
             />
           </>)}
-        </View>
+        </View> */}
 
       </ScrollView>
     </ScreenContainer>

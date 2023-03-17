@@ -64,7 +64,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
       console.log('no goog maps api key found')
       return null
     }
-    console.log(GOOGLE_PLACES_AUTOCOMPLETE_API_URL);
+    // console.log(GOOGLE_PLACES_AUTOCOMPLETE_API_URL);
 
     fetch(GOOGLE_PLACES_AUTOCOMPLETE_API_URL, {
       method: 'get'
@@ -172,10 +172,15 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
             }}
           />
         ) : (
-          weather.dailyForecast ? (
-            <FlatList
-              contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
-              style={{ flex: 1, opacity: (keyboardOpen ? 0.5 : 1), marginBottom: -1.5 * searchBarHeight - 100 }}
+            weather.loading ? (
+              <ActivityIndicator
+                size='large'
+                style={{ flex: 1 }}
+              />
+            ) : (
+              <FlatList
+                  style={{ flex: 1, marginBottom: -1.5 * searchBarHeight - 100 }}
+                  contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
               automaticallyAdjustsScrollIndicatorInsets={false}
@@ -184,11 +189,9 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
               ItemSeparatorComponent={HorizontalLine}
               ListHeaderComponent={CurrentWeather}
             />
-          ) : (
-            <ActivityIndicator
-              size='large'
-              style={{ flex: 1 }}
-            />
+
+
+
           )
         )}
 
