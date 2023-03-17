@@ -284,9 +284,10 @@ type AddressComponent = {
 }
 
 export type Place = {
-  name: string,
-  vicinity: string,
-  geometry: {
+  name?: string,
+  formatted_address?: string,
+  vicinity?: string,
+  geometry?: {
     location: { "lat": number, "lng": number },
     viewport: {
       northeast: { "lat": number, "lng": number },
