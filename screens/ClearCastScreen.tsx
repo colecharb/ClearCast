@@ -180,13 +180,13 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
             ) : (
               <FlatList
                   style={{ flex: 1, marginBottom: -1.5 * searchBarHeight - 100 }}
-                  contentContainerStyle={[{ paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
+                  contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
               automaticallyAdjustsScrollIndicatorInsets={false}
               data={weather.dailyForecast?.list}
               renderItem={renderDayForecastCard}
-              ItemSeparatorComponent={HorizontalLine}
+                  ItemSeparatorComponent={() => (<HorizontalLine style={{}} />)}
               ListHeaderComponent={CurrentWeather}
             />
 
