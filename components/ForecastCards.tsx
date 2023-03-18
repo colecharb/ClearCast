@@ -52,11 +52,10 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
   const sunsetDate = new Date(dayInterval.sunset * 1000);
   // const sunrise = sunriseDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
   // const sunset = sunsetDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: 'numeric' });
-  const sunriseTimeProportion = (sunriseDate.getTime() - date.getTime()) / (24 * 60 * 60 * 1000); // divide by # milliseconds in 25 h
+  const sunriseTimeProportion = (sunriseDate.getTime() - date.getTime()) / (24 * 60 * 60 * 1000); // divide by # milliseconds in 26 h
   const sunsetTimeProportion = (sunsetDate.getTime() - date.getTime()) / (24 * 60 * 60 * 1000);
 
   const DAYLIGHT_GRADIENT_FEATHER = 0.02;
-  const VERTICAL_OFFSET = 1 / 25;
 
   const precipType = (
     dayInterval.rain ? (
@@ -95,7 +94,7 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
       hourInterval => {
         const hourDate = new Date(hourInterval.dt * 1000);
         // console.log(hourDate.getDate(), date.getDate());
-        return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0));
+        return ((hourDate.getDate() === date.getDate()) && (hourDate.getHours() % 2 === 0)) || (hourDate.getHours() === 0 && hourDate.getDate() === tomorrowDate.getDate());
       }
     )
   ) : (
@@ -209,42 +208,47 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
       {showHours ? (
         <View>
 
-
-          <LinearGradient
-            style={{
+          <View style={{
               position: 'absolute',
               top: Layout.margin / 4,
               bottom: -Layout.margin / 4,
               left: `${4.5 / 24 * 100}%`,
               right: `${16.5 / 24 * 100}%`
             }}
-            colors={[
-              Colors[theme].night,
-              Colors[theme].night,
-              Colors[theme].daylight,
-              Colors[theme].daylight,
-              Colors[theme].night,
-              Colors[theme].night
-            ]}
-            locations={[
-              0,
-              sunriseTimeProportion - DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
-              sunriseTimeProportion + DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
-              sunsetTimeProportion - DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
-              sunsetTimeProportion + DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
-              1
-            ]}
           >
-            {thisIsToday ? (
-              <>
-                <View style={{ flex: now.getTime() - date.getTime() }} />
-                <HorizontalLine style={{ backgroundColor: Colors[theme].tint }} />
-                <View style={{ flex: tomorrowDate.getTime() - now.getTime() }} />
-              </>
-            ) : (
-              null
-            )}
-          </LinearGradient>
+            <View style={{ flex: 1 }} />
+            <LinearGradient
+              style={{ flex: 24 }}
+
+              colors={[
+                Colors[theme].night,
+                Colors[theme].night,
+                Colors[theme].daylight,
+                Colors[theme].daylight,
+                Colors[theme].night,
+                Colors[theme].night
+              ]}
+              locations={[
+                0,
+                sunriseTimeProportion - DAYLIGHT_GRADIENT_FEATHER,
+                sunriseTimeProportion + DAYLIGHT_GRADIENT_FEATHER,
+                sunsetTimeProportion - DAYLIGHT_GRADIENT_FEATHER,
+                sunsetTimeProportion + DAYLIGHT_GRADIENT_FEATHER,
+                1
+              ]}
+            >
+              {thisIsToday ? (
+                <>
+                  <View style={{ flex: now.getTime() - date.getTime() }} />
+                  <HorizontalLine style={{ backgroundColor: Colors[theme].tint }} />
+                  <View style={{ flex: tomorrowDate.getTime() - now.getTime() }} />
+                </>
+              ) : (
+                null
+              )}
+            </LinearGradient>
+            <View style={{ flex: 1 }} />
+          </View>
 
           <FlatList
             style={{ marginTop: Layout.margin / 4, marginBottom: -Layout.margin / 4 }}
@@ -319,7 +323,7 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
             flex: 4,
             textAlign: 'right',
             // paddingRight: Layout.margin,
-            color: thisIntervalIsNow ? Colors[theme].text : Colors[theme].medium,
+            color: Colors[theme].medium,//thisIntervalIsNow ? Colors[theme].text : Colors[theme].medium,
           }
         ]}>
           {hour}{/*thisIntervalIsNow ? 'Now' : hour*/}
