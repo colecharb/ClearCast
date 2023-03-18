@@ -44,7 +44,7 @@ function RootNavigator() {
       initialRouteName='ClearCast'
       screenOptions={{
         headerTransparent: true,
-        headerBlurEffect: 'regular',
+        headerBlurEffect: 'extraLight',
         headerTitleStyle: styles.navigationHeaderTitle,
         headerTintColor: Colors[theme].tint,
       }}
