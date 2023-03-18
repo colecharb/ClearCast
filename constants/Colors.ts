@@ -1,4 +1,4 @@
-const tintColorLight = '#ffffff';
+const tintColorLight = '#eecc00';
 const tintColorDark = '#33aaff';
 // const tintColor = '#33aaff';
 

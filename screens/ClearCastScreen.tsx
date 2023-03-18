@@ -186,7 +186,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
               automaticallyAdjustsScrollIndicatorInsets={false}
               data={weather.dailyForecast?.list}
               renderItem={renderDayForecastCard}
-              ItemSeparatorComponent={HorizontalLine}
+                  ItemSeparatorComponent={() => (<HorizontalLine style={{}} />)}
               ListHeaderComponent={CurrentWeather}
             />
 
