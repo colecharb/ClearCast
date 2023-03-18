@@ -180,7 +180,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
             ) : (
               <FlatList
                   style={{ flex: 1, marginBottom: -1.5 * searchBarHeight - 100 }}
-                  contentContainerStyle={[styles.container, { paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
+                  contentContainerStyle={[{ paddingTop: headerHeight, paddingBottom: Layout.window.height / 3 }]}
               showsVerticalScrollIndicator={false}
               automaticallyAdjustContentInsets={false}
               automaticallyAdjustsScrollIndicatorInsets={false}

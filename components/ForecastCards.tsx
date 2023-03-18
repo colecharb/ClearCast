@@ -10,6 +10,7 @@ import rescale from "../utils/rescale";
 import { Text, View } from "./Themed";
 import makeStyles from "../constants/Styles";
 import { LinearGradient } from "expo-linear-gradient";
+import HorizontalLine from "./HorizontalLine";
 
 
 export const DayForecastCard = memo(function ({ dailyForecast, index }: { weather: WeatherContextData, dailyForecast: DailyForecast | undefined, index: number }) {
@@ -31,9 +32,13 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
   // const dateNow = new Date();
   // dateNow.setHours(0, 0, 0, 0);
 
+  const now = new Date();
+
   const date = new Date((dayInterval.dt) * 1000);
   date.setHours(0, 0, 0, 0);
   // date.setHours(0, 0, 0, 0);
+
+  const thisIsToday = now.getDate() === date.getDate();
 
   // console.log(date, dateNow);
 
@@ -132,7 +137,7 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
               <Text style={[styles.dayText, { flex: 4, textAlign: 'right' }]}>
-                {index === 0 ? 'Today' : day}
+                {thisIsToday ? 'Today' : day}
               </Text>
 
               <Text style={[styles.emojiLg, { flex: 8, textAlign: 'center', marginBottom: -Layout.margin }]}>
@@ -229,7 +234,17 @@ export const DayForecastCard = memo(function ({ dailyForecast, index }: { weathe
               sunsetTimeProportion + DAYLIGHT_GRADIENT_FEATHER + VERTICAL_OFFSET,
               1
             ]}
-          />
+          >
+            {thisIsToday ? (
+              <>
+                <View style={{ flex: now.getTime() - date.getTime() }} />
+                <HorizontalLine style={{ backgroundColor: Colors[theme].tint }} />
+                <View style={{ flex: tomorrowDate.getTime() - now.getTime() }} />
+              </>
+            ) : (
+              null
+            )}
+          </LinearGradient>
 
           <FlatList
             style={{ marginTop: Layout.margin / 4, marginBottom: -Layout.margin / 4 }}
@@ -282,8 +297,11 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
 
   const date = new Date(hourInterval.dt * 1000);
   const hour = date.toLocaleTimeString(navigator.language, { hour: 'numeric' });
+  // const startHour = ((date.getHours() - 1) % 12 + 12) % 12 + 1;
+  // const endHour = (date.getHours() + 1) % 12 + 1;
 
-  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
+
+  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.floor(now.getHours() / 2)) === date.getHours();
 
   // console.log(date.toLocaleDateString(locale, { dateStyle: 'short' }));
   // console.log(navigator.language);
@@ -304,7 +322,7 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
             color: thisIntervalIsNow ? Colors[theme].text : Colors[theme].medium,
           }
         ]}>
-          {thisIntervalIsNow ? 'Now' : hour}
+          {hour}{/*thisIntervalIsNow ? 'Now' : hour*/}
         </Text>
         <Text style={[styles.emojiSm, { flex: 4, textAlign: 'center' }]}>{emojiFromIcon(hourInterval.weather[0].icon)}</Text>
         <View style={{ flex: 4 }}>
