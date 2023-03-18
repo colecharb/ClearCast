@@ -305,7 +305,7 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
   // const endHour = (date.getHours() + 1) % 12 + 1;
 
 
-  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.floor(now.getHours() / 2)) === date.getHours();
+  const thisIntervalIsNow = now.getDate() === date.getDate() && (2 * Math.round(now.getHours() / 2)) === date.getHours();
 
   // console.log(date.toLocaleDateString(locale, { dateStyle: 'short' }));
   // console.log(navigator.language);
@@ -323,7 +323,7 @@ const HourForecastCard = memo(function ({ hourInterval, minLow, low, high, maxHi
             flex: 4,
             textAlign: 'right',
             // paddingRight: Layout.margin,
-            color: Colors[theme].medium,//thisIntervalIsNow ? Colors[theme].text : Colors[theme].medium,
+            color: thisIntervalIsNow ? Colors[theme].text : Colors[theme].medium,
           }
         ]}>
           {hour}{/*thisIntervalIsNow ? 'Now' : hour*/}
