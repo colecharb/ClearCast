@@ -2,8 +2,7 @@
 
 A minimalist weather app for iOS.
 
-I have generally found weather apps to have overcomplicated or unintuitive user interfaces;
-while designing and developing ClearCast, I keep the following tenets in mind:
+Made in the interest of the following tenets:
 
 1. Most people want a weather app that is intuitive, rather than one that is feature-rich.
 2. Weather data from the recent past is valuable.
