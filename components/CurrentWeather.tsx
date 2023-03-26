@@ -29,7 +29,7 @@ export default function () {
         </Text>
         {/* <View style={{ width: Layout.margin }} /> */}
         <Text style={[{ fontSize: 80 }]}>
-          {currrentWeather.main.temp.toFixed(0)}˚
+          {currrentWeather.main.feels_like.toFixed(0)}˚
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -38,7 +38,7 @@ export default function () {
         </Text>
         <View style={{ width: Layout.margin }} />
         <Text style={[styles.detailsText, { textAlign: "left" }]}>
-          feels like {currrentWeather.main.feels_like.toFixed(0)}˚
+          actual temp {currrentWeather.main.temp.toFixed(0)}˚
         </Text>
       </View>
 
