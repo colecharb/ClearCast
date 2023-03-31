@@ -11,21 +11,18 @@ import { ALL_UNITS, RootStackScreenProps, Units } from "../types";
 import Layout from "../constants/Layout";
 import HorizontalLine from "../components/HorizontalLine";
 import { HeaderBackButton } from '@react-navigation/elements'
+import { SettingsContext } from "../contexts/Settings";
 
 export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
 
-  const weather = useContext(WeatherContext);
+  const settings = useContext(SettingsContext);
 
   const headerHeight = useHeaderHeight();
   const styles = makeStyles();
 
-  const [units, setUnits] = useState(weather.units);
-  const [manualTheme, setManualTheme] = useState<'light' | 'dark' | 'automatic'>('automatic')
-  const theme = useColorScheme();
 
   const changeUnits = (units: Units) => {
-    setUnits(units);
-    weather.setUnits(units)
+    settings.setUnits(units)
   }
 
   // navigation.setOptions({
@@ -58,7 +55,7 @@ export default function ({ navigation }: RootStackScreenProps<'Settings'>) {
               {index === 0 ? null : <SettingSeparator />}
               <SettingSelection
                 item={theUnits}
-                selected={theUnits === units}
+                selected={theUnits === settings.units}
                 onPress={() => changeUnits(theUnits)}
               // key={theUnits}
               />
