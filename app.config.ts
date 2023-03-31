@@ -26,7 +26,7 @@ export default {
     ],
     "ios": {
       "bundleIdentifier": "com.clearcast.ClearCast",
-      "buildNumber": '4',
+      "buildNumber": '5',
       "supportsTablet": false,
       "bitcode": false  
     },
