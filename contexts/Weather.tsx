@@ -1,8 +1,9 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import * as Location from 'expo-location';
-import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours, Units, PlaceDetailsResponse, Place, PlaceNearbyResponse } from '../types';
+import { DailyForecast, HourlyForecast, CurrentWeather, HistoricalHours, Units, PlaceDetailsResponse, Place } from '../types';
 import Constants from 'expo-constants';
 import { LayoutAnimation } from 'react-native';
+import { SettingsContext } from './Settings';
 
 export type Coordinates = {
   latitude: number,
@@ -10,8 +11,8 @@ export type Coordinates = {
 }
 
 export type WeatherContextData = {
-  units: Units,
-  setUnits: React.Dispatch<React.SetStateAction<"imperial" | "metric" | "kelvin">>,
+  // units: Units,
+  // setUnits: React.Dispatch<React.SetStateAction<Units>>,
   // toggleTemperatureUnits: () => void,
   coordinates: Coordinates | undefined,
   getCoordinatesAsync: (params?: { placeID: string, sessionToken: string }) => Promise<void>,
@@ -66,13 +67,17 @@ const addExtremesToDailyForecast = (forecast: DailyForecast) => {
 // and an empty object typed as such
 export const WeatherContext = createContext({} as WeatherContextData);
 
-export const WeatherProvider = ({ children }: { children: any }) => {
+export const WeatherProvider = ({ children }: { children: ReactNode }) => {
+
+  const settings = useContext(SettingsContext);
+
+  const { units, setUnits } = settings;
 
   // console.log('AuthProvider has been called.');
   const [errorMessage, setErrorMessage] = useState<string>();
 
   // hooks to return
-  const [units, setUnits] = useState<Units>('imperial')
+  // const [units, setUnits] = useState<Units>('imperial')
   const [coordinates, setCoordinates] = useState<Coordinates>();
   const [place, setPlace] = useState<Place>();
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather>();
@@ -169,20 +174,6 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
     setPlaceLoading(true);
 
-    // console.log(theCoords);
-
-
-    // await fetch(GOOGLE_PLACES_NEARBY_API_URL(theCoords), {
-    //   method: 'get'
-    // }).then((response) => {
-    //   return response.json();
-    // }).then((response: PlaceNearbyResponse) => {
-    //   console.log(JSON.stringify(response, null, '  '));
-
-    //   setPlace(response.results[0]);
-    // })
-
-
     await Location.reverseGeocodeAsync(
       theCoords
     ).then((response) => {
@@ -204,7 +195,14 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
       setPlace({
         name,
-        formatted_address
+        formatted_address,
+        geometry: {
+          location: {
+            lat: theCoords.latitude,
+            lng: theCoords.longitude,
+          },
+          viewport: undefined,
+        },
       })  
 
     })
@@ -310,8 +308,8 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   // }, [loading])
 
   const weatherContextData = {
-    units: units,
-    setUnits: setUnits,
+    // units: units,
+    // setUnits: setUnits,
     // toggleTemperatureUnits: toggleTemperatureUnits,
     coordinates: coordinates,
     place: place,

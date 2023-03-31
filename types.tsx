@@ -287,9 +287,9 @@ export type Place = {
   name?: string,
   formatted_address?: string,
   vicinity?: string,
-  geometry?: {
+  geometry: {
     location: { "lat": number, "lng": number },
-    viewport: {
+    viewport?: {
       northeast: { "lat": number, "lng": number },
       southwest: { "lat": number, "lng": number },
     },
