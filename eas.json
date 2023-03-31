@@ -8,23 +8,20 @@
       "distribution": "internal",
       "releaseChannel": "internal",
       "ios": {
-        "resourceClass": "m1-medium"
+        "resourceClass": "m-medium"
       }
     },
     "preview": {
       "distribution": "internal",
       "releaseChannel": "internal",
       "ios": {
-        "resourceClass": "m1-medium"
+        "resourceClass": "m-medium"
       }
-    },
-    "beta-friends": {
-      "releaseChannel": "internal"
     },
     "production": {
       "releaseChannel": "production",
       "ios": {
-        "resourceClass": "m1-medium"
+        "resourceClass": "m-medium"
       }
     }
   },
