@@ -95,7 +95,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
 
 
   const OWM_API_KEY = Constants.expoConfig?.extra?.owmApiKey;
-  const GOOGLE_API_KEY = Constants.manifest?.extra?.googleApiKey;
+  const GOOGLE_API_KEY = Constants.expoConfig?.extra?.googleApiKey;
 
   const CURRENT_WEATHER_URL = "https://pro.openweathermap.org/data/2.5/weather";
   const makeCurrentWeatherUrlParams = (lat: number, lon: number) => (
