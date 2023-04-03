@@ -11,9 +11,8 @@
         "resourceClass": "m-medium"
       }
     },
-    "preview": {
-      "distribution": "internal",
-      "releaseChannel": "internal",
+    "beta": {
+      "channel": "beta",
       "ios": {
         "resourceClass": "m-medium"
       }
@@ -26,7 +25,7 @@
     }
   },
   "submit": {
-    "beta-friends": {
+    "beta": {
       "ios": {
         "appleId": "colecharbconneau@gmail.com",
         "ascAppId": "6446231556",
