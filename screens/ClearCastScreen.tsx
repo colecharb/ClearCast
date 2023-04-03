@@ -151,7 +151,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={-safeAreaInsets.bottom}
-        style={{ flex: 1, justifyContent: 'flex-end', borderWidth: 1, borderColor: 'green' }}
+        style={{ flex: 1, justifyContent: 'flex-end' }}
       >
 
         {keyboardOpen ? (
