@@ -70,7 +70,7 @@ export default function ({ navigation }: RootStackScreenProps<'ClearCast'>) {
     }).then((response) => {
       return response.json();
     }).then((response) => {
-      console.log("the data:\n", JSON.stringify(response, null, '  '))
+      // console.log("the data:\n", JSON.stringify(response, null, '  '))
       setAutocompleteResponse(response)
     }).catch((err) => {
       console.log(err)
