@@ -1,15 +1,15 @@
-# ClearCast – Intuitive Weather
+# ClearCast
 
-A minimalist weather app for iOS.
+_A minimalist and intuitive weather app for iOS._
 
 
 <p>
-    <img width="175" src="https://github.com/user-attachments/assets/07b6bf22-786e-450f-8b68-92ba6758f13e" hspace="10" >
-    <img width="175" src="https://github.com/user-attachments/assets/44f89442-9f9a-44e2-9bc1-b136b92cb919" hspace="10" >
+    <img width="250" src="https://github.com/user-attachments/assets/07b6bf22-786e-450f-8b68-92ba6758f13e" hspace="10" >
+    <img width="250" src="https://github.com/user-attachments/assets/44f89442-9f9a-44e2-9bc1-b136b92cb919" hspace="10" >
     <p>
-    <img width="175" src="https://github.com/user-attachments/assets/dc83043b-dab8-4dec-8715-586cfc84e49f" hspace="10" >
-    <img width="175" src="https://github.com/user-attachments/assets/4a8e9121-7484-4bf1-b4ff-81e78984db46" hspace="10" >
-    <img width="175" src="https://github.com/user-attachments/assets/38fae91a-366d-428b-bbc4-0d7b934b8889" hspace="10" >
+    <img width="250" src="https://github.com/user-attachments/assets/dc83043b-dab8-4dec-8715-586cfc84e49f" hspace="10" >
+    <img width="250" src="https://github.com/user-attachments/assets/4a8e9121-7484-4bf1-b4ff-81e78984db46" hspace="10" >
+    <img width="250" src="https://github.com/user-attachments/assets/38fae91a-366d-428b-bbc4-0d7b934b8889" hspace="10" >
 </p>
 
 
